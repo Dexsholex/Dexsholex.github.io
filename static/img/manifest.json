@@ -1,0 +1,109 @@
+{
+ "portrait": [
+  {
+   "w": 360,
+   "h": 450,
+   "src": "/img/portrait-360.webp"
+  },
+  {
+   "w": 540,
+   "h": 675,
+   "src": "/img/portrait-540.webp"
+  },
+  {
+   "w": 720,
+   "h": 900,
+   "src": "/img/portrait-720.webp"
+  }
+ ],
+ "about": [
+  {
+   "w": 360,
+   "h": 450,
+   "src": "/img/about-360.webp"
+  },
+  {
+   "w": 540,
+   "h": 675,
+   "src": "/img/about-540.webp"
+  },
+  {
+   "w": 720,
+   "h": 900,
+   "src": "/img/about-720.webp"
+  }
+ ],
+ "contact": [
+  {
+   "w": 96,
+   "h": 96,
+   "src": "/img/contact-96.webp"
+  },
+  {
+   "w": 192,
+   "h": 192,
+   "src": "/img/contact-192.webp"
+  }
+ ],
+ "avatar": [
+  {
+   "w": 64,
+   "h": 64,
+   "src": "/img/avatar-64.webp"
+  },
+  {
+   "w": 128,
+   "h": 128,
+   "src": "/img/avatar-128.webp"
+  }
+ ],
+ "geoaid-flood": [
+  {
+   "w": 480,
+   "h": 300,
+   "src": "/img/geoaid-flood-480.webp"
+  },
+  {
+   "w": 640,
+   "h": 400,
+   "src": "/img/geoaid-flood-640.webp"
+  },
+  {
+   "w": 800,
+   "h": 500,
+   "src": "/img/geoaid-flood-800.webp"
+  },
+  {
+   "w": 1200,
+   "h": 750,
+   "src": "/img/geoaid-flood-1200.webp"
+  },
+  {
+   "w": 1600,
+   "h": 1000,
+   "src": "/img/geoaid-flood-1600.webp"
+  }
+ ],
+ "access-map-preview": [
+  {
+   "w": 480,
+   "h": 210,
+   "src": "/img/access-map-preview-480.webp"
+  },
+  {
+   "w": 800,
+   "h": 350,
+   "src": "/img/access-map-preview-800.webp"
+  },
+  {
+   "w": 1200,
+   "h": 525,
+   "src": "/img/access-map-preview-1200.webp"
+  },
+  {
+   "w": 1600,
+   "h": 700,
+   "src": "/img/access-map-preview-1600.webp"
+  }
+ ]
+}
