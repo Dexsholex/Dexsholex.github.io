@@ -251,9 +251,12 @@ def main():
     }
     values.update(fragments(site, caps, gaps))
 
-    if DIST.exists():
-        shutil.rmtree(DIST)
-    shutil.copytree(STATIC, DIST)
+    # Empty dist/ rather than deleting it: on Windows a folder that a shell or
+    # the preview server has open cannot be removed.
+    DIST.mkdir(exist_ok=True)
+    for p in DIST.iterdir():
+        shutil.rmtree(p) if p.is_dir() else p.unlink()
+    shutil.copytree(STATIC, DIST, dirs_exist_ok=True)
 
     page = render((SRC / "index.html").read_text(encoding="utf-8"), values)
     (DIST / "index.html").write_text(page, encoding="utf-8", newline="\n")
