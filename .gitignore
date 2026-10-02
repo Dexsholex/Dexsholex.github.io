@@ -1,0 +1,15 @@
+# The brief names clients that must never be public. Keep it local.
+CLAUDE.md
+private/
+
+# Build output (GitHub Actions rebuilds it)
+dist/
+
+# Local tooling
+reports/
+.claude/
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
