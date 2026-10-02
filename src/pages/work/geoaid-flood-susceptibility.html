@@ -1,0 +1,119 @@
+<!--page
+{"kind": "case",
+ "title": "GeoAID flood susceptibility mapping, Lagos · Oluwasola Oyinloye",
+ "headline": "GeoAID: mapping where Amuwo-Odofin is most prone to flooding",
+ "description": "Case study: an open, explainable flood susceptibility model for Amuwo-Odofin, Lagos, tested with spatial cross-validation and published as a live dashboard.",
+ "og_title": "GeoAID: where Amuwo-Odofin is most prone to flooding",
+ "og_image": "og-geoaid.png",
+ "og_image_alt": "Case study card: GeoAID flood susceptibility map of Amuwo-Odofin, Lagos.",
+ "crumb": "GeoAID flood susceptibility",
+ "published": "2026-10-02",
+ "keywords": ["flood susceptibility", "Lagos flooding", "Amuwo-Odofin", "random forest", "spatial cross-validation", "SHAP", "Sentinel-1"]}
+-->
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li><a href="/#work">Case studies</a></li><li aria-current="page">GeoAID flood susceptibility</li></ol>
+      </nav>
+      <ul class="tags" aria-label="Project type">
+        <li class="tag">Public good</li>
+        <li class="tag tag-quiet">Spatial ML</li>
+        <li class="tag tag-quiet">Pilot</li>
+      </ul>
+      <h1>Mapping where <span class="nowrap">Amuwo-Odofin</span> is most prone to flooding</h1>
+      <p class="lead">GeoAID is an open flood susceptibility model for one Lagos LGA. It shows where flooding is structurally more likely, why, and who is exposed, and it is honest about how well it holds up on ground it hasn't seen.</p>
+      <dl class="kpis">
+        <div><dt>Random-split ROC-AUC</dt><dd>≈ 0.798</dd></div>
+        <div><dt>Spatial cross-validation</dt><dd>≈ 0.642</dd></div>
+        <div><dt>Grid</dt><dd>100 m</dd></div>
+        <div><dt>Flood events in training</dt><dd>4, 2017 to 2022</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-map">
+      <a class="zoomable" href="{{ geoaid_full }}" data-lightbox>
+        {{ img_geoaid_large }}
+        <span class="zoom-hint"><svg aria-hidden="true" focusable="false"><use href="#i-expand"/></svg>Enlarge map</span>
+      </a>
+      <figcaption>
+        <span class="ramp-legend is-inline"><span>Lower</span><i></i><span>Higher flood probability</span></span>
+        Modelled flood probability across Amuwo-Odofin LGA (Random Forest, 100 m grid). A screening map, not a forecast.
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>The question</h2>
+      <p>Where in Amuwo-Odofin is flooding most likely, and why? Many flood maps rest on expert-assigned weights that are never checked against floods that actually happened, and they rarely say why one place scores higher than another. GeoAID is trained on observed flooding and explains each prediction.</p>
+
+      <h2>Three layers</h2>
+      <ol class="layer-list">
+        <li><b>Structural susceptibility</b><span>Where is inherently flood-prone? 14 satellite-derived factors feed a Random Forest that produces a four-tier risk map.</span></li>
+        <li><b>Live activation</b><span>Is that risk being activated now? Near-real-time rainfall from NASA GPM IMERG is compared against the risk map.</span></li>
+        <li><b>Exposure</b><span>Who and what is in the way? WorldPop population, and schools, health facilities and roads from OpenStreetMap, overlaid on the risk tiers.</span></li>
+      </ol>
+
+      <h2>Data and model</h2>
+      <p>The flood record comes from Sentinel-1 radar across 4 verified Lagos flood events between 2017 and 2022, with masking to exclude permanent water. The conditioning factors cover terrain, rainfall, land cover, vegetation, soil and distance to drainage, all on a common 100 m grid.</p>
+      <p>A Random Forest was chosen over logistic regression and XGBoost. SHAP explains each prediction: vegetation cover is the strongest driver of susceptibility, which matches the model's own feature importance.</p>
+
+      <h2>How good is it?</h2>
+      <figure class="auc">
+        <figcaption>How well the model tells flooded from dry locations (ROC-AUC, where 0.5 is a coin toss and 1.0 is perfect)</figcaption>
+        <div class="auc-row">
+          <span class="auc-label">Random split</span>
+          <span class="auc-value">≈ 0.798</span>
+          <span class="auc-bar" style="--v:.596" aria-hidden="true"><span></span></span>
+        </div>
+        <div class="auc-row is-key">
+          <span class="auc-label">Spatial cross-validation</span>
+          <span class="auc-value">≈ 0.642</span>
+          <span class="auc-bar" style="--v:.284" aria-hidden="true"><span></span></span>
+        </div>
+        <div class="auc-axis" aria-hidden="true"><span>0.5</span><span>0.75</span><span>1.0</span></div>
+      </figure>
+      <p>On a random split the model scores about 0.798. That number flatters it, because neighbouring cells in the training and test sets look alike. Under spatial cross-validation, where whole blocks of ground are held out, it falls to about 0.642. That is the score to plan with: GeoAID points to areas worth a closer look, but it is not a basis for decisions about a specific plot.</p>
+
+      <h2>Catching a data error</h2>
+      <p>An early version of the radar flood record marked 97.7% of the study area as flooded, because permanent water was leaking into the flooded class. After diagnosing and masking it, the flooded share fell to a physically credible 5.18%. That correction, and every other one, is written up in the public methods log.</p>
+
+      <h2>Limits</h2>
+      <ul>
+        <li>Susceptibility is not a forecast. It shows where conditions make flooding more likely, not when a flood will happen.</li>
+        <li>Two of the 14 inputs, both rainfall datasets, are coarser than the study area, which limits how much they can separate one place from another.</li>
+        <li>The model is trained and tested for Amuwo-Odofin only. Whether it transfers to other LGAs has not been tested.</li>
+      </ul>
+      <p class="small">GeoAID was built as my Master of Information Technology dissertation at Miva Open University. A peer-reviewed manuscript based on it is in preparation.</p>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Summary</h2>
+        <dl class="facts">
+          <div><dt>Type</dt><dd>Public good, open source</dd></div>
+          <div><dt>Area</dt><dd>Amuwo-Odofin LGA, Lagos</dd></div>
+          <div><dt>Model</dt><dd>Random Forest, explained with SHAP</dd></div>
+          <div><dt>Validation</dt><dd>Random split and spatial cross-validation</dd></div>
+        </dl>
+        <ul class="chips"><li>Python</li><li>Google Earth Engine</li><li>Sentinel-1 SAR</li><li>SHAP</li><li>Streamlit</li></ul>
+        <p class="case-links stack">
+          <a href="{{ geoaid_dashboard }}">Open the live dashboard<svg aria-hidden="true" focusable="false"><use href="#i-out"/></svg></a>
+          <a href="{{ geoaid_repo }}">Read the code<svg aria-hidden="true" focusable="false"><use href="#i-out"/></svg></a>
+          <a href="{{ geoaid_methods }}">Methods log<svg aria-hidden="true" focusable="false"><use href="#i-out"/></svg></a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Screening a site for flood risk?</strong> Tell me where and what you're planning.</p>
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>Book a 20-minute call</a>
+      </div>
+    </aside>
+  </div>
+
+  <nav class="case-next wrap" aria-label="More case studies">
+    <a href="/work/oil-palm-tree-counting/"><span>Next case study</span><strong>Counting {{ palm_palms }} oil palms from aerial imagery</strong><svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+  </nav>
+</article>

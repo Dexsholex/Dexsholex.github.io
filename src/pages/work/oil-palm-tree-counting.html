@@ -1,0 +1,111 @@
+<!--page
+{"kind": "case",
+ "title": "Oil palm counting from aerial imagery · Oluwasola Oyinloye",
+ "headline": "Counting 718,751 oil palms from aerial imagery",
+ "description": "Case study: a YOLOv8 crown-detection pipeline that mapped 718,751 palms across 12,166.6 ha and 26 blocks for a commercial oil palm plantation.",
+ "og_title": "Counting 718,751 oil palms from aerial imagery",
+ "og_image": "og-oil-palm.png",
+ "og_image_alt": "Case study card: 718,751 oil palms counted across 12,166.6 hectares from aerial imagery.",
+ "crumb": "Oil palm tree counting",
+ "published": "2026-10-02",
+ "keywords": ["oil palm tree counting", "palm crown detection", "YOLOv8", "plantation inventory", "aerial imagery", "geospatial AI"]}
+-->
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li><a href="/#work">Case studies</a></li><li aria-current="page">Oil palm tree counting</li></ol>
+      </nav>
+      <ul class="tags" aria-label="Project type">
+        <li class="tag">Client work</li>
+        <li class="tag tag-quiet">Geospatial AI</li>
+        <li class="tag tag-quiet">Anonymised</li>
+      </ul>
+      <h1>Counting {{ palm_palms }} oil palms from aerial imagery</h1>
+      <p class="lead">A commercial oil palm plantation needed a tree-by-tree inventory of its estate. I built a pipeline that finds each palm crown in aerial imagery and turns it into a mapped, countable point.</p>
+      <dl class="kpis">
+        <div><dt>Palms detected</dt><dd>{{ palm_palms }}</dd></div>
+        <div><dt>Net area covered</dt><dd>{{ palm_hectares }} ha</dd></div>
+        <div><dt>Production blocks</dt><dd>{{ palm_blocks }}</dd></div>
+        <div><dt>Average density</dt><dd>{{ palm_density }} palms/ha</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>The question</h2>
+      <p>How many palms does the plantation have, and where is each one? On an estate this size, manual counts are slow and they don't produce a map. The deliverable here is one mapped point per palm, block by block, that the plantation can query and check.</p>
+
+      <h2>How it works</h2>
+      <ol class="pipeline" aria-label="Processing pipeline">
+        <li><b>Imagery</b><span>An RGB orthomosaic for each block</span></li>
+        <li><b>Tiles</b><span>1280-pixel chips with 256 pixels of overlap</span></li>
+        <li><b>Detection</b><span>A YOLOv8 model with one class: oil palm</span></li>
+        <li><b>Merge</b><span>Tile results joined and duplicates removed</span></li>
+        <li><b>Inventory</b><span>One point per palm, in GeoPackage and CSV</span></li>
+      </ol>
+      <p>The training data is a small, hand-annotated set of crowns taken from a stratified sample of tiles, chosen so that weed-only, palm-only and mixed scenes are all covered. Training, validation and test sets were split by spatial sector rather than by random tile, so the test score reflects ground the model had not seen.</p>
+
+      <h2>Improving the model in production</h2>
+      <p>As blocks came in, two failure patterns showed up: dense mature canopy, where neighbouring crowns run together, and young palms that are small and easy to miss. I re-annotated examples of both and retrained. The current model is the result of {{ palm_iterations }} training iterations, each compared against the same held-out test set.</p>
+
+      <h2>Making the count add up</h2>
+      <p>Blocks were delivered one at a time, and many of them overlapped. A check of every pair found {{ palm_overlap_hectares }} ha of shared coverage across {{ palm_overlap_pairs }} block pairs. Adding up each block's count on its own would have counted the palms in those zones two or three times.</p>
+      <p>I resolved it with one fixed rule: shared ground belongs to the block delivered first, and later blocks drop their detections inside that overlap. Every hectare is counted once.</p>
+      <figure class="bars" aria-label="Palm totals before and after overlap resolution">
+        <figcaption>Plantation total, before and after removing double counts</figcaption>
+        <div class="bar-row">
+          <span class="bar-label">Sum of block counts</span>
+          <span class="bar-value">{{ palm_naive_palms }}</span>
+          <span class="bar-track" aria-hidden="true"><span style="--v:1"></span></span>
+        </div>
+        <div class="bar-row is-key">
+          <span class="bar-label">Each hectare counted once</span>
+          <span class="bar-value">{{ palm_palms }}</span>
+          <span class="bar-track" aria-hidden="true"><span style="--v:.704"></span></span>
+        </div>
+        <p class="bar-note">{{ palm_double_counts }} double counts removed ({{ palm_double_count_share }})</p>
+      </figure>
+      <p>Where elevation data was available ({{ palm_chm_blocks }} of {{ palm_blocks }} blocks), a canopy-height check flags detections that are implausibly short and probably not palms. It flags them for review; it does not delete them.</p>
+
+      <h2>What it doesn't claim</h2>
+      <ul>
+        <li>Overlaps were resolved with each block's rectangular extent, not surveyed property boundaries. Block totals could shift if true boundaries are applied. The plantation total should not change much, because the overlap is real imagery overlap.</li>
+        <li>A few blocks keep only a thin sliver of ground after the overlap rule, so their palms-per-hectare figure looks very low. Those figures need a field check before anyone quotes them.</li>
+        <li>The figures above are detections. A counting-accuracy check against a manually counted area is part of the workflow; its result is shown in the summary panel once published.</li>
+      </ul>
+
+      <h2>What the plantation received</h2>
+      <ul>
+        <li>A GeoPackage per block with two layers: crown outlines, and one point per palm with an ID, confidence score and crown area.</li>
+        <li>A plantation-wide master inventory that combines every block.</li>
+        <li>A runbook for processing new blocks without retraining, unless a new failure pattern appears.</li>
+      </ul>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Summary</h2>
+        <dl class="facts">
+          <div><dt>Client</dt><dd>A commercial oil palm plantation (anonymised)</dd></div>
+          <div><dt>Data</dt><dd>RGB orthomosaics; elevation models for some blocks</dd></div>
+          <div><dt>Method</dt><dd>YOLOv8 object detection</dd></div>
+          <div><dt>Output</dt><dd>GeoPackage and CSV, UTM zone 31N</dd></div>
+          <div><dt>As of</dt><dd>{{ palm_as_of }}</dd></div>
+          {{ palm_accuracy_row }}
+        </dl>
+        <ul class="chips"><li>Python</li><li>YOLOv8</li><li>PyTorch</li><li>GeoPackage</li></ul>
+        <p class="case-links">{{ palm_repo_link }}</p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Need a tree count or stand map?</strong> Tell me about your estate and imagery.</p>
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>Book a 20-minute call</a>
+      </div>
+    </aside>
+  </div>
+
+  <nav class="case-next wrap" aria-label="More case studies">
+    <a href="/work/geoaid-flood-susceptibility/"><span>Next case study</span><strong>GeoAID flood susceptibility: Amuwo-Odofin pilot</strong><svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+  </nav>
+</article>

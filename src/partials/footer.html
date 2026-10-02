@@ -1,0 +1,38 @@
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <p class="footer-name">{{ name }}</p>
+      <p>{{ roles_line }}</p>
+      <p>Based in Lagos, Nigeria · {{ timezone }}</p>
+    </div>
+    <nav aria-label="Footer">
+      <p class="footer-head">Site</p>
+      <ul>
+        <li><a href="{{ nav_prefix }}#work">Case studies</a></li>
+        <li><a href="{{ nav_prefix }}#services">Services</a></li>
+        <li><a href="{{ nav_prefix }}#about">About</a></li>
+        <li><a href="{{ nav_prefix }}#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div>
+      <p class="footer-head">Elsewhere</p>
+      <ul>
+        <li><a href="{{ linkedin }}" rel="me">LinkedIn</a></li>
+        <li><a href="{{ github }}" rel="me">GitHub</a></li>
+        <li><a href="{{ medium }}" rel="me">Medium</a></li>
+        {{ researchgate_footer }}
+      </ul>
+    </div>
+    <div>
+      <p class="footer-head">Contact</p>
+      <ul>
+        <li><a href="{{ mailto_url }}">{{ email }}</a></li>
+        <li><a href="{{ whatsapp_url }}">WhatsApp {{ whatsapp_display }}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <p>© {{ year }} {{ name }}</p>
+    <p>No cookies, analytics or tracking. Your theme choice is kept in this browser only.</p>
+  </div>
+</footer>

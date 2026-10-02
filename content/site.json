@@ -1,18 +1,20 @@
 {
   "base_url": "https://dexsholex.github.io/",
   "name": "Oluwasola Oyinloye",
-  "job_title": "Geospatial data scientist",
+  "roles": ["Geospatial data scientist", "Geospatial AI specialist"],
   "flagship": "Geospatial analysis you can verify.",
-  "title": "Oluwasola Oyinloye · Geospatial Data Scientist, Lagos, Nigeria",
-  "description": "Geospatial data scientist in Lagos. Satellite imagery analysis, spatial machine learning and GIS for plantations, agric lenders, developers and NGOs in Nigeria.",
+  "title": "Oluwasola Oyinloye · Geospatial Data Science & Geospatial AI",
+  "description": "Geospatial data scientist and geospatial AI specialist in Lagos, Nigeria. Satellite, drone and aerial imagery analysis, spatial machine learning and GIS.",
   "locality": "Lagos",
   "country_code": "NG",
   "country": "Nigeria",
+  "timezone": "WAT, UTC+1",
 
   "email": "o.oyin1115@gmail.com",
   "whatsapp": "",
   "whatsapp_display": "",
   "call_message": "Hello Oluwasola, I'd like to book a 20-minute call.",
+  "booking_url": null,
 
   "links": {
     "linkedin": "https://www.linkedin.com/in/oluwasola-oyinloye",
@@ -21,15 +23,32 @@
     "researchgate": null
   },
 
+  "tools": ["Python", "PyTorch", "YOLOv8", "Google Earth Engine", "Sentinel-1 SAR", "GeoPandas",
+            "PostGIS", "XGBoost", "SHAP", "Streamlit", "Power BI", "OpenStreetMap"],
+
   "projects": {
-    "oil_palm_scale": null,
-    "oil_palm_accuracy": null,
+    "oil_palm": {
+      "palms": "718,751",
+      "naive_palms": "1,021,163",
+      "double_counts": "302,412",
+      "double_count_share": "29.6%",
+      "hectares": "12,166.6",
+      "overlap_hectares": "5,194.7",
+      "overlap_pairs": "51",
+      "blocks": "26",
+      "density": "59.1",
+      "iterations": "9",
+      "chm_blocks": "5",
+      "as_of": "August 2026",
+      "repo": "https://github.com/Dexsholex/oil-palm-crown-detection",
+      "accuracy": null,
+      "detection_image": null
+    },
     "access_map_build": null,
     "geoaid_dashboard": "https://geoaid-lagos-flood.streamlit.app/",
-    "geoaid_repo": "https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk"
+    "geoaid_repo": "https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk",
+    "geoaid_methods": "https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk/blob/main/docs/methods_log.md"
   },
-
-  "headshot": null,
 
   "search_console": {
     "google": null,

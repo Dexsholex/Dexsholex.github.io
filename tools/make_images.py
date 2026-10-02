@@ -3,7 +3,8 @@
 
     python tools/make_images.py
 
-Run it again after changing the name, flagship line or base_url in content/site.json,
+Run it again after changing the name, flagship line, base_url or oil palm figures in
+content/site.json, and after tools/media.py (the GeoAID card reuses its map),
 then commit the new files. Needs Pillow (pip install pillow). Fonts are read from
 C:/Windows/Fonts, so run it on Windows or point FONT_DIR at a folder holding
 segoeuib.ttf, seguisb.ttf, segoeui.ttf and consola.ttf.
@@ -54,11 +55,22 @@ def mark(size, bg=ACCENT_DEEP, fg=WHITE, radius=8):
     return im.resize((size, size), Image.LANCZOS)
 
 
-def share_image(site):
+def wrap_text(d, text, fnt, width):
+    lines, line = [], ""
+    for w in text.split():
+        trial = f"{line} {w}".strip()
+        if d.textlength(trial, font=fnt) > width and line:
+            lines.append(line)
+            line = w
+        else:
+            line = trial
+    return lines + [line]
+
+
+def base_card(site):
+    """Dark card with a fading graticule and the name; shared by every share image."""
     W, H = 1200, 630
     im = Image.new("RGB", (W, H), BG)
-
-    # Graticule, fading out from the top right
     grid = Image.new("RGB", (W, H), BG)
     g = ImageDraw.Draw(grid)
     for x in range(0, W, 60):
@@ -69,10 +81,30 @@ def share_image(site):
     fade = Image.eval(fade, lambda v: max(0, 255 - int(v * 1.25)))
     mask = Image.new("L", (W, H), 0)
     mask.paste(fade, (1000 - 950, 120 - 750))
-    im = Image.composite(grid, im, mask)
+    im = Image.composite(grid, im, mask).convert("RGBA")
+    im.alpha_composite(mark(56), (72, 66))
+    d = ImageDraw.Draw(im)
+    d.text((146, 94), site["name"], font=font("seguisb.ttf", 34), fill=TEXT, anchor="lm")
+    host = site["base_url"].split("//", 1)[-1].rstrip("/")
+    d.text((72, 560), host, font=font("consola.ttf", 24), fill=MUTED)
+    d.rectangle([0, H - 8, W, H], fill=ACCENT_DEEP)
+    return im
 
-    # Survey target on the right
-    over = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+
+def text_block(im, kicker, title, subline, width, size=76):
+    d = ImageDraw.Draw(im)
+    d.text((72, 214), kicker, font=font("consola.ttf", 24), fill=ACCENT)
+    title_font = font("segoeuib.ttf", size)
+    y = 262
+    for ln in wrap_text(d, title, title_font, width):
+        d.text((68, y), ln, font=title_font, fill=WHITE)
+        y += round(size * 1.16)
+    if subline:
+        d.text((72, y + 30), subline, font=font("segoeui.ttf", 28), fill=MUTED)
+
+
+def survey_target(im):
+    over = Image.new("RGBA", im.size, (0, 0, 0, 0))
     o = ImageDraw.Draw(over)
     cx, cy = 975, 270
     col = ACCENT + (190,)
@@ -82,39 +114,43 @@ def share_image(site):
                  ((cx - 195, cy), (cx - 78, cy)), ((cx + 78, cy), (cx + 195, cy))):
         o.line([a, b], fill=col, width=3)
     o.ellipse([cx - 9, cy - 9, cx + 9, cy + 9], fill=ACCENT + (255,))
-    im = Image.alpha_composite(im.convert("RGBA"), over)
+    im.alpha_composite(over)
+    ImageDraw.Draw(im).text((cx, cy + 230), "6.455° N   3.384° E", font=font("consola.ttf", 22), fill=MUTED, anchor="mm")
 
-    d = ImageDraw.Draw(im)
-    mono = font("consola.ttf", 22)
-    d.text((cx, cy + 230), "6.455° N   3.384° E", font=mono, fill=MUTED, anchor="mm")
 
-    # Name with the brand mark
-    im.alpha_composite(mark(56), (72, 66))
-    d.text((146, 94), site["name"], font=font("seguisb.ttf", 34), fill=TEXT, anchor="lm")
-
-    # Kicker and flagship line
-    d.text((72, 214), "GEOSPATIAL DATA SCIENCE · LAGOS, NIGERIA", font=font("consola.ttf", 24), fill=ACCENT)
-    title_font = font("segoeuib.ttf", 76)
-    words, lines, line = site["flagship"].split(), [], ""
-    for w in words:
-        trial = f"{line} {w}".strip()
-        if d.textlength(trial, font=title_font) > 720 and line:
-            lines.append(line)
-            line = w
-        else:
-            line = trial
-    lines.append(line)
-    y = 262
-    for ln in lines:
-        d.text((68, y), ln, font=title_font, fill=WHITE)
-        y += 88
-
-    d.text((72, y + 34), "Satellite imagery  ·  Spatial machine learning  ·  GIS", font=font("segoeui.ttf", 28), fill=MUTED)
-    host = site["base_url"].split("//", 1)[-1].rstrip("/")
-    d.text((72, 560), host, font=font("consola.ttf", 24), fill=MUTED)
-    d.rectangle([0, H - 8, W, H], fill=ACCENT_DEEP)
-
+def home_image(site):
+    im = base_card(site)
+    survey_target(im)
+    text_block(im, "GEOSPATIAL DATA SCIENCE · GEOSPATIAL AI", site["flagship"],
+               "Satellite, drone and aerial imagery  ·  Lagos, Nigeria", 720)
     im.convert("RGB").save(STATIC / "og.png", optimize=True)
+
+
+def oil_palm_image(site):
+    palm = site["projects"]["oil_palm"]
+    im = base_card(site)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([760, 150, 1128, 520], radius=28, fill=(20, 36, 30), outline=(40, 70, 58), width=2)
+    d.text((944, 250), palm["palms"], font=font("segoeuib.ttf", 72), fill=WHITE, anchor="mm")
+    d.text((944, 312), "palms detected", font=font("segoeui.ttf", 28), fill=MUTED, anchor="mm")
+    d.line([(800, 370), (1088, 370)], fill=(40, 70, 58), width=2)
+    d.text((944, 420), f"{palm['hectares']} ha", font=font("seguisb.ttf", 34), fill=TEXT, anchor="mm")
+    d.text((944, 466), f"{palm['blocks']} blocks", font=font("segoeui.ttf", 26), fill=MUTED, anchor="mm")
+    text_block(im, "CASE STUDY · GEOSPATIAL AI", "Counting oil palms from aerial imagery",
+               "YOLOv8 crown detection, block by block", 640, size=68)
+    im.convert("RGB").save(STATIC / "og-oil-palm.png", optimize=True)
+
+
+def geoaid_image(site):
+    im = base_card(site)
+    pic = Image.open(STATIC / "img" / "geoaid-flood-800.webp").convert("RGB")
+    pic = pic.crop((110, 0, 690, 500)).resize((406, 350), Image.LANCZOS)
+    m = Image.new("L", pic.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle([0, 0, pic.width - 1, pic.height - 1], radius=24, fill=255)
+    im.paste(pic, (730, 150), m)
+    text_block(im, "CASE STUDY · SPATIAL ML", "GeoAID: flood risk mapping in Lagos",
+               "Amuwo-Odofin pilot · spatially cross-validated", 600, size=64)
+    im.convert("RGB").save(STATIC / "og-geoaid.png", optimize=True)
 
 
 def main():
@@ -123,8 +159,10 @@ def main():
     (STATIC / "favicon.svg").write_text(FAVICON_SVG, encoding="utf-8", newline="\n")
     mark(180, radius=0).convert("RGB").save(STATIC / "apple-touch-icon.png", optimize=True)
     mark(256).save(STATIC / "favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
-    share_image(site)
-    for p in sorted(STATIC.iterdir()):
+    home_image(site)
+    oil_palm_image(site)
+    geoaid_image(site)
+    for p in sorted(STATIC.glob("*.*")):
         print(f"{p.name}: {p.stat().st_size / 1024:.1f} KB")
 
 

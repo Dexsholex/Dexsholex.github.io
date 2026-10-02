@@ -1,13 +1,28 @@
 [
   {
+    "title": "Geospatial AI",
+    "text": "Deep-learning models that find and count objects in drone, aerial and satellite imagery.",
+    "icon": "detect"
+  },
+  {
+    "title": "Drone mapping and analysis",
+    "text": "Drone imagery turned into orthomosaics, surface and terrain models, and counts you can measure from.",
+    "icon": "drone"
+  },
+  {
     "title": "Remote sensing and satellite analysis",
-    "text": "Land cover, vegetation and change over time, read from satellite and aerial imagery.",
+    "text": "Land cover, vegetation, water and change over time, read from optical and radar satellite imagery.",
     "icon": "orbit"
   },
   {
     "title": "Spatial machine learning",
-    "text": "Models that detect objects or estimate risk, tested on areas they have not seen.",
-    "icon": "network"
+    "text": "Predictive models that explain their answers and are tested on areas they have not seen.",
+    "icon": "scatter"
+  },
+  {
+    "title": "Flood and climate risk mapping",
+    "text": "Where flooding is more likely, and which people, roads and facilities sit in the way.",
+    "icon": "wave"
   },
   {
     "title": "GIS and spatial databases",
@@ -23,10 +38,5 @@
     "title": "Dashboards",
     "text": "Streamlit and Power BI dashboards that put results in front of the people deciding.",
     "icon": "chart"
-  },
-  {
-    "title": "Field data collection",
-    "text": "Planned surveys and GPS collection to fill gaps and check models on the ground.",
-    "icon": "pin"
   }
 ]
