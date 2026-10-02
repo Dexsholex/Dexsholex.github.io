@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Remote sensing and satellite analysis",
+    "text": "Land cover, vegetation and change over time, read from satellite and aerial imagery.",
+    "icon": "orbit"
+  },
+  {
+    "title": "Spatial machine learning",
+    "text": "Models that detect objects or estimate risk, tested on areas they have not seen.",
+    "icon": "network"
+  },
+  {
+    "title": "GIS and spatial databases",
+    "text": "Clean, queryable spatial data in PostGIS that your team and tools can use.",
+    "icon": "layers"
+  },
+  {
+    "title": "Data audits and validation",
+    "text": "Checks on how complete and accurate a dataset is before you rely on it.",
+    "icon": "check"
+  },
+  {
+    "title": "Dashboards",
+    "text": "Streamlit and Power BI dashboards that put results in front of the people deciding.",
+    "icon": "chart"
+  },
+  {
+    "title": "Field data collection",
+    "text": "Planned surveys and GPS collection to fill gaps and check models on the ground.",
+    "icon": "pin"
+  }
+]

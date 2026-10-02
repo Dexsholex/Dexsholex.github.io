@@ -1,0 +1,38 @@
+{
+  "base_url": "https://dexsholex.github.io/",
+  "name": "Oluwasola Oyinloye",
+  "job_title": "Geospatial data scientist",
+  "flagship": "Geospatial analysis you can verify.",
+  "title": "Oluwasola Oyinloye · Geospatial Data Scientist in Lagos, Nigeria",
+  "description": "Geospatial data scientist in Lagos. Satellite imagery analysis, spatial machine learning and GIS for plantations, agric lenders, developers and NGOs in Nigeria.",
+  "locality": "Lagos",
+  "country_code": "NG",
+  "country": "Nigeria",
+
+  "email": "o.oyin1115@gmail.com",
+  "whatsapp": "",
+  "whatsapp_display": "",
+  "call_message": "Hello Oluwasola, I'd like to book a 20-minute call.",
+
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/oluwasola-oyinloye",
+    "github": "https://github.com/Dexsholex",
+    "medium": "https://medium.com/@Deyley",
+    "researchgate": null
+  },
+
+  "projects": {
+    "oil_palm_scale": null,
+    "oil_palm_accuracy": null,
+    "access_map_build": null,
+    "geoaid_dashboard": "https://geoaid-lagos-flood.streamlit.app/",
+    "geoaid_repo": "https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk"
+  },
+
+  "headshot": null,
+
+  "search_console": {
+    "google": null,
+    "bing": null
+  }
+}
