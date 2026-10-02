@@ -1,0 +1,14 @@
+﻿{
+  "name": "oluwasola-oyinloye-site",
+  "private": true,
+  "description": "Audit tooling for the portfolio site. The site itself has no Node dependencies.",
+  "type": "module",
+  "scripts": {
+    "audit": "node tools/audit.mjs"
+  },
+  "devDependencies": {
+    "chrome-launcher": "^1.2.0",
+    "lighthouse": "^13.5.0",
+    "puppeteer-core": "^25.12.0"
+  }
+}

@@ -7,8 +7,10 @@
    committed) and searches every file git would publish, every commit message
    and the built dist/ folder. Any hit fails the check.
 2. Filler words the brief rules out, in the page source and content files.
-3. TODO markers left in dist/index.html.
-4. Page weight of dist/index.html, raw and gzipped.
+3. TODO markers left in the built pages.
+4. Weight of every built page, raw and gzipped.
+
+For Lighthouse scores, screenshots and link checks, run npm run audit.
 """
 import gzip
 import re
@@ -64,26 +66,29 @@ def main():
     else:
         print("WARN private/blocked_terms.txt missing, so the blocked-names check did not run")
 
-    sources = [ROOT / "src" / "index.html", *sorted((ROOT / "content").glob("*.json"))]
+    sources = [*sorted((ROOT / "src").rglob("*.html")), *sorted((ROOT / "content").glob("*.json"))]
     found = []
     for p in sources:
         text = p.read_text(encoding="utf-8").lower()
         found += [f"{p.name}: {w}" for w in FILLER if w in text]
     print("WARN filler words: " + ", ".join(found) if found else "ok   no filler words")
 
-    page = ROOT / "dist" / "index.html"
-    if not page.exists():
-        print("FAIL dist/index.html missing. Run python tools/build.py first.")
+    pages = sorted((ROOT / "dist").rglob("*.html"))
+    if not pages:
+        print("FAIL dist/ is empty. Run python tools/build.py first.")
         sys.exit(1)
-    html = page.read_text(encoding="utf-8")
-    todos = re.findall(r'<span class="todo">TODO: (.*?)</span>', html)
+    todos = set()
+    for page in pages:
+        html = page.read_text(encoding="utf-8")
+        todos.update(re.findall(r'<span class="todo">TODO: (.*?)</span>', html))
+        raw = len(html.encode("utf-8"))
+        gz = len(gzip.compress(html.encode("utf-8")))
+        status = "ok  " if gz / 1024 < WEIGHT_BUDGET_KB else "FAIL"
+        name = "/" + page.relative_to(ROOT / "dist").as_posix().removesuffix("index.html")
+        print(f"{status} {name:<40} {raw / 1024:5.1f} KB raw, {gz / 1024:4.1f} KB gzipped (budget {WEIGHT_BUDGET_KB} KB)")
+        failed |= status == "FAIL"
+    todos = sorted(t.replace("&quot;", '"') for t in todos)
     print(f"WARN {len(todos)} TODO marker(s): " + "; ".join(todos) if todos else "ok   no TODO markers")
-
-    raw = len(html.encode("utf-8"))
-    gz = len(gzip.compress(html.encode("utf-8")))
-    status = "ok  " if gz / 1024 < WEIGHT_BUDGET_KB else "FAIL"
-    print(f"{status} page weight: {raw / 1024:.1f} KB raw, {gz / 1024:.1f} KB gzipped (budget {WEIGHT_BUDGET_KB} KB)")
-    failed |= status == "FAIL"
 
     sys.exit(1 if failed else 0)
 
