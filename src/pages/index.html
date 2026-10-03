@@ -5,12 +5,13 @@
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="byline">{{ img_avatar }}<span><strong>{{ name }}</strong><span>{{ roles_br }}</span></span></p>
-      <p class="kicker">Geospatial data science · Geospatial AI</p>
+      <p class="kicker">GIS · Remote sensing · Drone mapping · Geospatial AI</p>
       <h1 id="hero-title">{{ flagship }}</h1>
-      <p class="lead">I work with plantation operators, agric lenders, developers and NGOs in Nigeria and abroad. I turn satellite, drone and aerial imagery into answers, and I tell you how far to trust each one.</p>
+      <p class="lead">I do GIS, remote sensing, drone mapping and geospatial AI work for plantation operators, agric lenders, developers, governments and NGOs, in Nigeria and abroad. I turn imagery and location data into answers, and I tell you how far to trust each one.</p>
       <div class="hero-actions">
         <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
         {{ whatsapp_button }}
+        <a class="btn btn-ghost" href="/services/">Explore services<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
       </div>
       <p class="hero-meta">Based in Lagos ({{ timezone }}) · On site across Nigeria · Remote for clients anywhere · <a href="#work">See the work</a></p>
     </div>
@@ -25,10 +26,10 @@
 <section class="proof" aria-label="Track record">
   <div class="wrap">
     <ul class="stats">
-      <li><span class="stat-value">{{ palm_palms }}</span><span class="stat-label">oil palms mapped across {{ palm_hectares }} ha for one plantation</span></li>
-      <li><span class="stat-value">1,500</span><span class="stat-label">people taught in a Python-for-geospatial seminar</span></li>
+      <li><span class="stat-value" data-count>{{ palm_palms }}</span><span class="stat-label">oil palms mapped across {{ palm_hectares }} ha for one plantation</span></li>
+      <li><span class="stat-value" data-count>1,500</span><span class="stat-label">people taught in a Python-for-geospatial seminar</span></li>
       <li><span class="stat-value">2</span><span class="stat-label">{{ publications_label }}</span></li>
-      <li><span class="stat-value">5</span><span class="stat-label">years of professional GIS and remote sensing work</span></li>
+      <li><span class="stat-value" data-count>5</span><span class="stat-label">years of professional GIS and remote sensing work</span></li>
     </ul>
   </div>
 </section>
@@ -151,6 +152,8 @@
   </div>
 </section>
 
+{{ testimonials }}
+
 <section class="section section-alt" id="products" aria-labelledby="products-title">
   <div class="wrap">
     <header class="section-head">
@@ -224,11 +227,15 @@
   <div class="wrap">
     <header class="section-head">
       <p class="eyebrow">Services</p>
-      <h2 id="services-title">What I do</h2>
+      <h2 id="services-title">GIS and geospatial services</h2>
+      <p>Eight service areas, from drone surveys to training. Pick your sector to see where I can help.</p>
     </header>
-    <ul class="services">
+    {{ sector_filter }}
+    <ul class="services" data-sector-list>
 {{ capabilities }}
     </ul>
+    <p class="services-also">{{ services_also }}</p>
+    <p class="case-links"><a class="more" href="/services/">All services and sectors<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a></p>
     <div class="tools">
       <h3>Tools I work with</h3>
       <div class="tool-groups">
@@ -290,8 +297,7 @@
         <p>Tell me what you need to decide, where, and what data you already have. I'll tell you plainly whether I can help. The email opens with a short template, including a line for your time zone.</p>
         <div class="contact-person">{{ img_contact }}<p><strong>You'll speak with me directly.</strong><span>Lagos, Nigeria · {{ timezone }}</span></p></div>
         <div class="contact-actions">
-          <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book by email</a>
-          {{ whatsapp_button }}
+          {{ contact_actions }}
         </div>
       </div>
       <ul class="contact-list">
@@ -301,7 +307,9 @@
         <li><span class="k">GitHub</span><span class="v"><a href="{{ github }}" rel="me">Dexsholex</a></span></li>
         <li><span class="k">Medium</span><span class="v"><a href="{{ medium }}" rel="me">@Deyley</a></span></li>
         {{ researchgate_item }}
+        <li><span class="k">In brief</span><span class="v"><a href="/capability-statement/">Capability statement</a></span></li>
       </ul>
     </div>
+{{ brief_builder }}
   </div>
 </section>

@@ -40,6 +40,12 @@
     document.querySelectorAll("details[data-open-wide]").forEach(function (d) { d.open = true; });
   }
 
+  // Mark the menu item for the section of the site you are in (Services and its pages)
+  document.querySelectorAll(".site-nav a").forEach(function (a) {
+    var u = new URL(a.href, location.href);
+    if (!u.hash && u.pathname !== "/" && location.pathname.indexOf(u.pathname) === 0) a.setAttribute("aria-current", "page");
+  });
+
   // Highlight the nav link for the section in view (home page only)
   var navLinks = document.querySelectorAll('.site-nav a[href^="#"]');
   if (navLinks.length && hasIO) {
@@ -118,6 +124,112 @@
       });
     });
   });
+
+  // Sector filter on the service lists
+  var filter = document.querySelector("[data-sector-filter]");
+  var sectorList = document.querySelector("[data-sector-list]");
+  if (filter && sectorList) {
+    var sectorStatus = document.querySelector("[data-sector-status]");
+    filter.hidden = false;
+    filter.addEventListener("click", function (ev) {
+      var b = ev.target.closest("button[data-sector]");
+      if (!b) return;
+      filter.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      var key = b.dataset.sector;
+      var shown = 0;
+      sectorList.querySelectorAll("li[data-sectors]").forEach(function (li) {
+        var show = key === "all" || li.dataset.sectors.split(" ").indexOf(key) > -1;
+        li.hidden = !show;
+        if (show) { shown++; li.classList.add("is-in"); }
+      });
+      if (sectorStatus) sectorStatus.textContent = shown + " services" + (key === "all" ? "" : " for " + b.textContent);
+    });
+  }
+
+  // Request builder: turns the ticked options into an email in the visitor's own mail app
+  var brief = document.querySelector("[data-brief]");
+  if (brief) {
+    brief.hidden = false;
+    var briefStatus = brief.querySelector(".brief-status");
+    var compose = function () {
+      var fd = new FormData(brief);
+      var line = function (label, values) { return values.length ? label + ": " + values.join(", ") : ""; };
+      var place = (fd.get("place") || "").trim();
+      var where = fd.get("where") || "";
+      var lines = [
+        "Hello Oluwasola,", "", "I'd like to book a 20-minute call.", "",
+        line("Services", fd.getAll("service")),
+        where || place ? "Site: " + [where, place].filter(Boolean).join(", ") : "",
+        line("Timing", fd.getAll("when")),
+        line("Data we have", fd.getAll("data")),
+        (fd.get("decide") || "").trim() ? "What I need to decide: " + fd.get("decide").trim() : "",
+        "", "Organisation:", "Two or three times that suit me (with time zone):"
+      ];
+      return lines.filter(function (l, i) { return l !== "" || lines[i - 1] !== ""; }).join("\r\n");
+    };
+    brief.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var services = new FormData(brief).getAll("service");
+      var subject = "20-minute call" + (services.length ? ": " + services.slice(0, 2).join(", ") : "");
+      window.location.href = "mailto:" + brief.dataset.email +
+        "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(compose());
+      briefStatus.textContent = "Opening your email app…";
+    });
+    var copyBrief = brief.querySelector("[data-brief-copy]");
+    if (navigator.clipboard) {
+      copyBrief.addEventListener("click", function () {
+        navigator.clipboard.writeText(compose()).then(function () { briefStatus.textContent = "Brief copied. Paste it into any message."; });
+      });
+    } else {
+      copyBrief.hidden = true;
+    }
+  }
+
+  // Count the headline numbers up once, when they come into view; the real numbers are already in the page
+  var counters = document.querySelectorAll("[data-count]");
+  if (counters.length && hasIO && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        co.unobserve(e.target);
+        var el = e.target;
+        var text = el.textContent.trim();
+        var target = parseFloat(text.replace(/,/g, ""));
+        if (isNaN(target)) return;
+        var decimals = (text.split(".")[1] || "").length;
+        var start = performance.now();
+        var tick = function (now) {
+          var t = Math.min(1, (now - start) / 1100);
+          var v = target * (1 - Math.pow(1 - t, 3));
+          el.textContent = v.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+          if (t < 1) requestAnimationFrame(tick); else el.textContent = text;
+        };
+        requestAnimationFrame(tick);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (c) { co.observe(c); });
+  }
+
+  // Reading progress on case studies, service pages and the methods log
+  var article = document.querySelector(".case-page, .service-page, .doc-page");
+  if (article) {
+    var bar = document.createElement("div");
+    bar.className = "read-progress";
+    bar.setAttribute("aria-hidden", "true");
+    bar.innerHTML = "<span></span>";
+    document.body.appendChild(bar);
+    var fill = bar.firstChild;
+    var ticking = false;
+    var measure = function () {
+      var r = article.getBoundingClientRect();
+      var total = r.height - window.innerHeight;
+      var p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 1;
+      fill.style.transform = "scaleX(" + p + ")";
+      ticking = false;
+    };
+    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(measure); } }, { passive: true });
+    measure();
+  }
 
   // Enlarge images in a dialog; without JavaScript the link opens the image itself
   var dialog;
