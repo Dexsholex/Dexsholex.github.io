@@ -109,7 +109,7 @@ for (const p of pages) {
       await new Promise(r => setTimeout(r, 1200));
       await page.evaluate(() => window.scrollTo(0, 0));
       // full-page screenshots need every section drawn, including ones the browser is skipping off-screen
-      await page.addStyleTag({ content: '* { content-visibility: visible !important; }' });
+      await page.addStyleTag({ content: '* { content-visibility: visible !important; animation: none !important; }' });
       await new Promise(r => setTimeout(r, 400));
       const m = await page.evaluate(() => {
         const de = document.documentElement;

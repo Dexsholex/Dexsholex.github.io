@@ -264,8 +264,11 @@ button { font: inherit; color: inherit; }
 
 /* Sections */
 .section { padding-block: clamp(4rem, 9vw, 7rem); }
-/* Phones skip layout and paint of sections until they come near the screen */
+/* Phones skip layout and paint of long-page blocks until they come near the screen. Placeholder heights
+   would make jumps to #sections land in the wrong place, so html.cv-off (set by the head script for
+   URLs with a #, and by main.js before same-page jumps) turns it off first. */
 .section { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+html.cv-off .section { content-visibility: visible; } /* set before any jump to a #section */
 .case-layout { content-visibility: auto; contain-intrinsic-size: auto 1600px; }
 .case-next { content-visibility: auto; contain-intrinsic-size: auto 160px; }
 .site-footer { content-visibility: auto; contain-intrinsic-size: auto 380px; }
@@ -353,8 +356,6 @@ button { font: inherit; color: inherit; }
 .auc-bar span { display: block; width: calc(var(--v) * 100%); height: 100%; background: var(--bar-muted); border-radius: 0 4px 4px 0; }
 .auc-row.is-key .auc-bar span { background: var(--accent); }
 .auc-axis { display: flex; justify-content: space-between; margin-top: -.4rem; color: var(--muted); font: .75rem/1 var(--mono); }
-.reveal-ready .auc-bar span, .reveal-ready .bar-track span { transform-origin: left; transition: transform .9s cubic-bezier(.2, .7, .2, 1); }
-.reveal-ready [data-reveal]:not(.is-in) .auc-bar span, .reveal-ready [data-reveal]:not(.is-in) .bar-track span { transform: scaleX(0); }
 
 /* Access Map feature */
 .feature {
@@ -538,7 +539,7 @@ button { font: inherit; color: inherit; }
 .site-footer { padding-block: 3rem 2rem; border-top: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: .875rem; }
 .footer-grid { display: grid; gap: 2rem; }
 .footer-grid ul { display: grid; gap: .35rem; padding: 0; list-style: none; }
-.footer-grid a { color: var(--text); text-decoration: none; }
+.footer-grid a { display: inline-block; padding-block: .2rem; color: var(--text); text-decoration: none; }
 .footer-grid a:hover { color: var(--accent-text); text-decoration: underline; }
 .footer-name { color: var(--text); font-size: 1rem; font-weight: 700; }
 .footer-brand { display: grid; gap: .25rem; align-content: start; }
@@ -560,10 +561,17 @@ button { font: inherit; color: inherit; }
 @media (min-width: 880px) { .reveal-ready .mobile-cta { display: none; } }
 
 /* Reveal on scroll (only with JavaScript and when motion is welcome) */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-ready [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
-  .reveal-ready [data-reveal].is-in { opacity: 1; transform: none; }
+/* Scroll-driven, so nothing can stay hidden: browsers without support simply show everything */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] { animation: reveal-up linear both; animation-timeline: view(); animation-range: entry 0% entry 35%; }
+    .auc-bar span, .bar-track span {
+      transform-origin: left; animation: bar-grow linear both; animation-timeline: view(); animation-range: entry 40% cover 50%;
+    }
+  }
 }
+@keyframes reveal-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* Case study pages */
 .case-hero { position: relative; overflow: hidden; padding-block: clamp(2rem, 5vw, 3.5rem) clamp(2.5rem, 6vw, 4rem); border-bottom: 1px solid var(--line); }

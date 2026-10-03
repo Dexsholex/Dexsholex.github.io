@@ -40,6 +40,15 @@
     document.querySelectorAll("details[data-open-wide]").forEach(function (d) { d.open = true; });
   }
 
+  // Before a jump to a section on this page, lay out every section at its real height so the jump lands right
+  document.addEventListener("click", function (ev) {
+    var a = ev.target.closest && ev.target.closest("a[href*='#']");
+    if (!a) return;
+    var u = new URL(a.href, location.href);
+    if (u.pathname === location.pathname && u.hash) doc.classList.add("cv-off");
+  });
+  window.addEventListener("hashchange", function () { doc.classList.add("cv-off"); });
+
   // Mark the menu item for the section of the site you are in (Services and its pages)
   document.querySelectorAll(".site-nav a").forEach(function (a) {
     var u = new URL(a.href, location.href);
@@ -62,24 +71,6 @@
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
     Object.keys(byId).forEach(function (id) { spy.observe(document.getElementById(id)); });
-  }
-
-  // Fade sections in as they arrive; siblings arrive one after another
-  var reveals = document.querySelectorAll("[data-reveal]");
-  if (hasIO) {
-    reveals.forEach(function (el) {
-      var siblings = el.parentNode.querySelectorAll(":scope > [data-reveal]");
-      var i = Array.prototype.indexOf.call(siblings, el);
-      if (i > 0) el.style.transitionDelay = Math.min(i, 4) * 70 + "ms";
-    });
-    var ro = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add("is-in"); ro.unobserve(e.target); }
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-    reveals.forEach(function (el) { ro.observe(el); });
-  } else {
-    reveals.forEach(function (el) { el.classList.add("is-in"); });
   }
 
   // Floating "Book a call" on phones once the hero has scrolled away
@@ -140,7 +131,7 @@
       sectorList.querySelectorAll("li[data-sectors]").forEach(function (li) {
         var show = key === "all" || li.dataset.sectors.split(" ").indexOf(key) > -1;
         li.hidden = !show;
-        if (show) { shown++; li.classList.add("is-in"); }
+        if (show) shown++;
       });
       if (sectorStatus) sectorStatus.textContent = shown + " services" + (key === "all" ? "" : " for " + b.textContent);
     });
