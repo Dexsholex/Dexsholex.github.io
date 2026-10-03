@@ -1,0 +1,41 @@
+// Print the one-page capability statement to PDF.
+//
+//   python tools/build.py && npm run pdf && python tools/build.py
+//
+// Serves dist/, prints /capability-statement/ on A4 with Chrome and saves
+// static/oluwasola-oyinloye-capability-statement.pdf (the second build copies it into dist/).
+import fs from 'node:fs';
+import path from 'node:path';
+import http from 'node:http';
+import { fileURLToPath } from 'node:url';
+import * as chromeLauncher from 'chrome-launcher';
+import puppeteer from 'puppeteer-core';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const DIST = path.join(ROOT, 'dist');
+const OUT = path.join(ROOT, 'static', 'oluwasola-oyinloye-capability-statement.pdf');
+const PORT = 8124;
+const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml',
+  '.png': 'image/png', '.webp': 'image/webp', '.ico': 'image/x-icon' };
+
+const server = http.createServer((req, res) => {
+  let p = decodeURIComponent(req.url.split('?')[0]);
+  if (p.endsWith('/')) p += 'index.html';
+  const f = path.join(DIST, p);
+  if (!f.startsWith(DIST) || !fs.existsSync(f)) { res.writeHead(404); res.end(); return; }
+  res.writeHead(200, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream' });
+  res.end(fs.readFileSync(f));
+});
+await new Promise(r => server.listen(PORT, r));
+
+const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new'] });
+const browser = await puppeteer.connect({ browserURL: `http://127.0.0.1:${chrome.port}` });
+const page = await browser.newPage();
+await page.emulateMediaType('print');
+await page.goto(`http://localhost:${PORT}/capability-statement/`, { waitUntil: 'networkidle0' });
+await page.pdf({ path: OUT, format: 'A4', printBackground: true, preferCSSPageSize: true });
+const pages = (fs.readFileSync(OUT, 'latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
+console.log(`Wrote ${path.relative(ROOT, OUT)}: ${pages} page(s), ${(fs.statSync(OUT).size / 1024).toFixed(0)} KB`);
+await browser.disconnect();
+await chrome.kill();
+server.close();
