@@ -24,7 +24,7 @@
   {
     "name": "Lagos Access Map",
     "status": "building",
-    "summary": "Starts by measuring how complete OpenStreetMap's record of health facilities is, ward by ward, so that maps of access to care rest on data that has been checked.",
+    "summary": "The first phase measures how complete OpenStreetMap's record of health facilities is, ward by ward, so that any map of access to care starts from checked data.",
     "for": "Health planners, NGOs and the OpenStreetMap community",
     "tags": [
       "Health access",

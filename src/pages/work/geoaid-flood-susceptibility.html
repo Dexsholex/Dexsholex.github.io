@@ -22,7 +22,7 @@
         <li class="tag tag-quiet">Pilot</li>
       </ul>
       <h1>Mapping where <span class="nowrap">Amuwo-Odofin</span> is most prone to flooding</h1>
-      <p class="lead">GeoAID is an open flood susceptibility model for one Lagos LGA. It shows where flooding is structurally more likely, why, and who is exposed, and it is honest about how well it holds up on ground it hasn't seen.</p>
+      <p class="lead">GeoAID is an open flood susceptibility model for one Lagos LGA. It shows where flooding is structurally more likely, why, and who is exposed. It also reports how well it holds up on ground it hasn't seen.</p>
       <dl class="kpis">
         <div><dt>Random-split ROC-AUC</dt><dd>≈ 0.798</dd></div>
         <div><dt>Spatial cross-validation</dt><dd>≈ 0.642</dd></div>
@@ -40,7 +40,7 @@
       </a>
       <figcaption>
         <span class="ramp-legend is-inline"><span>Lower</span><i></i><span>Higher flood probability</span></span>
-        Modelled flood probability across Amuwo-Odofin LGA (Random Forest, 100 m grid). A screening map, not a forecast.
+        Modelled flood probability across Amuwo-Odofin LGA (Random Forest, 100 m grid).
       </figcaption>
     </figure>
   </div>
@@ -48,7 +48,7 @@
   <div class="wrap case-layout">
     <div class="prose">
       <h2>The question</h2>
-      <p>Where in Amuwo-Odofin is flooding most likely, and why? Many flood maps rest on expert-assigned weights that are never checked against floods that actually happened, and they rarely say why one place scores higher than another. GeoAID is trained on observed flooding and explains each prediction.</p>
+      <p>Where in Amuwo-Odofin is flooding most likely, and why? Flood maps built on expert-assigned weights are often never checked against real floods, and they rarely explain why one place scores higher than another. GeoAID is trained on observed flooding and explains each prediction.</p>
 
       <h2>Three layers</h2>
       <ol class="layer-list">
@@ -76,7 +76,7 @@
         </div>
         <div class="auc-axis" aria-hidden="true"><span>0.5</span><span>0.75</span><span>1.0</span></div>
       </figure>
-      <p>On a random split the model scores about 0.798. That number flatters it, because neighbouring cells in the training and test sets look alike. Under spatial cross-validation, where whole blocks of ground are held out, it falls to about 0.642. That is the score to plan with: GeoAID points to areas worth a closer look, but it is not a basis for decisions about a specific plot.</p>
+      <p>On a random split the model scores about 0.798. That number flatters it, because neighbouring cells in the training and test sets look alike. Under spatial cross-validation, where whole blocks of ground are held out, it falls to about 0.642. Plan with the second number. GeoAID can point to areas worth a closer look, but it shouldn't be the basis for a decision about a specific plot.</p>
 
       <h2>Catching a data error</h2>
       <p>An early version of the radar flood record marked 97.7% of the study area as flooded, because permanent water was leaking into the flooded class. After diagnosing and masking it, the flooded share fell to a physically credible 5.18%. That correction, and every other one, is written up in the <a href="{{ geoaid_methods }}">methods log</a>.</p>
