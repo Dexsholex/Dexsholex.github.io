@@ -30,9 +30,9 @@
     "icon": "layers"
   },
   {
-    "title": "Data audits and validation",
-    "text": "Checks on how complete and accurate a dataset is before you rely on it.",
-    "icon": "check"
+    "title": "Web GIS development",
+    "text": "Interactive web maps and spatial web apps, built with Leaflet and Streamlit, that work on any device.",
+    "icon": "webmap"
   },
   {
     "title": "Dashboards",

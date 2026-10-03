@@ -122,22 +122,27 @@ def home_image(site):
     im = base_card(site)
     survey_target(im)
     text_block(im, "GEOSPATIAL DATA SCIENCE · GEOSPATIAL AI", site["flagship"],
-               "Satellite, drone and aerial imagery  ·  Lagos, Nigeria", 720)
+               "From Lagos, for Nigeria, Africa and worldwide", 720)
     im.convert("RGB").save(STATIC / "og.png", optimize=True)
 
 
 def oil_palm_image(site):
     palm = site["projects"]["oil_palm"]
     im = base_card(site)
-    d = ImageDraw.Draw(im)
-    d.rounded_rectangle([760, 150, 1128, 520], radius=28, fill=(20, 36, 30), outline=(40, 70, 58), width=2)
-    d.text((944, 250), palm["palms"], font=font("segoeuib.ttf", 72), fill=WHITE, anchor="mm")
-    d.text((944, 312), "palms detected", font=font("segoeui.ttf", 28), fill=MUTED, anchor="mm")
-    d.line([(800, 370), (1088, 370)], fill=(40, 70, 58), width=2)
-    d.text((944, 420), f"{palm['hectares']} ha", font=font("seguisb.ttf", 34), fill=TEXT, anchor="mm")
-    d.text((944, 466), f"{palm['blocks']} blocks", font=font("segoeui.ttf", 26), fill=MUTED, anchor="mm")
+    pic = Image.open(ROOT / "assets" / "field" / "palm-drone-pad.jpg").convert("RGB")
+    w, h = pic.size
+    box = 0.62  # crop a 430x370 window that keeps the drone and the palms
+    pic = pic.crop((int(w * 0.02), int(h * 0.36), int(w * 0.02 + h * box * 430 / 370), int(h * 0.36 + h * box)))
+    pic = pic.resize((430, 370), Image.LANCZOS)
+    m = Image.new("L", pic.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle([0, 0, pic.width - 1, pic.height - 1], radius=24, fill=255)
+    im.paste(pic, (706, 150), m)
+    d = ImageDraw.Draw(im, "RGBA")
+    d.rounded_rectangle([726, 170, 1116, 234], radius=18, fill=(13, 23, 20, 215))
+    d.text((921, 202), f"{palm['palms']} palms · {palm['hectares']} ha", font=font("seguisb.ttf", 26),
+           fill=WHITE, anchor="mm")
     text_block(im, "CASE STUDY · GEOSPATIAL AI", "Counting oil palms from aerial imagery",
-               "YOLOv8 crown detection, block by block", 640, size=68)
+               "YOLOv8 crown detection, block by block", 600, size=58)
     im.convert("RGB").save(STATIC / "og-oil-palm.png", optimize=True)
 
 

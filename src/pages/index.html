@@ -7,12 +7,12 @@
       <p class="byline">{{ img_avatar }}<span><strong>{{ name }}</strong><span>{{ roles_br }}</span></span></p>
       <p class="kicker">Geospatial data science · Geospatial AI</p>
       <h1 id="hero-title">{{ flagship }}</h1>
-      <p class="lead">I turn satellite, drone and aerial imagery into answers for plantation operators, agric lenders, developers and NGOs, and I tell you how far to trust each one.</p>
+      <p class="lead">I turn satellite, drone and aerial imagery into answers for plantation operators, agric lenders, developers and NGOs in Nigeria, across Africa and worldwide, and I tell you how far to trust each one.</p>
       <div class="hero-actions">
-        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>Book a 20-minute call</a>
-        <a class="btn btn-ghost" href="#work">See the work<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+        <a class="btn btn-ghost" href="{{ whatsapp_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>WhatsApp</a>
       </div>
-      <p class="hero-meta">Lagos, Nigeria · {{ timezone }} · or email <a href="{{ mailto_url }}">{{ email }}</a></p>
+      <p class="hero-meta">Based in Lagos ({{ timezone }}) · On site across Nigeria · Remote for clients anywhere · <a href="#work">See the work</a></p>
     </div>
     <div class="hero-portrait">
       <div class="portrait-frame">{{ img_portrait }}</div>
@@ -28,7 +28,7 @@
       <li><span class="stat-value">{{ palm_palms }}</span><span class="stat-label">oil palms mapped across {{ palm_hectares }} ha for one plantation</span></li>
       <li><span class="stat-value">1,500</span><span class="stat-label">people taught in a Python-for-geospatial seminar</span></li>
       <li><span class="stat-value">2</span><span class="stat-label">{{ publications_label }}</span></li>
-      <li><span class="stat-value"><span class="stat-approx">about</span>3</span><span class="stat-label">years of professional GIS and remote sensing work</span></li>
+      <li><span class="stat-value">5</span><span class="stat-label">years of professional GIS and remote sensing work</span></li>
     </ul>
   </div>
 </section>
@@ -109,7 +109,7 @@
       </article>
     </div>
 
-    <article class="feature" aria-labelledby="access-title" data-reveal>
+    <article class="feature" id="access-map" aria-labelledby="access-title" data-reveal>
       <div class="feature-text">
         <div class="feature-intro">
           <ul class="tags" aria-label="Project status">
@@ -151,7 +151,20 @@
   </div>
 </section>
 
-<section class="section section-alt" id="clients" aria-labelledby="clients-title">
+<section class="section section-alt" id="products" aria-labelledby="products-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">Products</p>
+      <h2 id="products-title">Open geospatial products</h2>
+      <p>Free public tools I build and maintain alongside client work. Each one is open about its data and its limits.</p>
+    </header>
+    <ul class="products">
+{{ products }}
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="clients" aria-labelledby="clients-title">
   <div class="wrap">
     <header class="section-head">
       <p class="eyebrow">Who I work with</p>
@@ -162,7 +175,7 @@
         <span class="icon"><svg aria-hidden="true" focusable="false"><use href="#i-leaf"/></svg></span>
         <h3>Plantation operators</h3>
         <p class="q">How many palms do we have, block by block, and where are the gaps?</p>
-        <p>Tree counts and stand maps from drone, aerial or satellite imagery.</p>
+        <p>Tree counts and stand maps from drone surveys I plan and fly, or from satellite imagery.</p>
       </li>
       <li data-reveal>
         <span class="icon"><svg aria-hidden="true" focusable="false"><use href="#i-bank"/></svg></span>
@@ -183,10 +196,31 @@
         <p>Access and coverage maps, and audits of the data your programme relies on.</p>
       </li>
     </ul>
+
+    <div class="where" aria-labelledby="where-title">
+      <h3 id="where-title">Where I work</h3>
+      <ul class="where-grid">
+        <li data-reveal>
+          <p class="where-place">Nigeria</p>
+          <p class="where-mode">On site</p>
+          <p>Drone surveys I plan and fly, GNSS ground control and field checks, through to analysis and delivery.</p>
+        </li>
+        <li data-reveal>
+          <p class="where-place">Across Africa</p>
+          <p class="where-mode">Remote, satellite first</p>
+          <p>Open satellite data covers the whole continent: land cover, vegetation, flood risk and change over time, with no site visit needed to start.</p>
+        </li>
+        <li data-reveal>
+          <p class="where-place">Worldwide</p>
+          <p class="where-mode">Remote, on your schedule</p>
+          <p>Written scoping, regular updates and deliverables in standard formats (GeoTIFF, GeoPackage, PostGIS), with the code. WAT (UTC+1) overlaps the working day in Europe and the morning in the Americas.</p>
+        </li>
+      </ul>
+    </div>
   </div>
 </section>
 
-<section class="section" id="services" aria-labelledby="services-title">
+<section class="section section-alt" id="services" aria-labelledby="services-title">
   <div class="wrap">
     <header class="section-head">
       <p class="eyebrow">Services</p>
@@ -197,12 +231,14 @@
     </ul>
     <div class="tools">
       <h3>Tools I work with</h3>
-      <ul class="chips">{{ tools }}</ul>
+      <div class="tool-groups">
+{{ tools }}
+      </div>
     </div>
   </div>
 </section>
 
-<section class="section section-alt" id="process" aria-labelledby="process-title">
+<section class="section" id="process" aria-labelledby="process-title">
   <div class="wrap">
     <header class="section-head">
       <p class="eyebrow">Process</p>
@@ -225,7 +261,7 @@
   </div>
 </section>
 
-<section class="section" id="about" aria-labelledby="about-title">
+<section class="section section-alt" id="about" aria-labelledby="about-title">
   <div class="wrap about-grid">
     <div class="about-photo" data-reveal>{{ img_about }}</div>
     <div class="about-text">
@@ -233,11 +269,13 @@
       <h2 id="about-title">Hello, I'm Oluwasola</h2>
       <p>I'm {{ name }}, a {{ roles_sentence }} based in Lagos.</p>
       <p>I trained in Surveying and Geoinformatics at the University of Ilorin (BSc), then earned a Master of Information Technology (MIT) with an AI specialisation from Miva Open University.</p>
-      <p>I have about three years of professional GIS and remote sensing work behind me, and I have taught Python for geospatial analysis to a seminar of 1,500 people.</p>
+      <p>I have five years of professional GIS and remote sensing work behind me, and I have taught Python for geospatial analysis to a seminar of 1,500 people.</p>
+      <p>I plan and fly drone surveys myself in Nigeria, and work remotely from satellite data for clients across Africa and beyond.</p>
       <p>I report how every result was validated, including when the numbers are less flattering. Alongside client work, I build free public tools like the Lagos Access Map and GeoAID.</p>
       <dl class="creds">
         <div><dt>Education</dt><dd>BSc Surveying and Geoinformatics, University of Ilorin<br>Master of Information Technology (MIT), AI specialisation, Miva Open University</dd></div>
         <div><dt>Work with</dt><dd>Satellite, drone and aerial imagery · spatial machine learning · GIS</dd></div>
+        <div><dt>Clients in</dt><dd>Nigeria (on site) · Africa and worldwide (remote)</dd></div>
       </dl>
     </div>
   </div>
@@ -249,9 +287,12 @@
       <div class="contact-pitch">
         <p class="eyebrow">Contact</p>
         <h2 id="contact-title">Book a 20-minute call</h2>
-        <p>Tell me what you need to decide, where, and what data you already have. I'll tell you plainly whether I can help.</p>
+        <p>Tell me what you need to decide, where, and what data you already have. I'll tell you plainly whether I can help. The email opens with a short template, including a line for your time zone.</p>
         <div class="contact-person">{{ img_contact }}<p><strong>You'll speak with me directly.</strong><span>Lagos, Nigeria · {{ timezone }}</span></p></div>
-        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>Book a 20-minute call</a>
+        <div class="contact-actions">
+          <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book by email</a>
+          <a class="btn btn-ghost" href="{{ whatsapp_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>WhatsApp</a>
+        </div>
       </div>
       <ul class="contact-list">
         <li><span class="k">Email</span><span class="v"><a href="{{ mailto_url }}">{{ email }}</a><button class="copy" type="button" data-copy="{{ email }}" hidden><svg aria-hidden="true" focusable="false"><use href="#i-copy"/></svg><span>Copy</span></button></span></li>

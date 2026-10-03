@@ -1,0 +1,41 @@
+[
+  {
+    "name": "GeoAID",
+    "status": "live",
+    "summary": "Where Amuwo-Odofin is structurally prone to flooding, whether rain is activating that risk now, and which people, schools, clinics and roads are exposed.",
+    "for": "Planners, emergency responders, NGOs and researchers",
+    "tags": [
+      "Flood risk",
+      "Open source",
+      "Lagos"
+    ],
+    "links": [
+      {
+        "label": "Open the live dashboard",
+        "url": "https://geoaid-lagos-flood.streamlit.app/",
+        "external": true
+      },
+      {
+        "label": "Read the case study",
+        "url": "/work/geoaid-flood-susceptibility/"
+      }
+    ]
+  },
+  {
+    "name": "Lagos Access Map",
+    "status": "building",
+    "summary": "Starts by measuring how complete OpenStreetMap's record of health facilities is, ward by ward, so that maps of access to care rest on data that has been checked.",
+    "for": "Health planners, NGOs and the OpenStreetMap community",
+    "tags": [
+      "Health access",
+      "OpenStreetMap",
+      "Lagos"
+    ],
+    "links": [
+      {
+        "label": "See the map preview",
+        "url": "/#access-map"
+      }
+    ]
+  }
+]

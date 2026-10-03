@@ -35,6 +35,11 @@
     if (media.addEventListener) media.addEventListener("change", label);
   }
 
+  // Long contents lists start open only where there is room beside the text
+  if (window.matchMedia("(min-width: 1100px)").matches) {
+    document.querySelectorAll("details[data-open-wide]").forEach(function (d) { d.open = true; });
+  }
+
   // Highlight the nav link for the section in view (home page only)
   var navLinks = document.querySelectorAll('.site-nav a[href^="#"]');
   if (navLinks.length && hasIO) {

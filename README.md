@@ -10,15 +10,16 @@ No cookies, analytics or tracking.
 ```
 content/site.json          contacts, links, tools, project figures (null = not yet)
 content/capabilities.json  the "What I do" list; add an item to grow it
+content/products.json      open products; status is live, building or planned
 src/pages/                 one file per page; work/x.html becomes /work/x/
 src/partials/              shared layout, header and footer
 src/style.css, src/js/     styles and the small enhancement script
-assets/                    source photos and GeoAID data (inputs to tools/media.py)
+assets/                    photos (metadata stripped) and GeoAID data, inputs to tools/media.py
 static/                    copied to the site as-is (icons, share images, img/, data/, vendor/)
 tools/                     build, image, data and check scripts
 ```
 
-Icons for `capabilities.json`: `detect`, `drone`, `orbit`, `scatter`, `wave`, `layers`, `check`, `chart`.
+Icons for `capabilities.json`: `detect`, `drone`, `orbit`, `scatter`, `wave`, `layers`, `webmap`, `check`, `chart`.
 
 ## Build and preview
 
@@ -60,10 +61,17 @@ errors, and checks every link. Results go to `reports/` (not committed).
 | `python tools/media.py` | photos, GeoAID map and Access Map preview in `static/img/` | changing photos or crops |
 | `python tools/make_images.py` | share images and icons in `static/` | changing name, flagship line, domain or figures |
 | `python tools/fetch_osm_health.py` | OpenStreetMap snapshot in `static/data/` | wanting fresher map data |
+| `python tools/import_media.py` | metadata-free photo masters in `assets/field/`, video clips in `static/media/` | adding field photos or video (edit the list at the top) |
+| `python tools/import_methods_log.py` | the GeoAID methods log page, copied from GitHub | the log changes in the GeoAID repo |
 
 `fetch_osm_health.py --recount` recomputes the per-LGA counts offline.
 Map data © OpenStreetMap contributors (ODbL). Leaflet is self-hosted in
 `static/vendor/leaflet/` under its BSD-2-Clause licence.
+
+## Adding a product
+
+Add an entry to `content/products.json`. For a full page, add `src/pages/products/<name>.html`
+(copy a case study page as a starting point); it is published at `/products/<name>/`.
 
 ## Custom domain
 

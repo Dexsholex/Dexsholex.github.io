@@ -1,31 +1,88 @@
 {
   "base_url": "https://dexsholex.github.io/",
   "name": "Oluwasola Oyinloye",
-  "roles": ["Geospatial data scientist", "Geospatial AI specialist"],
+  "roles": [
+    "Geospatial data scientist",
+    "Geospatial AI specialist"
+  ],
   "flagship": "Geospatial analysis you can verify.",
   "title": "Oluwasola Oyinloye · Geospatial Data Science & Geospatial AI",
-  "description": "Geospatial data scientist and geospatial AI specialist in Lagos, Nigeria. Satellite, drone and aerial imagery analysis, spatial machine learning and GIS.",
+  "description": "Geospatial data science and geospatial AI from Lagos, for clients in Nigeria, across Africa and worldwide: satellite and drone imagery, spatial machine learning and GIS.",
   "locality": "Lagos",
   "country_code": "NG",
   "country": "Nigeria",
+  "areas": [
+    "Nigeria",
+    "Africa",
+    "Worldwide"
+  ],
   "timezone": "WAT, UTC+1",
-
   "email": "o.oyin1115@gmail.com",
   "whatsapp": "",
   "whatsapp_display": "",
   "call_message": "Hello Oluwasola, I'd like to book a 20-minute call.",
+  "call_subject": "20-minute call",
+  "call_body": "Hello Oluwasola,\n\nI'd like to book a 20-minute call.\n\nOrganisation:\nCountry or area of interest:\nWhat I need to decide:\nData we already have:\nTwo or three times that suit me (with time zone):\n",
   "booking_url": null,
-
   "links": {
     "linkedin": "https://www.linkedin.com/in/oluwasola-oyinloye",
     "github": "https://github.com/Dexsholex",
     "medium": "https://medium.com/@Deyley",
     "researchgate": null
   },
-
-  "tools": ["Python", "PyTorch", "YOLOv8", "Google Earth Engine", "Sentinel-1 SAR", "GeoPandas",
-            "PostGIS", "XGBoost", "SHAP", "Streamlit", "Power BI", "OpenStreetMap"],
-
+  "tools": {
+    "Programming and analysis": [
+      "Python",
+      "SQL",
+      "Jupyter",
+      "pandas",
+      "NumPy",
+      "SciPy",
+      "statsmodels"
+    ],
+    "Machine learning and AI": [
+      "PyTorch",
+      "Ultralytics YOLOv8",
+      "scikit-learn",
+      "XGBoost",
+      "SHAP",
+      "OpenCV"
+    ],
+    "Earth observation": [
+      "Google Earth Engine",
+      "geemap",
+      "Sentinel-1 SAR",
+      "Sentinel-2",
+      "SRTM",
+      "CHIRPS",
+      "NASA GPM IMERG",
+      "ESA WorldCover",
+      "WorldPop"
+    ],
+    "GIS and spatial data": [
+      "QGIS",
+      "Google Earth Pro",
+      "PostGIS",
+      "GeoPandas",
+      "Rasterio",
+      "Shapely",
+      "PyProj",
+      "OpenStreetMap"
+    ],
+    "Drone mapping": [
+      "DJI Terra",
+      "Agisoft Metashape",
+      "WebODM / OpenDroneMap",
+      "GNSS ground control"
+    ],
+    "Dashboards and web maps": [
+      "Streamlit",
+      "Power BI",
+      "Plotly",
+      "Folium",
+      "Leaflet"
+    ]
+  },
   "projects": {
     "oil_palm": {
       "palms": "718,751",
@@ -47,9 +104,9 @@
     "access_map_build": null,
     "geoaid_dashboard": "https://geoaid-lagos-flood.streamlit.app/",
     "geoaid_repo": "https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk",
-    "geoaid_methods": "https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk/blob/main/docs/methods_log.md"
+    "geoaid_methods": "/work/geoaid-flood-susceptibility/methods-log/",
+    "geoaid_docs_repo": "https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk/tree/main/docs"
   },
-
   "search_console": {
     "google": null,
     "bing": null

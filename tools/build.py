@@ -79,14 +79,55 @@ def fixed_img(manifest, name, alt, cls="", size=None):
 
 
 # ---------- fragments ----------
-def fragments(site, caps, osm, manifest, gaps):
+def gallery_item(manifest, name, alt, caption, shape="wide"):
+    full = manifest[name][-1]["src"]
+    sizes = "(min-width: 1024px) 380px, (min-width: 600px) 46vw, 92vw"
+    return (f'<figure class="g-{shape}"><a class="zoomable" href="{full}" data-lightbox>'
+            f'{picture(manifest, name, alt, sizes)}</a><figcaption>{esc(caption)}</figcaption></figure>')
+
+
+def gallery_video(name, label, caption):
+    return (f'<figure class="g-tall"><video controls preload="none" playsinline width="720" height="1280" '
+            f'poster="/media/{name}-poster.webp" aria-label="{esc(label)}">'
+            f'<source src="/media/{name}.mp4" type="video/mp4"></video><figcaption>{esc(caption)}</figcaption></figure>')
+
+
+STATUS = {"live": "Live", "building": "In development", "planned": "Planned"}
+NEXT_PRODUCT = (
+    '<li class="product product-next" data-reveal><span class="status status-planned">Next</span>'
+    "<h3>Your question, as a public tool?</h3>"
+    "<p>I build open products where good data can help many people at once. If you hold data, fund public-good "
+    "work or have a question worth answering in the open, let's talk.</p>"
+    '<p class="case-links"><a href="#contact">Get in touch{arrow}</a></p></li>')
+
+
+def products_html(products):
+    cards = []
+    for p in products:
+        links = "".join(
+            f'<a href="{esc(l["url"])}">{esc(l["label"])}{icon("out" if l.get("external") else "arrow")}</a>'
+            for l in p["links"])
+        tags = "".join(f'<li class="tag tag-quiet">{esc(t)}</li>' for t in p["tags"])
+        cards.append(
+            f'<li class="product" data-reveal><div class="product-top"><span class="status status-{esc(p["status"])}">'
+            f'{STATUS[p["status"]]}</span><ul class="tags" aria-label="Topics">{tags}</ul></div>'
+            f'<h3>{esc(p["name"])}</h3><p>{esc(p["summary"])}</p>'
+            f'<p class="product-for"><span>For</span>{esc(p["for"])}</p><p class="case-links">{links}</p></li>')
+    cards.append(NEXT_PRODUCT.format(arrow=icon("arrow")))
+    return "\n".join(cards)
+
+
+def fragments(site, caps, osm, manifest, gaps, products):
     links, proj, palm = site["links"], site["projects"], site["projects"]["oil_palm"]
     f = {}
 
     wa = f"https://wa.me/{site['whatsapp']}?text={urllib.parse.quote(site['call_message'])}"
     f["whatsapp_url"] = esc(wa)
-    f["call_url"] = esc(site.get("booking_url") or wa)
-    f["mailto_url"] = esc(f"mailto:{site['email']}?subject={urllib.parse.quote('20-minute call')}")
+    # Email works for clients anywhere; the body prompts for what a first call needs, time zone included
+    body = site["call_body"].replace("\n", "\r\n")
+    book = f"mailto:{site['email']}?subject={urllib.parse.quote(site['call_subject'])}&body={urllib.parse.quote(body)}"
+    f["call_url"] = esc(site.get("booking_url") or book)
+    f["mailto_url"] = esc(f"mailto:{site['email']}")
     f["roles_line"] = esc(" · ".join(site["roles"]))
     f["roles_br"] = "<br>".join(esc(r) for r in site["roles"])
     f["roles_sentence"] = esc(" and ".join(r[0].lower() + r[1:] for r in site["roles"]))
@@ -113,21 +154,26 @@ def fragments(site, caps, osm, manifest, gaps):
     else:
         m = gaps.mark("validated counting accuracy figure")
         f["palm_accuracy_row"] = f"<div><dt>Counting accuracy</dt><dd>{m}</dd></div>" if m else ""
-    shot = palm.get("detection_image")
-    if shot:
-        f["palm_media"] = (f'<img src="{esc(shot["src"])}" width="{shot["width"]}" height="{shot["height"]}" '
-                           f'alt="{esc(shot["alt"])}" loading="lazy" decoding="async">')
-    else:
-        m = gaps.mark("detection sample image (client-approved)")
-        f["palm_media"] = (
-            f'<div class="stat-panel" role="img" aria-label="{esc(palm["palms"])} palms detected across '
-            f'{esc(palm["hectares"])} hectares in {esc(palm["blocks"])} blocks">'
-            f'<span class="sp-kicker">Production run · {esc(palm["as_of"])}</span>'
-            f'<span class="sp-value">{esc(palm["palms"])}</span>'
-            f'<span class="sp-label">palms detected and mapped</span>'
-            f'<span class="sp-row"><b>{esc(palm["hectares"])}</b> ha<i></i><b>{esc(palm["blocks"])}</b> blocks'
-            f'<i></i><b>{esc(palm["density"])}</b> palms/ha</span>'
-            f'{f"<span class=sp-todo>{m}</span>" if m else ""}</div>')
+    chip = (f'<span class="media-chip"><b>{esc(palm["palms"])}</b> palms<i></i><b>{esc(palm["hectares"])}</b> ha'
+            f'<i></i><b>{esc(palm["blocks"])}</b> blocks</span>')
+    pad_alt = "A survey drone on its landing pad at the edge of an oil palm estate, with mature palms behind it"
+    f["palm_media"] = picture(manifest, "palm-drone-pad", pad_alt, "(min-width: 900px) 560px, 92vw") + chip
+    f["palm_hero"] = picture(manifest, "palm-drone-pad", pad_alt, "(min-width: 1200px) 1152px, 96vw", eager=True)
+    f["palm_hero_full"] = manifest["palm-drone-pad"][-1]["src"]
+    f["palm_gallery"] = "\n".join([
+        gallery_item(manifest, "palm-pilot",
+                     "Oluwasola Oyinloye checking the flight plan on a drone controller in the field",
+                     "Planning the flight on site", "tall"),
+        gallery_video("palm-takeoff", "The survey drone taking off from its case and climbing over the palms",
+                      "Take-off for a mapping flight (14 s, no sound)"),
+        gallery_item(manifest, "palm-gnss", "A GNSS receiver on a tripod in low vegetation on the estate",
+                     "A GNSS receiver set up on the estate"),
+        gallery_item(manifest, "palm-estate-road",
+                     "A straight laterite road running through the plantation to the horizon",
+                     "The scale of the estate"),
+        gallery_item(manifest, "palm-crown", "A mature oil palm with a full crown of fronds",
+                     "A mature crown: what the model learns to find"),
+    ])
 
     # Access Map
     if proj.get("access_map_build"):
@@ -143,6 +189,7 @@ def fragments(site, caps, osm, manifest, gaps):
     f["geoaid_dashboard"] = esc(proj["geoaid_dashboard"])
     f["geoaid_repo"] = esc(proj["geoaid_repo"])
     f["geoaid_methods"] = esc(proj["geoaid_methods"])
+    f["geoaid_docs_repo"] = esc(proj["geoaid_docs_repo"])
 
     # Images
     f["img_portrait"] = picture(manifest, "portrait", f"Portrait of {site['name']}",
@@ -171,7 +218,11 @@ def fragments(site, caps, osm, manifest, gaps):
         items.append(f'<li data-reveal><span class="icon">{icon(esc(c["icon"]))}</span>'
                      f'<h3>{esc(c["title"])}</h3><p>{esc(c["text"])}</p></li>')
     f["capabilities"] = "\n".join(items)
-    f["tools"] = "".join(f"<li>{esc(t)}</li>" for t in site["tools"])
+    f["tools"] = "\n".join(
+        f'<div class="tool-group"><h4>{esc(group)}</h4><ul class="chips">'
+        + "".join(f"<li>{esc(t)}</li>" for t in items) + "</ul></div>"
+        for group, items in site["tools"].items())
+    f["products"] = products_html(products)
 
     meta = []
     sc = site.get("search_console") or {}
@@ -221,13 +272,16 @@ def person_and_service(site, caps, manifest):
             {"@type": "EducationalOccupationalCredential", "credentialCategory": "degree",
              "name": "Master of Information Technology (MIT), AI specialisation", "recognizedBy": miva},
         ],
-        "knowsAbout": skills + site["tools"], "sameAs": same_as,
+        "knowsAbout": skills + [t for group in site["tools"].values() for t in group], "knowsLanguage": "en",
+        "sameAs": same_as,
     }
     service = {
         "@type": "ProfessionalService", "@id": base + "#service", "name": site["name"],
         "description": site["description"], "url": base, "image": base + "og.png",
         "email": "mailto:" + site["email"], "telephone": "+" + site["whatsapp"], "address": address,
-        "areaServed": {"@type": "Country", "name": site["country"]}, "founder": {"@id": base + "#person"},
+        "areaServed": [{"@type": "Country", "name": "Nigeria"}, {"@type": "Continent", "name": "Africa"},
+                       {"@type": "Place", "name": "Worldwide"}],
+        "availableLanguage": "en", "founder": {"@id": base + "#person"},
         "knowsAbout": skills, "sameAs": same_as,
     }
     return person, service
@@ -256,6 +310,17 @@ def jsonld(page, site, caps, manifest):
             {"@type": "BreadcrumbList", "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
                 {"@type": "ListItem", "position": 2, "name": "Case studies", "item": base + "#work"},
+                {"@type": "ListItem", "position": 3, "name": page["crumb"], "item": url}]}]
+    elif page["kind"] == "doc":
+        parent = page["parent"]
+        graph = [person, website, {
+            "@type": "TechArticle", "@id": url + "#article", "url": url, "headline": page["headline"],
+            "description": page["description"], "author": {"@id": base + "#person"},
+            "datePublished": page["published"], "isBasedOn": page["source"], "inLanguage": "en",
+            "isPartOf": {"@id": base + "#website"}},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
+                {"@type": "ListItem", "position": 2, "name": parent["name"], "item": base.rstrip("/") + parent["path"]},
                 {"@type": "ListItem", "position": 3, "name": page["crumb"], "item": url}]}]
     else:
         return ""
@@ -336,6 +401,7 @@ def main():
     caps = json.loads((CONTENT / "capabilities.json").read_text(encoding="utf-8"))
     osm = json.loads((STATIC / "data" / "lagos-health-osm.json").read_text(encoding="utf-8"))
     manifest = json.loads((STATIC / "img" / "manifest.json").read_text(encoding="utf-8"))
+    products = json.loads((CONTENT / "products.json").read_text(encoding="utf-8"))
     if not site["base_url"].endswith("/"):
         sys.exit("build: base_url must end with '/'")
 
@@ -366,7 +432,7 @@ def main():
         "css": build_css(),
         "js_version": hashlib.sha1(js.encode()).hexdigest()[:8],
     }
-    shared.update(fragments(site, caps, osm, manifest, gaps))
+    shared.update(fragments(site, caps, osm, manifest, gaps, products))
     partials = {p.stem: p.read_text(encoding="utf-8") for p in (SRC / "partials").glob("*.html")}
 
     pages = load_pages()
@@ -386,7 +452,7 @@ def main():
             "og_title": esc(page.get("og_title") or title),
             "og_image": esc(site["base_url"] + page["og_image"]),
             "og_image_alt": esc(page.get("og_image_alt") or f'{site["name"]}: {site["flagship"]}'),
-            "og_type": "article" if page["kind"] == "case" else "website",
+            "og_type": "article" if page["kind"] in ("case", "doc") else "website",
             "robots": "noindex" if page.get("noindex") else "index, follow, max-image-preview:large",
             "body_class": "page-" + page["kind"],
             "nav_prefix": "" if page["kind"] == "home" else "/",
