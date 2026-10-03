@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "audit": "node tools/audit.mjs",
-    "pdf": "node tools/make_pdf.mjs"
+    "pdf": "node tools/make_pdf.mjs",
+    "og": "node tools/make_og.mjs"
   },
   "devDependencies": {
     "chrome-launcher": "^1.2.0",

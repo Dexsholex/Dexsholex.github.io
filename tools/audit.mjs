@@ -4,11 +4,12 @@
 //   npm install          (once)
 //   npm run audit
 //
-// Serves dist/ locally with gzip (as GitHub Pages does), then for every page:
-//   - Lighthouse, mobile and desktop
-//   - full-page screenshots at 360, 768 and 1440 px, light and dark
-//   - horizontal-overflow and JavaScript-error checks
-//   - every link and image: internal targets must exist; external links must answer
+// Serves dist/ locally with gzip (as GitHub Pages does), then:
+//   - every page, at 360, 768 and 1440 px: horizontal overflow (either side, for right-to-left
+//     pages), JavaScript errors, and every link and image (internal targets must exist;
+//     external links must answer)
+//   - a sample of pages in every language (AUDIT_ALL=1 for all of them): Lighthouse on mobile
+//     and desktop, and full-page screenshots in light and dark
 // Writes reports/audit.md, reports/lighthouse/*.html and reports/screens/*.png.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -66,12 +67,20 @@ const pages = [];
   }
 })(DIST);
 pages.sort();
+const LANGS = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'site.json'), 'utf8')).languages.map(l => l.code);
+const SAMPLE = new Set(['/work/geoaid-flood-susceptibility/methods-log/', '/404.html']);
+for (const l of LANGS) {
+  const pre = l === 'en' ? '' : '/' + l;
+  for (const p of ['/', '/services/', '/services/eudr-compliance/', '/work/oil-palm-tree-counting/', '/work/geoaid-flood-susceptibility/', '/data-protection/'])
+    SAMPLE.add(pre + p);
+}
+const deep = p => process.env.AUDIT_ALL === '1' || SAMPLE.has(p);
 
 const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new'] });
 const results = [];
 
 // ---------- Lighthouse ----------
-for (const p of pages) {
+for (const p of pages.filter(deep)) {
   for (const preset of ['mobile', 'desktop']) {
     const config = preset === 'desktop' ? (await import('lighthouse/core/config/desktop-config.js')).default : undefined;
     const r = await lighthouse(BASE + p, { port: chrome.port, output: 'html', logLevel: 'error' }, config);
@@ -92,13 +101,15 @@ for (const p of pages) {
 // ---------- screenshots, overflow, JS errors, links ----------
 const browser = await puppeteer.connect({ browserURL: `http://127.0.0.1:${chrome.port}` });
 const page = await browser.newPage();
+// The pages' security policy (rightly) refuses injected styles; the screenshots below need one
+await page.setBypassCSP(true);
 const errors = [];
 page.on('pageerror', e => errors.push(`${page.url()}: ${e.message}`));
 page.on('console', m => { if (m.type() === 'error') errors.push(`${page.url()}: ${m.text()}`); });
 const layout = [];
 const links = new Map();
 for (const p of pages) {
-  for (const scheme of ['light', 'dark']) {
+  for (const scheme of deep(p) ? ['light', 'dark'] : ['light']) {
     await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: scheme }]);
     for (const w of WIDTHS) {
       await page.setViewport({ width: w, height: 900 });
@@ -115,14 +126,15 @@ for (const p of pages) {
         const de = document.documentElement;
         const wide = [...document.querySelectorAll('body *')].filter(el => {
           const r = el.getBoundingClientRect();
-          return r.right > de.clientWidth + 1 && getComputedStyle(el).position !== 'fixed' && !el.closest('.leaflet-container, .site-nav, .table-scroll');
+          return (r.right > de.clientWidth + 1 || r.left < -1) && r.width > 0 && getComputedStyle(el).position !== 'fixed'
+            && !el.closest('.leaflet-container, .site-nav, .table-scroll, .sprite, .skip, .visually-hidden');
         }).slice(0, 3).map(el => `${el.tagName.toLowerCase()}.${el.className}`);
         const refs = [...document.querySelectorAll('a[href], img[src], link[href], script[src]')].map(el => el.href || el.src);
         return { overflow: wide, refs };
       });
       m.refs.forEach(u => { if (!links.has(u)) links.set(u, p); });
       const name = (p === '/' ? 'home' : p.replace(/\//g, '-').replace(/^-|-$/g, ''));
-      await page.screenshot({ path: path.join(OUT, 'screens', `${name}-${scheme}-${w}.png`), fullPage: true });
+      if (deep(p)) await page.screenshot({ path: path.join(OUT, 'screens', `${name}-${scheme}-${w}.png`), fullPage: true });
       layout.push({ page: p, scheme, w, overflow: m.overflow });
     }
   }
@@ -167,7 +179,7 @@ const weak = results.filter(r => r.failing.length);
 if (weak.length) { lines.push('', 'Audits scoring under 0.9:'); weak.forEach(r => lines.push(`- ${r.page} ${r.preset}: ${r.failing.join(', ')}`)); }
 const over = layout.filter(l => l.overflow.length);
 lines.push('', '## Layout', '', over.length ? over.map(l => `- ${l.page} ${l.scheme} ${l.w}px overflows: ${l.overflow.join(', ')}`).join('\n')
-  : `No horizontal overflow on ${pages.length} pages at ${WIDTHS.join(', ')} px, light and dark.`);
+  : `No horizontal overflow on ${pages.length} pages at ${WIDTHS.join(', ')} px (${SAMPLE.size} sampled pages also in dark).`);
 lines.push('', '## JavaScript errors', '', errors.length ? [...new Set(errors)].map(e => `- ${e}`).join('\n') : 'None.');
 lines.push('', '## Links and images', '', broken.length ? broken.map(b => `- ${b}`).join('\n') : `All ${links.size} links and assets resolve.`);
 if (warnings.length) lines.push('', 'Could not be checked automatically:', ...warnings.map(w => `- ${w}`));

@@ -1,0 +1,8 @@
+# Local content tools only (photos, maps, data refresh). Not needed to build the site.
+-r requirements.txt
+pillow
+pillow-heif
+imageio-ffmpeg
+rasterio
+requests
+markdown

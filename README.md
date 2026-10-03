@@ -1,45 +1,79 @@
 # Oluwasola Oyinloye: portfolio site
 
-Site for my geospatial data science and geospatial AI practice in Lagos. Static HTML
-and CSS with a little progressive-enhancement JavaScript, built by a small Python
-script and published to GitHub Pages by GitHub Actions on every push to `main`.
-No cookies, analytics or tracking.
+Site for my geospatial data science and geospatial AI work in Lagos, in English, French,
+Portuguese, Spanish and Arabic. Static HTML and CSS with a little progressive-enhancement
+JavaScript, built with Python and Jinja2, tested on every push and published to GitHub
+Pages by GitHub Actions. No cookies, analytics or tracking.
 
 ## Layout
 
 ```
-content/site.json          contacts, links, tools, project figures (null = not yet)
-content/capabilities.json  the "What I do" list; add an item to grow it
-content/products.json      open products; status is live, building or planned
-src/pages/                 one file per page; work/x.html becomes /work/x/
-src/partials/              shared layout, header and footer
-src/style.css, src/js/     styles and the small enhancement script
-assets/                    photos (metadata stripped) and GeoAID data, inputs to tools/media.py
-static/                    copied to the site as-is (icons, share images, img/, data/, vendor/)
-tools/                     build, image, data and check scripts
+content/site.json            structure: contacts, links, languages, tools, project figures (null = not yet)
+content/services.json        services: slug, icon, sectors, related case studies
+content/products.json        open products: status (live, building, planned) and links
+content/i18n/<lang>/         everything a reader sees, one folder per language:
+    ui.json                  interface text and the site's own wording
+    services.json            service titles, summaries and full service pages
+    products.json            product summaries
+src/pages/<lang>/            one Jinja template per page; work/x.html becomes /<lang>/work/x/
+src/templates/               base layout, header, footer, service page, shared macros
+src/style.css, src/js/       styles and the small enhancement script
+assets/                      photos (metadata stripped) and GeoAID data, inputs to tools/media.py
+static/                      copied to the site as-is (icons, share cards, PDFs, img/, data/, vendor/)
+tests/                       checks on the built site
+tools/                       build, release, image, data and check scripts
 ```
 
-Icons for `capabilities.json`: `detect`, `drone`, `orbit`, `scatter`, `wave`, `layers`, `webmap`, `check`, `chart`.
+Service icons: `detect`, `drone`, `orbit`, `forest`, `wave`, `layers`, `webmap`, `chart`, `people`.
+
+## Languages
+
+English is served at `/`; French, Portuguese, Spanish and Arabic at `/fr/`, `/pt/`,
+`/es/` and `/ar/`. Arabic pages are laid out right to left. A page and its translations
+share a path, so the build links them with `hreflang` tags and lists them together in the
+sitemap. Visitors pick a language from the menu in the header and the choice is remembered
+in their browser. When nothing has been chosen and the browser prefers another language
+the site offers, a small note suggests that version. The site never guesses from location.
+
+Every file in `content/i18n/<lang>/` must have exactly the same keys as the English one.
+The build stops and lists any differences. To add a language, copy `content/i18n/en/`
+and `src/pages/en/` (leaving out `404.html` and the methods log), translate them, and add
+the language to `languages` in `content/site.json` and to `FORMATS` in `tools/build.py`.
+
+Translations other than English need review by a native speaker before launch.
 
 ## Build and preview
 
 ```bash
+pip install -r requirements.txt
 python tools/build.py
 python -m http.server 8000 --directory dist
 ```
 
-Open http://localhost:8000. Preview builds show missing content as yellow TODO
-markers. `python tools/build.py --release` leaves those items out; that is what
-GitHub Actions publishes.
+Open http://localhost:8000. Preview builds show missing content as yellow TODO markers.
+`python tools/build.py --release` leaves those items out; that is what GitHub Actions publishes.
 
-## Before every push
+## Tests
 
 ```bash
-python tools/check.py
+python -m unittest discover -s tests -v
 ```
 
-Checks for names that must never appear (from `private/blocked_terms.txt`, which is
-never committed), filler words, TODO markers and page weight.
+Builds the release site and checks every page: one `h1`, title and description lengths,
+canonical URLs, `hreflang` pairs that point both ways, structured data, the content
+security policy (inline code must match its hashes), no inline styles, image sizes and
+alt text, internal links and anchors, the sitemap, and translation coverage.
+
+## Release
+
+```bash
+python tools/release.py
+```
+
+Runs the tests, then `tools/check.py` (names that must never appear, read from
+`private/blocked_terms.txt`, which is never committed; filler words; page weight).
+Add `--audit` for the full audit below and `--push` to push `main` once everything passes.
+GitHub Actions then runs the tests and Lighthouse again before it deploys.
 
 ## Full audit
 
@@ -50,30 +84,35 @@ python tools/build.py --release
 npm run audit
 ```
 
-Runs Lighthouse (mobile and desktop) on every page, takes screenshots at 360, 768
-and 1440 px in light and dark mode, checks for horizontal overflow and script
-errors, and checks every link. Results go to `reports/` (not committed).
+Checks every page at 360, 768 and 1440 px for horizontal overflow and script errors, and
+checks every link. Lighthouse (mobile and desktop) and screenshots in light and dark run on
+a sample of pages in every language; `AUDIT_ALL=1 npm run audit` covers all of them.
+Results go to `reports/` (not committed).
 
-## Images and data
+## Images, PDFs and data
 
 | Command | Makes | Run it after |
 |---|---|---|
 | `python tools/media.py` | photos, GeoAID map and Access Map preview in `static/img/` | changing photos or crops |
-| `python tools/make_images.py` | share images and icons in `static/` | changing name, flagship line, domain or figures |
+| `npm run og` | share cards for every language in `static/` | changing the flagship line, card text, domain or figures |
+| `npm run pdf` | one-page capability statement PDF per language in `static/` (fails if any runs past a page) | changing services, figures or the statement; build first, then build again |
+| `python tools/make_images.py` | favicon and touch icon in `static/` | changing the brand mark |
 | `python tools/fetch_osm_health.py` | OpenStreetMap snapshot in `static/data/` | wanting fresher map data |
 | `python tools/import_media.py` | metadata-free photo masters in `assets/field/`, video clips in `static/media/` | adding field photos or video (edit the list at the top) |
-| `python tools/import_methods_log.py` | the GeoAID methods log page, copied from GitHub | the log changes in the GeoAID repo |
+| `python tools/import_methods_log.py` | the GeoAID methods log page (English), copied from GitHub | the log changes in the GeoAID repo |
 
+The content tools need `pip install -r requirements-tools.txt`.
 `fetch_osm_health.py --recount` recomputes the per-LGA counts offline.
 Map data © OpenStreetMap contributors (ODbL). Leaflet is self-hosted in
 `static/vendor/leaflet/` under its BSD-2-Clause licence.
 
 ## Adding a product
 
-Add an entry to `content/products.json`. For a full page, add `src/pages/products/<name>.html`
-(copy a case study page as a starting point); it is published at `/products/<name>/`.
+Add an entry to `content/products.json` and its text to `content/i18n/<lang>/products.json`
+in every language. For a full page, add `src/pages/<lang>/products/<name>.html` in each
+language (copy a case study page as a starting point); it is published at `/products/<name>/`.
 
 ## Custom domain
 
 Set `base_url` in `content/site.json`, add `static/CNAME` containing the domain,
-run `tools/make_images.py`, then push.
+run `npm run og` and `npm run pdf`, then release.

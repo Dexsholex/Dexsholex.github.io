@@ -1,0 +1,2 @@
+# Build and tests (all CI needs)
+jinja2>=3.1,<4

@@ -66,7 +66,7 @@ def main():
     else:
         print("WARN private/blocked_terms.txt missing, so the blocked-names check did not run")
 
-    sources = [*sorted((ROOT / "src").rglob("*.html")), *sorted((ROOT / "content").glob("*.json"))]
+    sources = [*sorted((ROOT / "src").rglob("*.html")), *sorted((ROOT / "content").rglob("*.json"))]
     found = []
     for p in sources:
         text = p.read_text(encoding="utf-8").lower()
