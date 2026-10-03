@@ -1,0 +1,58 @@
+{#page {"kind": "hub", "title": "GIS and Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye", "description": "GIS, drone mapping, remote sensing, geospatial AI, EUDR checks, flood risk, web GIS, spatial databases and training. On site in Nigeria, remote worldwide."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.services, none)]) }}
+      <p class="eyebrow">Services</p>
+      <h1>GIS and geospatial services</h1>
+      <p class="lead">Drone surveys, satellite analysis, predictive models, web maps and training, with an accuracy figure attached to every result. Pick a service below, or describe the problem and I'll tell you which one fits.</p>
+      <div class="hero-actions">
+        {{ m.book_button() }}
+        <a class="btn btn-ghost" href="{{ section('work') }}">{{ t.cta.see_case_studies }}{{ m.icon('arrow') }}</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="all-title">
+    <div class="wrap">
+      <header class="section-head">
+        <h2 id="all-title">Nine service areas</h2>
+        <p>Pick your sector to see where I can help.</p>
+      </header>
+      {{ m.sector_filter() }}
+      <ul class="services" data-sector-list>
+        {{ m.service_cards() }}
+      </ul>
+      <p class="services-also">{{ services.also }}</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="sectors-title">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">Sectors</p>
+        <h2 id="sectors-title">Who I work with</h2>
+        <p class="small">If your organisation makes decisions about land, water, people or assets in a place, there is usually a geospatial question in it.</p>
+      </div>
+      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="where-title-2">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">Where</p>
+        <h2 id="where-title-2">Nigeria, Africa and beyond</h2>
+      </div>
+      <div class="prose">
+        <p>In Nigeria I work on site: drone surveys, GNSS ground control and field checks, through to analysis and delivery.</p>
+        <p>Across Africa and further afield I work remotely. Open satellite data covers the whole continent, so most projects can start without a site visit, and where drone imagery is needed I can process what a local team collects.</p>
+        <p>Lagos time (UTC+1) overlaps most of the European working day and the morning in the Americas. See the <a href="{{ section('engage') }}">ways to work together</a>.</p>
+      </div>
+    </div>
+  </section>
+</article>
+{% endblock %}

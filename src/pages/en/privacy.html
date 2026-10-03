@@ -1,0 +1,40 @@
+{#page {"kind": "page", "crumb": "Privacy",
+ "title": "Privacy · Oluwasola Oyinloye",
+ "description": "How this site handles your data: no cookies, no analytics, no tracking and no forms."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (page.crumb, none)]) }}
+      <h1>Privacy</h1>
+      <p class="lead">This site doesn't collect anything about you. The details are below, including what happens if you email me.</p>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="prose page-prose">
+      <h2>On this site</h2>
+      <ul>
+        <li>No cookies, no analytics, no tracking scripts, no advertising and no forms that send data.</li>
+        <li>If you switch between light and dark mode, or pick a language, that choice is saved in your own browser so the site remembers it. It is never sent anywhere.</li>
+        <li>The site doesn't look up where you are. If your browser is set to another language the site offers, it may suggest that version, and you choose.</li>
+        <li>The interactive map loads only files from this site. No third-party map tiles or fonts are requested.</li>
+        <li>The request builder on the home page writes an email in your own mail app. Nothing is sent until you send it yourself.</li>
+      </ul>
+
+      <h2>Hosting</h2>
+      <p>The site is hosted on GitHub Pages. To run and secure the service, GitHub may record technical details such as your IP address. See <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.</p>
+
+      <h2>Links to other services</h2>
+      <p>Links to {% if site.booking_url %}Cal.com, {% endif %}LinkedIn, GitHub, Medium, {% if preprint_url %}Preprints.org {% endif %}and the GeoAID dashboard on Streamlit take you to those services, which have their own privacy terms.</p>
+
+      <h2>When you contact me</h2>
+      <p>{% if site.booking_url %}If you book a call, Cal.com handles the booking and the details you enter there, under its own privacy policy. {% endif %}If you email me, I use your details only to reply and to work with you. I don't share them or add you to any mailing list. You can ask me at any time to delete our correspondence: <a href="{{ mailto_url }}">{{ site.email }}</a>.</p>
+      <p>Project data is covered separately, in <a href="{{ link('/data-protection/') }}">confidentiality and data protection</a>.</p>
+
+      <p class="small">Last updated October 2026.</p>
+    </div>
+  </div>
+</article>
+{% endblock %}

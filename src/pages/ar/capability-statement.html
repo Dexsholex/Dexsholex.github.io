@@ -1,0 +1,87 @@
+{#page {"kind": "page", "noindex": true,
+ "title": "بيان القدرات · Oluwasola Oyinloye",
+ "description": "بيان القدرات في صفحة واحدة: خدمات نظم المعلومات الجغرافية، والأعمال المختارة، والأدوات، والتعليم."} #}
+{% extends "print.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<div class="cap-bar">
+  <a href="{{ link('/') }}">{{ t.cta.back_to_site }}</a>
+  <a class="btn btn-sm" href="/{{ pdf }}" download>{{ t.cta.download_pdf }}</a>
+</div>
+<main class="cap">
+  <header class="cap-head">
+    <div>
+      <h1 class="cap-name">{{ site.name }}</h1>
+      <p class="cap-role">{{ site.roles|join(' · ') }}</p>
+      <p class="cap-tag">نظم المعلومات الجغرافية · الاستشعار عن بُعد · التخريط بالطائرات المسيّرة · الذكاء الاصطناعي الجغرافي</p>
+    </div>
+    <ul class="cap-contact" dir="ltr">
+      <li>{{ site.email }}</li>
+      <li>{{ site_host }}/ar/</li>
+      <li>linkedin.com/in/oluwasola-oyinloye</li>
+      <li>github.com/Dexsholex</li>
+      <li>Lagos, Nigeria · {{ site.timezone }}</li>
+    </ul>
+  </header>
+
+  <section class="cap-summary">
+    <p>عالم بيانات جغرافية مكانية ومتخصص في الذكاء الاصطناعي الجغرافي المكاني في لاغوس، مع خمس سنوات من العمل المهني في نظم المعلومات الجغرافية والاستشعار عن بُعد. أنفّذ مسوحًا بالطائرات المسيّرة في نيجيريا، يُخطَّط لها وتُنفَّذ داخليًا، وأعمل عن بُعد ببيانات الأقمار الصناعية لعملاء في أفريقيا وخارجها. كل نتيجة أسلّمها مرفقة بطريقة التحقق منها والشيفرة التي أنتجتها. أعمل بالإنجليزية أساسًا، ويمكنك مراسلتي بالعربية.</p>
+  </section>
+
+  <div class="cap-grid">
+    <div>
+      <h2>الخدمات</h2>
+      <ul class="cap-list cap-cols">
+        {% for s in services.services %}
+        <li>{{ s.title }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2>أعمال مختارة</h2>
+      <div class="cap-work">
+        <h3>عدّ نخيل الزيت من الصور الجوية</h3>
+        <p>لمزرعة تجارية: سلسلة كشف لتيجان النخيل بنموذج YOLOv8 رسمت {{ palm.palms }} نخلة على {{ palm.hectares }} هكتارًا في {{ palm.blocks }} قطعة. وعولجت التسليمات المتداخلة بحيث يُحسب كل هكتار مرة واحدة، فأُزيل {{ palm.double_counts }} عدًّا مكررًا.</p>
+      </div>
+      <div class="cap-work">
+        <h3>قابلية التعرض للفيضانات GeoAID، Amuwo-Odofin (لاغوس)</h3>
+        <p>نموذج مفتوح مع لوحة معلومات مباشرة: قابلية التعرض البنيوية للفيضانات، والأمطار شبه الآنية، وتعرّض السكان والمدارس والعيادات والطرق. ROC-AUC نحو 0.798 بالتقسيم العشوائي ونحو 0.642 بالتحقق المتقاطع المكاني، معروضان جنبًا إلى جنب.</p>
+      </div>
+      <div class="cap-work">
+        <h3>Lagos Access Map (قيد التطوير)</h3>
+        <p>تدقيق حيًّا بحيّ لمدى اكتمال سجل OpenStreetMap للمرافق الصحية في لاغوس، مع فترات ثقة، أساسًا لتخريط الوصول إلى الرعاية.</p>
+      </div>
+
+      <h2>القطاعات</h2>
+      <ul class="cap-list tight">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+    </div>
+
+    <div>
+      <h2>أين</h2>
+      <p>ميدانيًا في نيجيريا. وعن بُعد في أفريقيا والعالم.</p>
+
+      <h2>طرق التعاون</h2>
+      <p>مشروع تجريبي · مشروع · متابعة دورية · أيام استشارية · تدريب. نطاق مكتوب لكل تعاون؛ واتفاقية عدم إفصاح عند الطلب.</p>
+
+      <h2>الأدوات</h2>
+      <p class="cap-tools">{% for g in site.tools %}<b>{{ g.group }}:</b> {{ g['items']|join('، ') }}. {% endfor %}</p>
+
+      <h2>التعليم</h2>
+      <ul class="cap-list tight">
+        <li>ماجستير تقنية المعلومات (MIT)، تخصص الذكاء الاصطناعي، جامعة Miva المفتوحة</li>
+        <li>بكالوريوس المساحة والمعلوماتية الجغرافية، جامعة إيلورين</li>
+      </ul>
+
+      <h2>التدريس والبحث</h2>
+      <p>درّس Python للتحليل الجغرافي المكاني لـ 1,500 شخص في ندوات.</p>
+      {% if preprint_url %}
+      <p class="cap-pub" lang="en" dir="ltr">Preprint: Oyinloye, O. A. and Mustapha, I. O. ({{ site.preprint.year }}). {{ site.preprint.title }}. {{ site.preprint.server }}. doi.org/{{ site.preprint.doi }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <footer class="cap-foot">
+    <p>احجز مكالمة: <span dir="ltr">{{ site.booking_url.split('//', 1)[-1] if site.booking_url else site.email }} · {{ site.email }}</span></p>
+    <p>آخر تحديث: {{ today_month }}</p>
+  </footer>
+</main>
+{% endblock %}

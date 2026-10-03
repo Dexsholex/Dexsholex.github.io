@@ -1,0 +1,254 @@
+{
+  "lang_name": "Español",
+  "og_locale": "es_ES",
+  "skip": "Saltar al contenido",
+  "nav": {
+    "main": "Principal",
+    "work": "Trabajos",
+    "services": "Servicios",
+    "products": "Productos",
+    "about": "Sobre mí",
+    "contact": "Contacto",
+    "language": "Idioma",
+    "theme": "Cambiar el tema de color",
+    "breadcrumb": "Ruta de navegación",
+    "home": "Inicio",
+    "case_studies": "Casos de estudio",
+    "more_cases": "Más casos de estudio",
+    "project_type": "Tipo de proyecto"
+  },
+  "cta": {
+    "book": "Reservar una llamada",
+    "email_me": "Escribirme",
+    "book_by_email": "Reservar por correo",
+    "see_work": "Ver los trabajos",
+    "explore_services": "Ver los servicios",
+    "all_services": "Todos los servicios",
+    "all_services_sectors": "Todos los servicios y sectores",
+    "read_case": "Leer el caso de estudio",
+    "read_code": "Ver el código",
+    "live_dashboard": "Panel en línea",
+    "open_dashboard": "Abrir el panel en línea",
+    "read_methods": "Leer el registro metodológico (en inglés)",
+    "read_preprint": "Leer el preprint",
+    "follow_build": "Seguir el proyecto",
+    "get_in_touch": "Contactar",
+    "how_it_works": "Más información",
+    "see_case_studies": "Ver los casos de estudio",
+    "enlarge": "Ampliar",
+    "enlarge_map": "Ampliar el mapa",
+    "next_case": "Siguiente caso de estudio",
+    "back_home": "Ir a la página de inicio",
+    "download_pdf": "Descargar PDF",
+    "back_to_site": "Volver al sitio"
+  },
+  "footer": {
+    "based": "Con sede en Lagos, Nigeria",
+    "where": "Sobre el terreno en Nigeria, a distancia en el resto del mundo",
+    "site": "Sitio",
+    "case_studies": "Casos de estudio",
+    "ways": "Formas de colaborar",
+    "capability": "Presentación de capacidades",
+    "data_protection": "Confidencialidad y protección de datos",
+    "privacy": "Privacidad",
+    "elsewhere": "En otros sitios",
+    "preprint": "Preprint de GeoAID (DOI)",
+    "book_online": "Reservar una llamada en línea",
+    "no_tracking": "Sin cookies, analítica ni seguimiento."
+  },
+  "services": {
+    "filter_label": "Mostrar los servicios de un sector",
+    "all_sectors": "Todos los sectores"
+  },
+  "products": {
+    "status": {
+      "live": "En línea",
+      "building": "En desarrollo",
+      "planned": "Previsto"
+    },
+    "topics": "Temas",
+    "for": "Para",
+    "next": "Próximamente",
+    "next_title": "¿Su pregunta, convertida en herramienta pública?",
+    "next_text": "Desarrollo productos abiertos donde los buenos datos pueden ayudar a mucha gente a la vez. Si tiene datos, financia trabajo de interés público o tiene una pregunta que merece una respuesta abierta, hablemos."
+  },
+  "palm": {
+    "palms": "palmas",
+    "blocks": "bloques",
+    "sum_of_blocks": "Suma de los conteos por bloque",
+    "counted_once": "Cada hectárea contada una vez"
+  },
+  "geoaid": {
+    "auc_caption": "Capacidad del modelo para distinguir lugares inundados de lugares secos (ROC-AUC: 0,5 equivale a lanzar una moneda, 1,0 es perfecto)",
+    "random_split": "División aleatoria",
+    "spatial_cv": "Validación cruzada espacial",
+    "lower": "Menor",
+    "higher": "Mayor probabilidad de inundación",
+    "map_alt": "Mapa de la probabilidad de inundación modelada en Amuwo-Odofin, del casi blanco (menor) al rojo oscuro (mayor), dentro del límite de la LGA."
+  },
+  "access": {
+    "table_head": [
+      "LGA",
+      "Hospital",
+      "Clínica o médico",
+      "Farmacia",
+      "Otro",
+      "Total"
+    ],
+    "map_label": "Mapa interactivo de los centros de salud en OpenStreetMap, estado de Lagos",
+    "preview_alt": "Mapa estático de las 20 LGA del estado de Lagos con un punto por cada centro de salud registrado en OpenStreetMap; la mayoría de los puntos están en las LGA del oeste y del centro.",
+    "legend": [
+      "Hospital",
+      "Clínica o médico",
+      "Farmacia",
+      "Otro"
+    ],
+    "caption": "Lo que OpenStreetMap registra hoy: {count} centros de salud en las 20 LGA del estado de Lagos, extraídos el {date}. Si eso es la mayoría o solo una parte es lo que medirá la auditoría.",
+    "data_credit": "Datos del mapa ©",
+    "contributors": "colaboradores de OpenStreetMap",
+    "table_summary": "Ver los conteos por LGA en una tabla"
+  },
+  "testimonials": {
+    "eyebrow": "Clientes",
+    "title": "Lo que dicen los clientes"
+  },
+  "brief": {
+    "title": "¿Prefiere escribirlo primero?",
+    "intro": "Marque lo que corresponda y su programa de correo se abrirá con un resumen breve, listo para enviar. Este sitio no envía ni guarda nada.",
+    "need": "¿Qué necesita?",
+    "something_else": "Otra cosa",
+    "where": "¿Dónde está el lugar?",
+    "where_options": [
+      "Nigeria",
+      "Otro país de África",
+      "Fuera de África"
+    ],
+    "place": "Lugar (opcional)",
+    "place_hint": "Ciudad, región o país",
+    "when": "¿Cuándo?",
+    "when_options": [
+      "Lo antes posible",
+      "En los próximos 3 meses",
+      "Solo estoy explorando"
+    ],
+    "data": "Datos de los que ya dispone",
+    "data_options": [
+      "Imágenes de dron o aéreas",
+      "Imágenes de satélite",
+      "Archivos SIG o mapas",
+      "Hojas de cálculo con ubicaciones",
+      "Nada todavía"
+    ],
+    "decide": "¿Qué necesita decidir? (opcional)",
+    "decide_hint": "Una o dos frases",
+    "open_mail": "Abrir en mi correo",
+    "copy": "Copiar el resumen"
+  },
+  "js": {
+    "theme_to_dark": "Cambiar al tema oscuro",
+    "theme_to_light": "Cambiar al tema claro",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "copy_label": "Copiar la dirección de correo",
+    "email_copied": "Dirección de correo copiada",
+    "lightbox_label": "Imagen ampliada",
+    "close": "Cerrar",
+    "services_count": "{n} servicios",
+    "services_for": "{n} servicios para: {sector}",
+    "map_loading": "Cargando el mapa interactivo…",
+    "map_failed": "No se pudo cargar el mapa interactivo. La imagen muestra los mismos datos.",
+    "map_filter": "Mostrar u ocultar tipos de centros",
+    "map_reset": "Restablecer la vista",
+    "map_in_osm": "{n} centros en OpenStreetMap",
+    "map_in_osm_one": "1 centro en OpenStreetMap",
+    "map_unnamed": "Centro sin nombre",
+    "map_legend": [
+      "Hospital",
+      "Clínica o médico",
+      "Farmacia",
+      "Otro"
+    ],
+    "map_attribution": "Datos © {osm}, extraídos el {date}",
+    "brief_hello": "Hola, Oluwasola:",
+    "brief_book": "Me gustaría reservar una llamada.",
+    "brief_services": "Servicios",
+    "brief_site": "Lugar",
+    "brief_timing": "Plazo",
+    "brief_data": "Datos de los que disponemos",
+    "brief_decide": "Lo que necesito decidir",
+    "brief_org": "Organización:",
+    "brief_times": "Dos o tres horarios que me vienen bien (con zona horaria):",
+    "brief_subject": "Solicitud de llamada",
+    "brief_opening": "Abriendo su programa de correo…",
+    "brief_copied": "Resumen copiado. Péguelo en cualquier mensaje.",
+    "lang_suggest": "Esta página también está disponible en español.",
+    "lang_switch": "Leer en español",
+    "lang_stay": "Quedarme aquí"
+  },
+  "service": {
+    "eyebrow": "Servicio",
+    "get": "Qué recibe",
+    "who": "Para quién",
+    "how": "Cómo funciona",
+    "steps_label": "Etapas",
+    "faq": "Preguntas frecuentes",
+    "glance": "En resumen",
+    "where": "Dónde",
+    "timezone": "Zona horaria",
+    "keep": "Se queda con",
+    "keep_value": "Los resultados, el código y la documentación",
+    "related": "Trabajos relacionados",
+    "unsure_title": "¿No sabe si es el servicio adecuado?",
+    "unsure_text": "Describa el problema. Si no puedo ayudar, se lo diré.",
+    "others": "Otros servicios"
+  },
+  "related": {
+    "oil-palm": "Caso de estudio: 718 751 palmas aceiteras contadas con imágenes aéreas",
+    "geoaid": "Caso de estudio: susceptibilidad a inundaciones GeoAID, Amuwo-Odofin",
+    "access-map": "Lagos Access Map: centros de salud en OpenStreetMap",
+    "geoaid-dashboard": "El panel en línea de GeoAID"
+  },
+  "contact": {
+    "email": "Correo",
+    "preprint": "Preprint",
+    "in_brief": "En resumen",
+    "capability": "Presentación de capacidades"
+  },
+  "site": {
+    "roles": [
+      "Científico de datos geoespaciales",
+      "Especialista en IA geoespacial"
+    ],
+    "flagship": "Análisis geoespacial que puede verificar.",
+    "title": "Servicios SIG y geoespaciales en África · Oluwasola Oyinloye",
+    "description": "SIG, cartografía con drones, teledetección satelital e IA geoespacial desde Lagos, para clientes en Nigeria, en África y en todo el mundo. Reserve una llamada.",
+    "call_subject": "Solicitud de llamada",
+    "call_body": "Hola, Oluwasola:\n\nMe gustaría reservar una llamada.\n\nOrganización:\nPaís o zona de interés:\nLo que necesito decidir:\nDatos de los que ya disponemos:\nDos o tres horarios que me vienen bien (con zona horaria):\n",
+    "booking": {
+      "scoping": "Llamada de definición (30 min)",
+      "intro": "Presentación (15 min)"
+    },
+    "tool_groups": {
+      "programming": "Programación y análisis",
+      "ml": "Machine learning e IA",
+      "eo": "Observación de la Tierra",
+      "gis": "SIG y datos espaciales",
+      "drone": "Cartografía con drones",
+      "web": "Paneles y mapas web"
+    },
+    "tool_items": {
+      "GNSS ground control": "Puntos de control GNSS"
+    }
+  },
+  "og": {
+    "home_kicker": "Ciencia de datos geoespaciales · IA geoespacial",
+    "home_sub": "Desde Lagos, para Nigeria, África y el mundo",
+    "palm_kicker": "Caso de estudio · IA geoespacial",
+    "palm_title": "Contar palmas aceiteras con imágenes aéreas",
+    "palm_sub": "Detección de copas con YOLOv8, bloque por bloque",
+    "palm_chip": "{palms} palmas · {ha} ha",
+    "geoaid_kicker": "Caso de estudio · ML espacial",
+    "geoaid_title": "GeoAID: cartografía del riesgo de inundación en Lagos",
+    "geoaid_sub": "Piloto en Amuwo-Odofin · validación cruzada espacial"
+  }
+}

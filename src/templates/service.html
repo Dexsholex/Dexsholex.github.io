@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+{% set s = service %}
+{% set sp = service.page %}
+{% set L = t.service %}
+<article class="service-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.services, link('/services/')), (sp.crumb, none)]) }}
+      <p class="eyebrow">{{ L.eyebrow }}</p>
+      <h1>{{ sp.headline }}</h1>
+      <p class="lead">{{ sp.lead }}</p>
+      <div class="hero-actions">
+        {{ m.book_button() }}
+        <a class="btn btn-ghost" href="{{ link('/services/') }}">{{ t.cta.all_services }}{{ m.icon('arrow') }}</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>{{ L.get }}</h2>
+      <ul>
+        {% for item in sp.get %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2>{{ L.who }}</h2>
+      <p>{{ sp.who }}</p>
+
+      <h2>{{ L.how }}</h2>
+      <ol class="pipeline" aria-label="{{ L.steps_label }}">
+        {% for step, detail in sp.steps %}
+        <li><b>{{ step }}</b><span>{{ detail }}</span></li>
+        {% endfor %}
+      </ol>
+
+      <h2>{{ L.faq }}</h2>
+      <div class="faqs">
+        {{ m.faq_list(sp.faq) }}
+      </div>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>{{ L.glance }}</h2>
+        <dl class="facts">
+          <div><dt>{{ L.where }}</dt><dd>{{ sp.where }}</dd></div>
+          <div><dt>{{ L.timezone }}</dt><dd>{{ site.timezone }}</dd></div>
+          <div><dt>{{ L.keep }}</dt><dd>{{ L.keep_value }}</dd></div>
+        </dl>
+        <ul class="chips">{% for c in sp.chips %}<li>{{ c }}</li>{% endfor %}</ul>
+        {% if sp.related %}
+        <h2>{{ L.related }}</h2>
+        <p class="case-links stack">
+          {% for r in sp.related %}
+          {% if r == 'geoaid-dashboard' %}
+          <a href="{{ site.projects.geoaid_dashboard }}">{{ t.related[r] }}{{ m.icon('out') }}</a>
+          {% else %}
+          <a href="{{ link(cases[r]) }}">{{ t.related[r] }}{{ m.icon('arrow') }}</a>
+          {% endif %}
+          {% endfor %}
+        </p>
+        {% endif %}
+      </div>
+      <div class="aside-cta">
+        <p><strong>{{ L.unsure_title }}</strong> {{ L.unsure_text }}</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <section class="wrap more-services" aria-labelledby="more-title">
+    <h2 id="more-title">{{ L.others }}</h2>
+    <ul class="services">
+      {{ m.service_cards(exclude=s.slug) }}
+    </ul>
+  </section>
+</article>
+{% endblock %}

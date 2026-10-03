@@ -1,0 +1,121 @@
+{#page {"kind": "case",
+ "title": "Comptage de palmiers à huile par imagerie aérienne · Oluwasola Oyinloye",
+ "headline": "718 751 palmiers à huile comptés par imagerie aérienne",
+ "description": "Étude de cas : une chaîne de détection des couronnes YOLOv8 qui a cartographié 718 751 palmiers sur 12 166,6 ha et 26 blocs pour une plantation commerciale.",
+ "og_title": "718 751 palmiers à huile comptés par imagerie aérienne",
+ "og_image": "og-oil-palm-fr.png",
+ "og_image_alt": "Étude de cas : 718 751 palmiers à huile comptés sur 12 166,6 hectares par imagerie aérienne.",
+ "crumb": "Comptage de palmiers à huile",
+ "published": "2026-10-03",
+ "keywords": ["comptage de palmiers à huile", "détection de couronnes", "YOLOv8", "inventaire de plantation", "imagerie aérienne", "IA géospatiale"]} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.case_studies, section('work')), (page.crumb, none)]) }}
+      <ul class="tags" aria-label="{{ t.nav.project_type }}">
+        <li class="tag">Mission client</li>
+        <li class="tag tag-quiet">IA géospatiale</li>
+        <li class="tag tag-quiet">Anonymisé</li>
+      </ul>
+      <h1>{{ palm.palms }} palmiers à huile comptés par imagerie aérienne</h1>
+      <p class="lead">Une plantation commerciale de palmiers à huile avait besoin d'un inventaire arbre par arbre de son domaine. J'ai construit une chaîne de traitement qui repère chaque couronne de palmier dans l'imagerie aérienne et en fait un point cartographié et comptable.</p>
+      <dl class="kpis">
+        <div><dt>Palmiers détectés</dt><dd>{{ palm.palms }}</dd></div>
+        <div><dt>Surface nette couverte</dt><dd>{{ palm.hectares }} ha</dd></div>
+        <div><dt>Blocs de production</dt><dd>{{ palm.blocks }}</dd></div>
+        <div><dt>Densité moyenne</dt><dd>{{ palm.density }} palmiers/ha</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-photo">
+      <a class="zoomable" href="{{ manifest['palm-drone-pad'][-1].src }}" data-lightbox>{{ m.picture('palm-drone-pad', "Un drone de relevé sur son aire de décollage en bordure d'une plantation de palmiers à huile, avec des palmiers adultes en arrière-plan", '(min-width: 1200px) 1152px, 96vw', eager=true) }}<span class="zoom-hint">{{ m.icon('expand') }}{{ t.cta.enlarge }}</span></a>
+      <figcaption>Sur le domaine : le drone de relevé prêt sur son aire de décollage.</figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>La question</h2>
+      <p>Combien de palmiers compte la plantation, et où se trouve chacun d'eux ? Sur un domaine de cette taille, les comptages manuels sont lents et ne produisent pas de carte. Le livrable est ici un point cartographié par palmier, bloc par bloc, que la plantation peut interroger et vérifier.</p>
+
+      <h2>Comment ça marche</h2>
+      <ol class="pipeline" aria-label="Chaîne de traitement">
+        <li><b>Imagerie</b><span>Une orthomosaïque RVB par bloc</span></li>
+        <li><b>Tuiles</b><span>Découpes de 1 280 pixels avec 256 pixels de recouvrement</span></li>
+        <li><b>Détection</b><span>Un modèle YOLOv8 à une seule classe : le palmier à huile</span></li>
+        <li><b>Fusion</b><span>Résultats des tuiles réunis et doublons supprimés</span></li>
+        <li><b>Inventaire</b><span>Un point par palmier, en GeoPackage et CSV</span></li>
+      </ol>
+      <p>Les données d'entraînement sont un petit jeu de couronnes annotées à la main, tirées d'un échantillon stratifié de tuiles, choisi pour couvrir les scènes avec seulement des adventices, seulement des palmiers, ou les deux. Les jeux d'entraînement, de validation et de test ont été séparés par secteur géographique plutôt que par tuile aléatoire : le score de test porte donc sur un terrain que le modèle n'avait pas vu.</p>
+
+      <h2>Améliorer le modèle en production</h2>
+      <p>À mesure que les blocs arrivaient, deux types d'erreurs sont apparus : la canopée dense des palmiers adultes, où les couronnes voisines se confondent, et les jeunes palmiers, petits et faciles à manquer. J'ai annoté de nouveaux exemples de ces deux cas et réentraîné le modèle. Le modèle actuel est le fruit de {{ palm.iterations }} itérations d'entraînement, chacune comparée au même jeu de test mis de côté.</p>
+
+      <h2>Obtenir un total juste</h2>
+      <p>Les blocs ont été livrés un par un, et beaucoup se chevauchaient. Une vérification de chaque paire a trouvé {{ palm.overlap_hectares }} ha de couverture commune sur {{ palm.overlap_pairs }} paires de blocs. Additionner le comptage de chaque bloc séparément aurait compté les palmiers de ces zones deux ou trois fois.</p>
+      <p>Je l'ai résolu par une règle fixe : la zone commune appartient au bloc livré en premier, et les blocs suivants abandonnent leurs détections dans ce recouvrement. Chaque hectare est compté une fois.</p>
+      {{ m.palm_bars('Total de la plantation, avant et après suppression des doubles comptages', note=palm.double_counts ~ ' doubles comptages supprimés (' ~ palm.double_count_share ~ ')') }}
+      <p>Là où des données d'élévation existaient ({{ palm.chm_blocks }} blocs sur {{ palm.blocks }}), un contrôle de la hauteur de canopée signale les détections trop basses pour être plausibles, qui ne sont probablement pas des palmiers. Il les signale pour vérification ; il ne les supprime pas.</p>
+
+      <h2>Ce que ce travail ne prétend pas</h2>
+      <ul>
+        <li>Les recouvrements ont été résolus avec l'emprise rectangulaire de chaque bloc, pas avec des limites de propriété levées. Les totaux par bloc pourraient changer si les vraies limites étaient appliquées. Le total de la plantation devrait peu varier, car le recouvrement correspond à un vrai recouvrement d'images.</li>
+        <li>Après application de la règle, quelques blocs ne gardent qu'une mince bande de terrain : leur nombre de palmiers par hectare paraît donc très faible. Ces chiffres doivent être vérifiés sur le terrain avant d'être cités.</li>
+        <li>Les chiffres ci-dessus sont des détections. La méthode prévoit un contrôle de la précision du comptage sur une zone comptée à la main, et j'ajouterai ce résultat au résumé dès qu'il sera publié.</li>
+      </ul>
+
+      <h2>Ce que la plantation a reçu</h2>
+      <ul>
+        <li>Un GeoPackage par bloc avec deux couches : les contours des couronnes, et un point par palmier avec un identifiant, un score de confiance et la surface de la couronne.</li>
+        <li>Un inventaire général de la plantation qui réunit tous les blocs.</li>
+        <li>Un guide pour traiter de nouveaux blocs sans réentraîner le modèle, sauf si un nouveau type d'erreur apparaît.</li>
+      </ul>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Résumé</h2>
+        <dl class="facts">
+          <div><dt>Client</dt><dd>Une plantation commerciale de palmiers à huile (anonymisée)</dd></div>
+          <div><dt>Données</dt><dd>Orthomosaïques RVB ; modèles d'élévation pour certains blocs</dd></div>
+          <div><dt>Méthode</dt><dd>Détection d'objets YOLOv8</dd></div>
+          <div><dt>Livrables</dt><dd>GeoPackage et CSV, UTM zone 31N</dd></div>
+          <div><dt>À jour</dt><dd>{{ palm.as_of }}</dd></div>
+          {% if palm.accuracy %}
+          <div><dt>Précision du comptage</dt><dd>{{ palm.accuracy }}</dd></div>
+          {% elif not release %}
+          <div><dt>Précision du comptage</dt><dd>{{ todo('validated counting accuracy figure') }}</dd></div>
+          {% else %}{{ todo('validated counting accuracy figure') }}{% endif %}
+        </dl>
+        <ul class="chips"><li>Python</li><li>YOLOv8</li><li>PyTorch</li><li>GeoPackage</li></ul>
+        <p class="case-links"><a href="{{ palm.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a></p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Besoin d'un comptage d'arbres ou d'une carte de peuplement ?</strong> Parlez-moi de votre domaine et de vos images.</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <section class="wrap field" aria-labelledby="field-title">
+    <h2 id="field-title">Sur le terrain</h2>
+    <p class="small">Photos et vidéo prises sur le domaine. J'ai supprimé les données de localisation de chaque fichier.</p>
+    <div class="gallery">
+      {{ m.gallery_item('palm-pilot', 'Oluwasola Oyinloye vérifie le plan de vol sur la radiocommande du drone, sur le terrain', 'Préparation du vol sur site') }}
+      {{ m.gallery_video('palm-takeoff', 'Le drone de relevé décolle de sa mallette et monte au-dessus des palmiers', 'Décollage pour un vol de cartographie (14 s, sans son)') }}
+      {{ m.gallery_item('palm-gnss', 'Un récepteur GNSS sur trépied dans une végétation basse du domaine', 'Un récepteur GNSS installé sur le domaine') }}
+      {{ m.gallery_item('palm-estate-road', "Une piste de latérite rectiligne qui traverse la plantation jusqu'à l'horizon", "L'étendue du domaine") }}
+      {{ m.gallery_item('palm-crown', 'Un palmier à huile adulte avec une couronne de palmes complète', 'Une couronne adulte : ce que le modèle apprend à trouver') }}
+    </div>
+  </section>
+
+  <nav class="case-next wrap" aria-label="{{ t.nav.more_cases }}">
+    <a href="{{ link(cases['geoaid']) }}"><span>{{ t.cta.next_case }}</span><strong>Susceptibilité aux inondations GeoAID : projet pilote à Amuwo-Odofin</strong>{{ m.icon('arrow') }}</a>
+  </nav>
+</article>
+{% endblock %}

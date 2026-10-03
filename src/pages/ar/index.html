@@ -1,0 +1,313 @@
+{#page {"kind": "home", "title": "خدمات نظم المعلومات الجغرافية في أفريقيا · Oluwasola Oyinloye", "description": "نظم معلومات جغرافية، وتخريط بالطائرات المسيّرة، واستشعار عن بُعد، وذكاء اصطناعي جغرافي مكاني من لاغوس، لعملاء في نيجيريا وأفريقيا والعالم. احجز مكالمة."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="byline">{{ m.fixed_img('avatar', '', 'avatar', 56) }}<span><strong>{{ site.name }}</strong><span>{% for r in site.roles %}{{ r }}{% if not loop.last %}<br>{% endif %}{% endfor %}</span></span></p>
+      <p class="kicker">نظم المعلومات الجغرافية · الاستشعار عن بُعد · التخريط بالطائرات المسيّرة · الذكاء الاصطناعي الجغرافي</p>
+      <h1 id="hero-title">{{ site.flagship }}</h1>
+      <p class="lead">أعمل في نظم المعلومات الجغرافية والاستشعار عن بُعد والتخريط بالطائرات المسيّرة والذكاء الاصطناعي الجغرافي المكاني لصالح المزارع الكبرى والمقرضين الزراعيين والمصدّرين والمطوّرين العقاريين والحكومات والمنظمات غير الحكومية، في نيجيريا وخارجها. أحوّل الصور وبيانات المواقع إلى إجابات، وأخبرك إلى أي حد يمكنك الوثوق بكل منها.</p>
+      <div class="hero-actions">
+        {{ m.book_button() }}
+        <a class="btn btn-ghost" href="{{ link('/services/') }}">{{ t.cta.explore_services }}{{ m.icon('arrow') }}</a>
+      </div>
+      <p class="hero-meta">مقيم في لاغوس ({{ site.timezone }}) · ميدانيًا في أنحاء نيجيريا · عن بُعد لعملاء في أي مكان · <a href="#work">{{ t.cta.see_work }}</a></p>
+    </div>
+    <div class="hero-portrait">
+      <div class="portrait-frame">{{ m.picture('portrait', 'صورة شخصية لـ ' ~ site.name, '(min-width: 1200px) 400px, (min-width: 880px) 34vw, 1px', eager=true, hide_below=880) }}</div>
+      <svg class="portrait-mark" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><circle cx="60" cy="60" r="36"/><circle cx="60" cy="60" r="15"/><path d="M60 8v32M60 80v32M8 60h32M80 60h32"/><circle cx="60" cy="60" r="3.5" class="dot"/></svg>
+      <p class="coord-chip" aria-hidden="true" dir="ltr">6.455° N · 3.384° E</p>
+    </div>
+  </div>
+</section>
+
+<section class="proof" aria-label="الإنجازات">
+  <div class="wrap">
+    <ul class="stats">
+      <li><span class="stat-value" data-count>{{ palm.palms }}</span><span class="stat-label">نخلة زيت رُسمت على الخريطة في {{ palm.hectares }} هكتارًا لمزرعة واحدة</span></li>
+      <li><span class="stat-value" data-count>1,500</span><span class="stat-label">شخص تدرّبوا على Python للتحليل الجغرافي المكاني في ندوات</span></li>
+      <li><span class="stat-value">2</span><span class="stat-label">{% if preprint_url %}<a href="{{ preprint_url }}">منشوران بحثيان</a>{% else %}منشوران بحثيان{% endif %}</span></li>
+      <li><span class="stat-value" data-count>5</span><span class="stat-label">سنوات من العمل المهني في نظم المعلومات الجغرافية والاستشعار عن بُعد</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="work" aria-labelledby="work-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">أعمال مختارة</p>
+      <h2 id="work-title">دراسات الحالة</h2>
+      <p>ما بنيته، وإلى أي حد خضع للاختبار.</p>
+    </header>
+
+    <div class="cases">
+      <article class="case" data-reveal>
+        <a class="case-media" href="{{ link(cases['oil-palm']) }}" tabindex="-1" aria-hidden="true">{{ m.picture('palm-drone-pad', 'طائرة مسح مسيّرة على منصة إقلاعها عند طرف مزرعة نخيل زيت، وخلفها نخيل مكتمل النمو', '(min-width: 900px) 560px, 92vw') }}{{ m.palm_chip() }}</a>
+        <div class="case-body">
+          <ul class="tags" aria-label="{{ t.nav.project_type }}">
+            <li class="tag">عمل لعميل</li>
+            <li class="tag tag-quiet">ذكاء اصطناعي جغرافي</li>
+            <li class="tag tag-quiet">مجهول الهوية</li>
+          </ul>
+          <h3><a href="{{ link(cases['oil-palm']) }}">عدّ نخيل الزيت من الصور الجوية</a></h3>
+          <p>لمزرعة تجارية لنخيل الزيت، يجد نموذج YOLOv8 كل تاج نخلة في الصور الجوية ويحوّله إلى شجرة مرسومة على الخريطة وقابلة للعدّ، قطعةً قطعة.</p>
+          {{ m.palm_bars('كانت القطع متداخلة، فجمعها كان سيحسب بعض النخيل مرتين. إجمالي المزرعة:') }}
+          <p class="small">أُزيل {{ palm.double_counts }} عدًّا مكررًا ({{ palm.double_count_share }}). كل هكتار يُنسب إلى قطعة واحدة فقط.</p>
+          <p class="case-links">
+            <a class="more" href="{{ link(cases['oil-palm']) }}">{{ t.cta.read_case }}{{ m.icon('arrow') }}</a>
+            <a href="{{ palm.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
+          </p>
+        </div>
+      </article>
+
+      <article class="case" data-reveal>
+        <a class="case-media case-media-map" href="{{ link(cases['geoaid']) }}" tabindex="-1" aria-hidden="true">
+          {{ m.picture('geoaid-flood', t.geoaid.map_alt, '(min-width: 1100px) 560px, (min-width: 720px) 50vw, 92vw') }}
+          {{ m.ramp_legend() }}
+        </a>
+        <div class="case-body">
+          <ul class="tags" aria-label="{{ t.nav.project_type }}">
+            <li class="tag">للصالح العام</li>
+            <li class="tag tag-quiet">تعلّم آلة مكاني</li>
+            <li class="tag tag-quiet">نسخة أولية من بحث</li>
+          </ul>
+          <h3><a href="{{ link(cases['geoaid']) }}">قابلية التعرض للفيضانات GeoAID: مشروع تجريبي في <span class="nowrap">Amuwo-Odofin</span></a></h3>
+          <p>نموذج تعلّم آلة يرسم خريطة لأجزاء Amuwo-Odofin الأكثر عرضة للفيضانات، مبني على بيانات الأقمار الصناعية، ومنشور كلوحة معلومات مباشرة، وموثّق في نسخة أولية من بحث.</p>
+          {{ m.auc_figure() }}
+          <p class="small">يختبر المقياس المكاني النموذج على مناطق لم يرها أثناء التدريب. يعني الانخفاض أن النموذج يستطيع الإشارة إلى مناطق تستحق الفحص، لكن لا ينبغي أن يقرر بعدُ أي شيء بشأن موقع بعينه.</p>
+          <p class="case-links">
+            <a class="more" href="{{ link(cases['geoaid']) }}">{{ t.cta.read_case }}{{ m.icon('arrow') }}</a>
+            <a href="{{ site.projects.geoaid_dashboard }}">{{ t.cta.live_dashboard }}{{ m.icon('out') }}</a>
+            {% if preprint_url %}<a href="{{ preprint_url }}">{{ t.cta.read_preprint }}{{ m.icon('out') }}</a>{% endif %}
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <article class="feature" id="access-map" aria-labelledby="access-title" data-reveal>
+      <div class="feature-text">
+        <div class="feature-intro">
+          <ul class="tags" aria-label="حالة المشروع">
+            <li class="tag tag-progress">قيد التنفيذ</li>
+            <li class="tag tag-quiet">للصالح العام</li>
+          </ul>
+          <h3 id="access-title">Lagos Access Map</h3>
+          <p>إلى أي حد يكتمل سجل OpenStreetMap للمرافق الصحية في لاغوس؟ تدقق المرحلة الأولى ذلك حيًّا بحيّ مقابل قائمة مرجعية للمرافق المعروفة.</p>
+          <p class="case-links">{% if site.projects.access_map_build %}<a href="{{ site.projects.access_map_build }}">{{ t.cta.follow_build }}{{ m.icon('out') }}</a>{% else %}{{ todo('"Follow the build" link') }}{% endif %}</p>
+        </div>
+        <div class="feature-facts">
+          <dl class="facts">
+            <div><dt>يقيس</dt><dd>نسبة المرافق المعروفة الموجودة في السجل، لكل حيّ، مع فترة ثقة 95%</dd></div>
+            <div><dt>وأيضًا</dt><dd>عدد المرافق لكل كم² ولكل 10,000 نسمة</dd></div>
+            <div><dt>النتائج</dt><dd>ليس بعد. ستُنشر هنا.</dd></div>
+          </dl>
+          <p class="note">الأعداد وحدها لا تكشف مدى الاكتمال. فالحيّ الذي تظهر فيه عيادات قليلة على الخريطة قد لا يضم إلا عيادات قليلة فعلًا.</p>
+        </div>
+      </div>
+      {% include "access-map.html" %}
+    </article>
+  </div>
+</section>
+
+<section class="section section-alt" id="products" aria-labelledby="products-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">المنتجات</p>
+      <h2 id="products-title">منتجات جغرافية مكانية مفتوحة</h2>
+      <p>أدوات عامة مجانية أطوّرها وأحافظ عليها إلى جانب العمل للعملاء. توثّق كل منها مصادر بياناتها وحدودها المعروفة.</p>
+    </header>
+    <ul class="products">
+      {{ m.product_cards() }}
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="clients" aria-labelledby="clients-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">مع من أعمل</p>
+      <h2 id="clients-title">الأسئلة التي يحملها العملاء</h2>
+    </header>
+    <ul class="audiences">
+      <li data-reveal>
+        <span class="icon">{{ m.icon('leaf') }}</span>
+        <h3>المزارع الكبرى</h3>
+        <p class="q">كم نخلة لدينا في كل قطعة، وأين الفجوات؟</p>
+        <p>أعداد الأشجار وخرائط الغرس من مسوح بالطائرات المسيّرة يُخطَّط لها وتُنفَّذ داخليًا، أو من صور الأقمار الصناعية.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('bank') }}</span>
+        <h3>المقرضون الزراعيون</h3>
+        <p class="q">هل هذه المزرعة موجودة فعلًا، وما مساحتها، وهل هي مزروعة؟</p>
+        <p>التحقق من حدود المزرعة ومساحتها ومحاصيلها بصور الأقمار الصناعية، قبل الإقراض وبعده.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('forest') }}</span>
+        <h3>المصدّرون والتعاونيات</h3>
+        <p class="q">هل نستطيع أن نثبت للمشترين الأوروبيين أن قطعنا لم تُزَل غاباتها بعد 2020؟</p>
+        <p>تدقيق المواقع الجغرافية للقطع وكشف إزالة الغابات وفق <a href="{{ link('/services/eudr-compliance/') }}">لائحة الاتحاد الأوروبي بشأن إزالة الغابات</a>.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('building') }}</span>
+        <h3>المطوّرون العقاريون</h3>
+        <p class="q">ما مدى تعرّض هذا الموقع للفيضانات، وما الذي يحيط به؟</p>
+        <p>تقييم قابلية التعرض للفيضانات والتعرّض قبل الشراء أو التصميم أو البناء.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('layers') }}</span>
+        <h3>الجهات الحكومية</h3>
+        <p class="q">أين يتعرّض السكان والمنشآت للخطر، وأين ينبغي أن تكون الخدمات القادمة؟</p>
+        <p>التعرض للفيضانات، والوصول إلى الخدمات، وتغيّر الغطاء الأرضي، مع بيانات وشيفرة يحتفظ بها فريقك.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('people') }}</span>
+        <h3>المنظمات غير الحكومية</h3>
+        <p class="q">من يعيش بعيدًا عن عيادة، وهل يمكننا الوثوق ببيانات الخريطة؟</p>
+        <p>خرائط الوصول والتغطية، وتدقيق البيانات التي يعتمد عليها برنامجك.</p>
+      </li>
+    </ul>
+
+    <div class="where" aria-labelledby="where-title">
+      <h3 id="where-title">أين أعمل</h3>
+      <ul class="where-grid">
+        <li data-reveal>
+          <p class="where-place">نيجيريا</p>
+          <p class="where-mode">ميدانيًا</p>
+          <p>مسوح بالطائرات المسيّرة يُخطَّط لها وتُنفَّذ داخليًا، ونقاط تحكم أرضية GNSS، وتحقق ميداني، وصولًا إلى التحليل والتسليم.</p>
+        </li>
+        <li data-reveal>
+          <p class="where-place">في أنحاء أفريقيا</p>
+          <p class="where-mode">عن بُعد، بالأقمار الصناعية أولًا</p>
+          <p>تغطي بيانات الأقمار الصناعية المفتوحة القارة كلها، فيمكن أن يبدأ العمل على الغطاء الأرضي أو النبات أو مخاطر الفيضانات أو التغيّر عبر الزمن دون زيارة الموقع.</p>
+        </li>
+        <li data-reveal>
+          <p class="where-place">حول العالم</p>
+          <p class="where-mode">عن بُعد، وفق جدولك</p>
+          <p>نتفق على النطاق كتابيًا، وأرسل لك تحديثات منتظمة، وتحصل على صيغ قياسية (GeoTIFF وGeoPackage وPostGIS) مع الشيفرة. توقيت لاغوس (UTC+1) يطابق توقيت الجزائر وتونس.</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="services" aria-labelledby="services-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">الخدمات</p>
+      <h2 id="services-title">خدمات نظم المعلومات الجغرافية والخدمات الجغرافية المكانية</h2>
+      <p>تسعة مجالات خدمة، من مسوح الطائرات المسيّرة إلى فحوصات EUDR والتدريب. اختر قطاعك لترى أين يمكنني المساعدة.</p>
+    </header>
+    {{ m.sector_filter() }}
+    <ul class="services" data-sector-list>
+      {{ m.service_cards() }}
+    </ul>
+    <p class="services-also">{{ services.also }}</p>
+    <p class="case-links"><a class="more" href="{{ link('/services/') }}">{{ t.cta.all_services_sectors }}{{ m.icon('arrow') }}</a></p>
+    <div class="tools">
+      <h3>الأدوات التي أعمل بها</h3>
+      <div class="tool-groups">
+        {{ m.tool_groups() }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="process" aria-labelledby="process-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">المنهجية</p>
+      <h2 id="process-title">كيف أعمل</h2>
+    </header>
+    <ol class="steps">
+      <li data-reveal>
+        <h3>مكالمة لتحديد النطاق</h3>
+        <p>مكالمة مدتها 15 أو 30 دقيقة: تخبرني بالقرار الذي تحتاج إلى اتخاذه، وأخبرك هل يمكن للبيانات المكانية أن تساعد وما الذي يتطلبه ذلك.</p>
+      </li>
+      <li data-reveal>
+        <h3>تجربة على بياناتك</h3>
+        <p>أختبر الطريقة على جزء صغير من منطقتك وأبلّغ عن معدل خطئها، لتحكم عليها قبل أن تلتزم.</p>
+      </li>
+      <li data-reveal>
+        <h3>تسليم يبقى لديك</h3>
+        <p>تحصل على النتائج، والشيفرة التي أنتجتها، وتوثيق يستطيع فريقك اتباعه.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section section-alt" id="engage" aria-labelledby="engage-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">أشكال العمل</p>
+      <h2 id="engage-title">طرق التعاون</h2>
+      <p>اختر الشكل الذي يناسب ميزانيتك ومدى ثقتك بالطريقة.</p>
+    </header>
+    <ul class="engage">
+      <li data-reveal>
+        <h3>مشروع تجريبي</h3>
+        <p>اختبار محدد النطاق على جزء من منطقتك. ترى الطريقة والنتيجة ومعدل الخطأ قبل أن تلتزم بالعمل الكامل.</p>
+      </li>
+      <li data-reveal>
+        <h3>مشروع</h3>
+        <p>مُخرَج محدد، مثل جرد للأشجار أو تقييم لخطر الفيضانات أو خريطة ويب، وفق نطاق وجدول زمني ومعايير قبول مكتوبة.</p>
+      </li>
+      <li data-reveal>
+        <h3>متابعة دورية</h3>
+        <p>التحليل نفسه يتكرر شهريًا أو موسميًا أو سنويًا، للبرامج والمحافظ التي تحتاج إلى رصد التغيّر.</p>
+      </li>
+      <li data-reveal>
+        <h3>أيام استشارية</h3>
+        <p>دعم بأجر يومي لبرامج المنظمات غير الحكومية والشركات الاستشارية وفرق البحث: مراجعة البيانات والمنهجيات، أو الانضمام إلى عطاء بصفة متخصص جغرافي مكاني.</p>
+      </li>
+      <li data-reveal>
+        <h3>التدريب</h3>
+        <p>ورش عمل مبنية حول بيانات فريقك، حضوريًا في نيجيريا أو عبر الإنترنت.</p>
+      </li>
+    </ul>
+    <p class="engage-note">{{ m.icon('shield') }}<span>يبدأ كل تعاون بنطاق مكتوب. اتفاقية عدم إفصاح عند الطلب. <a href="{{ link('/data-protection/') }}">كيف أتعامل مع بياناتك</a></span></p>
+  </div>
+</section>
+
+<section class="section" id="about" aria-labelledby="about-title">
+  <div class="wrap about-grid">
+    <div class="about-photo" data-reveal>{{ m.picture('about', site.name ~ ' جالسًا مبتسمًا بقميص أبيض', '(min-width: 880px) 340px, (min-width: 600px) 45vw, 92vw') }}</div>
+    <div class="about-text">
+      <p class="eyebrow">نبذة عني</p>
+      <h2 id="about-title">مرحبًا، أنا أولواسولا</h2>
+      <p>أنا {{ site.name }}، عالم بيانات جغرافية مكانية ومتخصص في الذكاء الاصطناعي الجغرافي المكاني، مقيم في لاغوس.</p>
+      <p>درست المساحة والمعلوماتية الجغرافية في جامعة إيلورين (بكالوريوس)، ثم حصلت على ماجستير تقنية المعلومات (MIT) بتخصص في الذكاء الاصطناعي من جامعة Miva المفتوحة.</p>
+      <p>لديّ خمس سنوات من العمل المهني في نظم المعلومات الجغرافية والاستشعار عن بُعد، ودرّست Python للتحليل الجغرافي المكاني لـ 1,500 شخص في ندوات.</p>
+      <p>أنفّذ مسوحًا بالطائرات المسيّرة في نيجيريا، يُخطَّط لها وتُنفَّذ داخليًا، وأعمل عن بُعد ببيانات الأقمار الصناعية لعملاء في أفريقيا وخارجها.</p>
+      <p>أوضّح كيف جرى التحقق من كل نتيجة، حتى حين تكون الأرقام أقل إرضاءً. وإلى جانب العمل للعملاء، أطوّر أدوات عامة مجانية مثل Lagos Access Map وGeoAID{% if preprint_url %}، الموثّق في <a href="{{ preprint_url }}">نسخة أولية من بحث</a> (بالإنجليزية){% endif %}.</p>
+      <dl class="creds">
+        <div><dt>التعليم</dt><dd>بكالوريوس المساحة والمعلوماتية الجغرافية، جامعة إيلورين<br>ماجستير تقنية المعلومات (MIT)، تخصص الذكاء الاصطناعي، جامعة Miva المفتوحة</dd></div>
+        <div><dt>أعمل على</dt><dd>صور الأقمار الصناعية والطائرات المسيّرة والصور الجوية · تعلّم الآلة المكاني · نظم المعلومات الجغرافية</dd></div>
+        <div><dt>العملاء</dt><dd>نيجيريا (ميدانيًا) · أفريقيا والعالم (عن بُعد)</dd></div>
+        <div><dt>اللغات</dt><dd>أعمل بالإنجليزية أساسًا. يمكنك مراسلتي بالعربية.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{{ m.testimonials() }}
+
+<section class="section section-alt" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <div class="contact-panel" data-reveal>
+      <div class="contact-pitch">
+        <p class="eyebrow">تواصل</p>
+        <h2 id="contact-title">احجز مكالمة</h2>
+        <p>أخبرني بما تحتاج إلى تقريره، وأين، وما البيانات المتوفرة لديك. سأخبرك بصراحة إن كان بإمكاني المساعدة. احجز 15 دقيقة للتعارف أو 30 دقيقة لتحديد نطاق مشروع، في موعد يظهر بتوقيتك المحلي. وإن كنت تفضّل الكتابة، تُفتح رسالة البريد بنموذج قصير.</p>
+        <div class="contact-person">{{ m.fixed_img('contact', site.name, 'contact-avatar', 64) }}<p><strong>ستتحدث معي مباشرة.</strong><span>لاغوس، نيجيريا · {{ site.timezone }}</span></p></div>
+        <div class="contact-actions">
+          {{ m.contact_actions() }}
+        </div>
+      </div>
+      {% include "contact-list.html" %}
+    </div>
+    {{ m.brief_builder() }}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% import "macros.html" as m with context %}
+<div class="map-block">
+  <div class="map-panel" dir="ltr" data-access-map data-src="/data/lagos-health-osm.json">
+    {{ m.picture('access-map-preview', t.access.preview_alt, '(min-width: 1100px) 1100px, 96vw', cls='map-preview') }}
+    <div class="map-live" role="region" aria-label="{{ t.access.map_label }}"></div>
+    <p class="map-status" data-map-status aria-live="polite"></p>
+  </div>
+  <div class="map-legend" data-map-legend>
+    {% for label in t.access.legend %}
+    <span><i class="dot-{{ loop.index0 }}"></i>{{ label }}</span>
+    {% endfor %}
+  </div>
+  <p class="map-caption">{{ t.access.caption|replace('{count}', osm_count)|replace('{date}', osm_pulled) }} {{ t.access.data_credit }} <a href="https://www.openstreetmap.org/copyright">{{ t.access.contributors }}</a>.</p>
+  <details class="map-table">
+    <summary>{{ t.access.table_summary }}</summary>
+    {{ m.osm_table() }}
+  </details>
+</div>

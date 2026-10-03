@@ -1,0 +1,114 @@
+{#page {"kind": "case", "preprint": true,
+ "title": "تخريط قابلية التعرض للفيضانات GeoAID، لاغوس · Oluwasola Oyinloye",
+ "headline": "GeoAID: أين تكون Amuwo-Odofin الأكثر عرضة للفيضانات",
+ "description": "دراسة حالة: نموذج مفتوح وقابل للتفسير لقابلية التعرض للفيضانات في Amuwo-Odofin بلاغوس، مختبَر بالتحقق المتقاطع المكاني ومنشور كلوحة معلومات مباشرة.",
+ "og_title": "GeoAID: أين تكون Amuwo-Odofin الأكثر عرضة للفيضانات",
+ "og_image": "og-geoaid-ar.png",
+ "og_image_alt": "دراسة حالة: خريطة قابلية التعرض للفيضانات GeoAID لمنطقة Amuwo-Odofin في لاغوس.",
+ "crumb": "قابلية التعرض للفيضانات GeoAID",
+ "published": "2026-10-03",
+ "keywords": ["قابلية التعرض للفيضانات", "فيضانات لاغوس", "Amuwo-Odofin", "الغابة العشوائية", "التحقق المتقاطع المكاني", "SHAP", "Sentinel-1"]} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.case_studies, section('work')), (page.crumb, none)]) }}
+      <ul class="tags" aria-label="{{ t.nav.project_type }}">
+        <li class="tag">للصالح العام</li>
+        <li class="tag tag-quiet">تعلّم آلة مكاني</li>
+        <li class="tag tag-quiet">نسخة أولية من بحث</li>
+      </ul>
+      <h1>أين تكون <span class="nowrap">Amuwo-Odofin</span> الأكثر عرضة للفيضانات</h1>
+      <p class="lead">GeoAID نموذج مفتوح لقابلية التعرض للفيضانات في منطقة حكم محلي (LGA) واحدة في لاغوس. يُظهر أين تكون الفيضانات أكثر احتمالًا من الناحية البنيوية، ولماذا، ومن المعرّض لها. ويبيّن أيضًا مدى صموده على أرض لم يرها من قبل.</p>
+      <dl class="kpis">
+        <div><dt>ROC-AUC بالتقسيم العشوائي</dt><dd>≈ 0.798</dd></div>
+        <div><dt>التحقق المتقاطع المكاني</dt><dd>≈ 0.642</dd></div>
+        <div><dt>الشبكة</dt><dd>100 م</dd></div>
+        <div><dt>فيضانات في التدريب</dt><dd>4، من 2017 إلى 2022</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-map">
+      <a class="zoomable" href="{{ manifest['geoaid-flood'][-1].src }}" data-lightbox>
+        {{ m.picture('geoaid-flood', t.geoaid.map_alt, '(min-width: 1100px) 1000px, 92vw', eager=true) }}
+        <span class="zoom-hint">{{ m.icon('expand') }}{{ t.cta.enlarge_map }}</span>
+      </a>
+      <figcaption>
+        {{ m.ramp_legend(inline=true) }}
+        احتمال الفيضان المقدَّر في منطقة Amuwo-Odofin (الغابة العشوائية، شبكة 100 م).
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>السؤال</h2>
+      <p>أين تكون الفيضانات أكثر احتمالًا في Amuwo-Odofin، ولماذا؟ كثيرًا ما لا تُقارَن خرائط الفيضانات المبنية على أوزان يحددها الخبراء بفيضانات حقيقية، ونادرًا ما تشرح لماذا يحصل مكان على درجة أعلى من غيره. يُدرَّب GeoAID على فيضانات مرصودة ويشرح كل تنبؤ.</p>
+
+      <h2>ثلاث طبقات</h2>
+      <ol class="layer-list">
+        <li><b>قابلية التعرض البنيوية</b><span>أي المناطق معرّضة للفيضانات بطبيعتها؟ يغذّي 14 عاملًا مستخلصًا من الأقمار الصناعية نموذج الغابة العشوائية (Random Forest) الذي ينتج خريطة خطر من أربعة مستويات.</span></li>
+        <li><b>التفعيل المباشر</b><span>هل يتفعّل هذا الخطر الآن؟ تُقارَن الأمطار شبه الآنية من NASA GPM IMERG بخريطة الخطر.</span></li>
+        <li><b>التعرّض</b><span>من وما الذي يقع في طريق المياه؟ سكان WorldPop، والمدارس والمرافق الصحية والطرق من OpenStreetMap، فوق مستويات الخطر.</span></li>
+      </ol>
+
+      <h2>البيانات والنموذج</h2>
+      <p>يأتي سجل الفيضانات من رادار Sentinel-1 عبر 4 فيضانات موثّقة في لاغوس بين 2017 و2022، مع قناع يستبعد المياه الدائمة. وتغطي العوامل المؤثرة التضاريس والأمطار والغطاء الأرضي والنبات والتربة والمسافة إلى شبكة التصريف، وكلها على شبكة موحدة بدقة 100 م.</p>
+      <p>اختيرت الغابة العشوائية بدلًا من الانحدار اللوجستي وXGBoost. ويفسّر SHAP كل تنبؤ: الغطاء النباتي هو أقوى محرّك لقابلية التعرض، وهذا يتفق مع أهمية المتغيرات التي يحسبها النموذج نفسه.</p>
+
+      <h2>ما مدى جودته؟</h2>
+      {{ m.auc_figure() }}
+      <p>بالتقسيم العشوائي يحقق النموذج نحو 0.798. هذا الرقم يجامله، لأن الخلايا المتجاورة في مجموعتي التدريب والاختبار متشابهة. أما بالتحقق المتقاطع المكاني، حيث تُحجب كتل كاملة من الأرض، فينخفض إلى نحو 0.642. خطّط على أساس الرقم الثاني. يستطيع GeoAID الإشارة إلى مناطق تستحق نظرة أدق، لكن لا ينبغي أن يكون أساسًا لقرار بشأن قطعة أرض بعينها.</p>
+
+      <h2>اكتشاف خطأ في البيانات</h2>
+      <p>صنّفت نسخة مبكرة من سجل الفيضانات الراداري 97.7% من منطقة الدراسة على أنها مغمورة، لأن المياه الدائمة كانت تتسرب إلى فئة «مغمور». وبعد التشخيص وتطبيق القناع، انخفضت النسبة المغمورة إلى 5.18%، وهي نسبة معقولة فيزيائيًا. هذا التصحيح، وكل تصحيح آخر، موثّق في <a href="{{ site.projects.geoaid_methods }}" hreflang="en">سجل المنهجية</a> (بالإنجليزية).</p>
+
+      <h2>الحدود</h2>
+      <ul>
+        <li>قابلية التعرض ليست توقعًا. إنها تُظهر أين تجعل الظروف الفيضان أكثر احتمالًا، لا متى سيحدث.</li>
+        <li>اثنان من المدخلات الأربعة عشر، وكلاهما من بيانات الأمطار، أخشن دقةً من منطقة الدراسة، مما يحدّ من قدرتهما على التمييز بين مكان وآخر.</li>
+        <li>دُرّب النموذج واختُبر على Amuwo-Odofin فقط. ولم يُختبر بعدُ إن كان يصلح لمناطق حكم محلي أخرى.</li>
+      </ul>
+
+      {% if preprint_url %}
+      <h2>النسخة الأولية من البحث</h2>
+      <p class="cite" lang="en" dir="ltr">Oyinloye, O. A. and Mustapha, I. O. ({{ site.preprint.year }}). <a href="{{ preprint_url }}">{{ site.preprint.title }}</a>. {{ site.preprint.server }}. doi:{{ site.preprint.doi }}</p>
+      <p class="small">البحث بالإنجليزية. النسخ الأولية من الأبحاث لم تخضع لتحكيم الأقران. أُنجز GeoAID بوصفه أطروحتي لماجستير تقنية المعلومات في جامعة Miva المفتوحة.</p>
+      {% else %}
+      <p class="small">أُنجز GeoAID بوصفه أطروحتي لماجستير تقنية المعلومات في جامعة Miva المفتوحة.</p>
+      {% endif %}
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>ملخص</h2>
+        <dl class="facts">
+          <div><dt>النوع</dt><dd>للصالح العام، مفتوح المصدر</dd></div>
+          <div><dt>المنطقة</dt><dd>منطقة Amuwo-Odofin، لاغوس</dd></div>
+          <div><dt>النموذج</dt><dd>الغابة العشوائية، مع تفسير SHAP</dd></div>
+          <div><dt>التحقق</dt><dd>التقسيم العشوائي والتحقق المتقاطع المكاني</dd></div>
+        </dl>
+        <ul class="chips"><li>Python</li><li>Google Earth Engine</li><li>Sentinel-1 SAR</li><li>SHAP</li><li>Streamlit</li></ul>
+        <p class="case-links stack">
+          <a href="{{ site.projects.geoaid_dashboard }}">{{ t.cta.open_dashboard }}{{ m.icon('out') }}</a>
+          {% if preprint_url %}<a href="{{ preprint_url }}">{{ t.cta.read_preprint }}{{ m.icon('out') }}</a>{% endif %}
+          <a href="{{ site.projects.geoaid_repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
+          <a href="{{ site.projects.geoaid_methods }}" hreflang="en">{{ t.cta.read_methods }}{{ m.icon('arrow') }}</a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>تقيّم خطر الفيضانات في موقع ما؟</strong> أخبرني أين، وما الذي تخطط له.</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <nav class="case-next wrap" aria-label="{{ t.nav.more_cases }}">
+    <a href="{{ link(cases['oil-palm']) }}"><span>{{ t.cta.next_case }}</span><strong>عدّ {{ palm.palms }} نخلة زيت من الصور الجوية</strong>{{ m.icon('arrow') }}</a>
+  </nav>
+</article>
+{% endblock %}

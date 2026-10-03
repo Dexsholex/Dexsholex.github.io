@@ -1,0 +1,121 @@
+{#page {"kind": "case",
+ "title": "Conteo de palmas aceiteras con imágenes aéreas · Oluwasola Oyinloye",
+ "headline": "718 751 palmas aceiteras contadas con imágenes aéreas",
+ "description": "Caso de estudio: un proceso de detección de copas con YOLOv8 que cartografió 718 751 palmas en 12 166,6 ha y 26 bloques para una plantación comercial.",
+ "og_title": "718 751 palmas aceiteras contadas con imágenes aéreas",
+ "og_image": "og-oil-palm-es.png",
+ "og_image_alt": "Caso de estudio: 718 751 palmas aceiteras contadas en 12 166,6 hectáreas con imágenes aéreas.",
+ "crumb": "Conteo de palmas aceiteras",
+ "published": "2026-10-03",
+ "keywords": ["conteo de palmas aceiteras", "detección de copas", "YOLOv8", "inventario de plantación", "imágenes aéreas", "IA geoespacial"]} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.case_studies, section('work')), (page.crumb, none)]) }}
+      <ul class="tags" aria-label="{{ t.nav.project_type }}">
+        <li class="tag">Trabajo para cliente</li>
+        <li class="tag tag-quiet">IA geoespacial</li>
+        <li class="tag tag-quiet">Anonimizado</li>
+      </ul>
+      <h1>{{ palm.palms }} palmas aceiteras contadas con imágenes aéreas</h1>
+      <p class="lead">Una plantación comercial de palma aceitera necesitaba un inventario árbol por árbol de toda la finca. Construí un proceso que encuentra cada copa en las imágenes aéreas y la convierte en un punto cartografiado y contable.</p>
+      <dl class="kpis">
+        <div><dt>Palmas detectadas</dt><dd>{{ palm.palms }}</dd></div>
+        <div><dt>Superficie neta cubierta</dt><dd>{{ palm.hectares }} ha</dd></div>
+        <div><dt>Bloques de producción</dt><dd>{{ palm.blocks }}</dd></div>
+        <div><dt>Densidad media</dt><dd>{{ palm.density }} palmas/ha</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-photo">
+      <a class="zoomable" href="{{ manifest['palm-drone-pad'][-1].src }}" data-lightbox>{{ m.picture('palm-drone-pad', 'Un dron de levantamiento sobre su plataforma de despegue en el borde de una plantación de palma aceitera, con palmas adultas detrás', '(min-width: 1200px) 1152px, 96vw', eager=true) }}<span class="zoom-hint">{{ m.icon('expand') }}{{ t.cta.enlarge }}</span></a>
+      <figcaption>En la finca: el dron de levantamiento listo sobre su plataforma de despegue.</figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>La pregunta</h2>
+      <p>¿Cuántas palmas tiene la plantación y dónde está cada una? En una finca de este tamaño, los conteos manuales son lentos y no producen un mapa. El entregable es un punto cartografiado por palma, bloque por bloque, que la plantación puede consultar y comprobar.</p>
+
+      <h2>Cómo funciona</h2>
+      <ol class="pipeline" aria-label="Proceso de tratamiento">
+        <li><b>Imágenes</b><span>Un ortomosaico RGB por bloque</span></li>
+        <li><b>Teselas</b><span>Recortes de 1280 píxeles con 256 píxeles de solape</span></li>
+        <li><b>Detección</b><span>Un modelo YOLOv8 con una sola clase: palma aceitera</span></li>
+        <li><b>Fusión</b><span>Resultados de las teselas unidos y duplicados eliminados</span></li>
+        <li><b>Inventario</b><span>Un punto por palma, en GeoPackage y CSV</span></li>
+      </ol>
+      <p>Los datos de entrenamiento son un pequeño conjunto de copas anotadas a mano, tomadas de una muestra estratificada de teselas, elegida para que haya escenas solo con maleza, solo con palmas y mixtas. Los conjuntos de entrenamiento, validación y prueba se separaron por sector geográfico y no por tesela aleatoria, así que la puntuación de prueba refleja terreno que el modelo no había visto.</p>
+
+      <h2>Mejorar el modelo en producción</h2>
+      <p>A medida que llegaban los bloques aparecieron dos tipos de error: el dosel denso de las palmas adultas, donde las copas vecinas se confunden, y las palmas jóvenes, pequeñas y fáciles de pasar por alto. Anoté nuevos ejemplos de ambos casos y volví a entrenar. El modelo actual es el resultado de {{ palm.iterations }} iteraciones de entrenamiento, cada una comparada con el mismo conjunto de prueba reservado.</p>
+
+      <h2>Que el total cuadre</h2>
+      <p>Los bloques se entregaron de uno en uno, y muchos se solapaban. Una comprobación de todos los pares encontró {{ palm.overlap_hectares }} ha de cobertura compartida en {{ palm.overlap_pairs }} pares de bloques. Sumar el conteo de cada bloque por separado habría contado las palmas de esas zonas dos o tres veces.</p>
+      <p>Lo resolví con una regla fija: el terreno compartido pertenece al bloque entregado primero, y los bloques posteriores descartan sus detecciones dentro de ese solape. Cada hectárea se cuenta una vez.</p>
+      {{ m.palm_bars('Total de la plantación, antes y después de eliminar los conteos duplicados', note=palm.double_counts ~ ' conteos duplicados eliminados (' ~ palm.double_count_share ~ ')') }}
+      <p>Donde había datos de elevación ({{ palm.chm_blocks }} de {{ palm.blocks }} bloques), un control de la altura del dosel señala las detecciones demasiado bajas para ser plausibles, que probablemente no son palmas. Las señala para revisarlas; no las borra.</p>
+
+      <h2>Lo que este trabajo no afirma</h2>
+      <ul>
+        <li>Los solapes se resolvieron con la extensión rectangular de cada bloque, no con límites de propiedad levantados. Los totales por bloque podrían cambiar si se aplicaran los límites reales. El total de la plantación no debería cambiar mucho, porque el solape es un solape real de imágenes.</li>
+        <li>Algunos bloques conservan solo una franja estrecha de terreno tras aplicar la regla, así que su cifra de palmas por hectárea parece muy baja. Esas cifras necesitan una comprobación de campo antes de citarlas.</li>
+        <li>Las cifras anteriores son detecciones. El proceso incluye un control de la precisión del conteo frente a una zona contada a mano, y añadiré ese resultado al resumen cuando se publique.</li>
+      </ul>
+
+      <h2>Lo que recibió la plantación</h2>
+      <ul>
+        <li>Un GeoPackage por bloque con dos capas: los contornos de las copas, y un punto por palma con identificador, puntuación de confianza y área de la copa.</li>
+        <li>Un inventario maestro de la plantación que reúne todos los bloques.</li>
+        <li>Una guía para procesar bloques nuevos sin volver a entrenar, salvo que aparezca un nuevo tipo de error.</li>
+      </ul>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Resumen</h2>
+        <dl class="facts">
+          <div><dt>Cliente</dt><dd>Una plantación comercial de palma aceitera (anonimizada)</dd></div>
+          <div><dt>Datos</dt><dd>Ortomosaicos RGB; modelos de elevación para algunos bloques</dd></div>
+          <div><dt>Método</dt><dd>Detección de objetos con YOLOv8</dd></div>
+          <div><dt>Entregables</dt><dd>GeoPackage y CSV, UTM zona 31N</dd></div>
+          <div><dt>Fecha</dt><dd>{{ palm.as_of }}</dd></div>
+          {% if palm.accuracy %}
+          <div><dt>Precisión del conteo</dt><dd>{{ palm.accuracy }}</dd></div>
+          {% elif not release %}
+          <div><dt>Precisión del conteo</dt><dd>{{ todo('validated counting accuracy figure') }}</dd></div>
+          {% else %}{{ todo('validated counting accuracy figure') }}{% endif %}
+        </dl>
+        <ul class="chips"><li>Python</li><li>YOLOv8</li><li>PyTorch</li><li>GeoPackage</li></ul>
+        <p class="case-links"><a href="{{ palm.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a></p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>¿Necesita un conteo de árboles o un mapa de plantación?</strong> Hábleme de su finca y de sus imágenes.</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <section class="wrap field" aria-labelledby="field-title">
+    <h2 id="field-title">Sobre el terreno</h2>
+    <p class="small">Fotos y vídeo de la finca. Eliminé los datos de ubicación de todos los archivos.</p>
+    <div class="gallery">
+      {{ m.gallery_item('palm-pilot', 'Oluwasola Oyinloye revisando el plan de vuelo en el control del dron, sobre el terreno', 'Planificando el vuelo en el lugar') }}
+      {{ m.gallery_video('palm-takeoff', 'El dron de levantamiento despegando de su maleta y subiendo sobre las palmas', 'Despegue para un vuelo de cartografía (14 s, sin sonido)') }}
+      {{ m.gallery_item('palm-gnss', 'Un receptor GNSS sobre un trípode, entre vegetación baja de la finca', 'Un receptor GNSS instalado en la finca') }}
+      {{ m.gallery_item('palm-estate-road', 'Un camino recto de laterita que atraviesa la plantación hasta el horizonte', 'La extensión de la finca') }}
+      {{ m.gallery_item('palm-crown', 'Una palma aceitera adulta con la copa completa', 'Una copa adulta: lo que el modelo aprende a encontrar') }}
+    </div>
+  </section>
+
+  <nav class="case-next wrap" aria-label="{{ t.nav.more_cases }}">
+    <a href="{{ link(cases['geoaid']) }}"><span>{{ t.cta.next_case }}</span><strong>Susceptibilidad a inundaciones GeoAID: proyecto piloto en Amuwo-Odofin</strong>{{ m.icon('arrow') }}</a>
+  </nav>
+</article>
+{% endblock %}

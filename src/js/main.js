@@ -6,6 +6,22 @@
   var hasIO = "IntersectionObserver" in window;
   doc.classList.add("reveal-ready");
 
+  // Interface text for this page's language, written into the page by the build
+  var T = {};
+  try { T = JSON.parse(document.getElementById("site-i18n").textContent); } catch (e) {}
+  var lang = T.lang || doc.lang || "en";
+  var NUM = T.num || { group: ",", decimal: "." };
+  // Numbers written the way this page's language writes them (the build uses the same rules)
+  function fmt(v, decimals) {
+    var parts = Number(v).toFixed(decimals || 0).split(".");
+    return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, NUM.group) + (parts[1] ? NUM.decimal + parts[1] : "");
+  }
+  function fill(s, vals) {
+    return String(s).replace(/\{(\w+)\}/g, function (m, k) { return k in vals ? vals[k] : m; });
+  }
+  function store(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+  function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -18,15 +34,14 @@
     var media = window.matchMedia("(prefers-color-scheme: dark)");
     var current = function () { return doc.dataset.theme || (media.matches ? "dark" : "light"); };
     var label = function () {
-      toggle.querySelector(".visually-hidden").textContent =
-        "Switch to " + (current() === "dark" ? "light" : "dark") + " theme";
+      toggle.querySelector(".visually-hidden").textContent = current() === "dark" ? T.theme_to_light : T.theme_to_dark;
     };
     toggle.hidden = false;
     label();
     toggle.addEventListener("click", function () {
       var next = current() === "dark" ? "light" : "dark";
       doc.dataset.theme = next;
-      try { localStorage.setItem("theme", next); } catch (e) {}
+      store("theme", next);
       document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
         m.setAttribute("content", next === "dark" ? "#0f1613" : "#f7f6f1");
       });
@@ -52,8 +67,64 @@
   // Mark the menu item for the section of the site you are in (Services and its pages)
   document.querySelectorAll(".site-nav a").forEach(function (a) {
     var u = new URL(a.href, location.href);
-    if (!u.hash && u.pathname !== "/" && location.pathname.indexOf(u.pathname) === 0) a.setAttribute("aria-current", "page");
+    if (!u.hash && !/^\/([a-z]{2}\/)?$/.test(u.pathname) && location.pathname.indexOf(u.pathname) === 0) a.setAttribute("aria-current", "page");
   });
+
+  // Language menu: closes on Escape or a click elsewhere
+  var langMenu = document.querySelector("[data-lang-menu]");
+  if (langMenu) {
+    document.addEventListener("click", function (ev) { if (langMenu.open && !langMenu.contains(ev.target)) langMenu.open = false; });
+    langMenu.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape" && langMenu.open) { langMenu.open = false; langMenu.querySelector("summary").focus(); }
+    });
+  }
+
+  // Language: a choice made in the menu is remembered, and the head script honours it on later visits
+  document.querySelectorAll("[data-lang-choice]").forEach(function (a) {
+    a.addEventListener("click", function () {
+      store("lang", a.dataset.langChoice);
+      if (location.hash && a.href.indexOf("#") < 0) a.href += location.hash;
+    });
+  });
+
+  // With no choice made yet, offer the version that matches the browser's language (never the location)
+  (function suggest() {
+    if (read("lang") || read("lang-suggest") === "off" || !T.suggest) return;
+    var wanted = null;
+    (navigator.languages || [navigator.language || ""]).some(function (l) {
+      var code = String(l).slice(0, 2).toLowerCase();
+      if (code === lang) return true;
+      if (T.suggest[code] && document.querySelector('link[rel="alternate"][hreflang="' + code + '"]')) { wanted = code; return true; }
+      return false;
+    });
+    if (!wanted) return;
+    var s = T.suggest[wanted];
+    var href = document.querySelector('link[rel="alternate"][hreflang="' + wanted + '"]').getAttribute("href");
+    var box = document.createElement("aside");
+    box.className = "lang-suggest";
+    box.lang = wanted;
+    box.dir = s.dir || "ltr";
+    box.setAttribute("aria-label", s.text);
+    var p = document.createElement("p");
+    p.textContent = s.text;
+    var actions = document.createElement("div");
+    var go = document.createElement("a");
+    go.className = "btn btn-sm";
+    go.href = new URL(href).pathname + location.hash;
+    go.hreflang = wanted;
+    go.textContent = s["switch"];
+    go.addEventListener("click", function () { store("lang", wanted); });
+    var stay = document.createElement("button");
+    stay.type = "button";
+    stay.className = "btn btn-sm btn-ghost";
+    stay.textContent = s.stay;
+    stay.addEventListener("click", function () { store("lang-suggest", "off"); box.remove(); });
+    actions.appendChild(go);
+    actions.appendChild(stay);
+    box.appendChild(p);
+    box.appendChild(actions);
+    document.body.appendChild(box);
+  })();
 
   // Highlight the nav link for the section in view (home page only)
   var navLinks = document.querySelectorAll('.site-nav a[href^="#"]');
@@ -104,14 +175,14 @@
   document.querySelectorAll("[data-copy]").forEach(function (btn) {
     if (!navigator.clipboard) return;
     btn.hidden = false;
-    btn.setAttribute("aria-label", "Copy email address");
+    btn.setAttribute("aria-label", T.copy_label);
     var text = btn.querySelector("span");
     btn.addEventListener("click", function () {
       navigator.clipboard.writeText(btn.dataset.copy).then(function () {
-        text.textContent = "Copied";
+        text.textContent = T.copied;
         btn.classList.add("is-done");
-        live.textContent = "Email address copied";
-        setTimeout(function () { text.textContent = "Copy"; btn.classList.remove("is-done"); live.textContent = ""; }, 2000);
+        live.textContent = T.email_copied;
+        setTimeout(function () { text.textContent = T.copy; btn.classList.remove("is-done"); live.textContent = ""; }, 2000);
       });
     });
   });
@@ -133,7 +204,7 @@
         li.hidden = !show;
         if (show) shown++;
       });
-      if (sectorStatus) sectorStatus.textContent = shown + " services" + (key === "all" ? "" : " for " + b.textContent);
+      if (sectorStatus) sectorStatus.textContent = fill(key === "all" ? T.services_count : T.services_for, { n: shown, sector: b.textContent });
     });
   }
 
@@ -144,32 +215,33 @@
     var briefStatus = brief.querySelector(".brief-status");
     var compose = function () {
       var fd = new FormData(brief);
-      var line = function (label, values) { return values.length ? label + ": " + values.join(", ") : ""; };
       var place = (fd.get("place") || "").trim();
       var where = fd.get("where") || "";
+      var sep = lang === "fr" ? " : " : ": ";
+      var line = function (label, values) { return values.length ? label + sep + values.join(", ") : ""; };
       var lines = [
-        "Hello Oluwasola,", "", "I'd like to book a call.", "",
-        line("Services", fd.getAll("service")),
-        where || place ? "Site: " + [where, place].filter(Boolean).join(", ") : "",
-        line("Timing", fd.getAll("when")),
-        line("Data we have", fd.getAll("data")),
-        (fd.get("decide") || "").trim() ? "What I need to decide: " + fd.get("decide").trim() : "",
-        "", "Organisation:", "Two or three times that suit me (with time zone):"
+        T.brief_hello, "", T.brief_book, "",
+        line(T.brief_services, fd.getAll("service")),
+        where || place ? T.brief_site + sep + [where, place].filter(Boolean).join(", ") : "",
+        line(T.brief_timing, fd.getAll("when")),
+        line(T.brief_data, fd.getAll("data")),
+        (fd.get("decide") || "").trim() ? T.brief_decide + sep + fd.get("decide").trim() : "",
+        "", T.brief_org, T.brief_times
       ];
       return lines.filter(function (l, i) { return l !== "" || lines[i - 1] !== ""; }).join("\r\n");
     };
     brief.addEventListener("submit", function (ev) {
       ev.preventDefault();
       var services = new FormData(brief).getAll("service");
-      var subject = "Call request" + (services.length ? ": " + services.slice(0, 2).join(", ") : "");
+      var subject = T.brief_subject + (services.length ? (lang === "fr" ? " : " : ": ") + services.slice(0, 2).join(", ") : "");
       window.location.href = "mailto:" + brief.dataset.email +
         "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(compose());
-      briefStatus.textContent = "Opening your email app…";
+      briefStatus.textContent = T.brief_opening;
     });
     var copyBrief = brief.querySelector("[data-brief-copy]");
     if (navigator.clipboard) {
       copyBrief.addEventListener("click", function () {
-        navigator.clipboard.writeText(compose()).then(function () { briefStatus.textContent = "Brief copied. Paste it into any message."; });
+        navigator.clipboard.writeText(compose()).then(function () { briefStatus.textContent = T.brief_copied; });
       });
     } else {
       copyBrief.hidden = true;
@@ -185,14 +257,15 @@
         co.unobserve(e.target);
         var el = e.target;
         var text = el.textContent.trim();
-        var target = parseFloat(text.replace(/,/g, ""));
+        var plain = text.replace(/[\s\u00a0\u202f]/g, "").split(NUM.group).join("").replace(NUM.decimal, ".");
+        var target = parseFloat(plain);
         if (isNaN(target)) return;
-        var decimals = (text.split(".")[1] || "").length;
+        var decimals = (plain.split(".")[1] || "").length;
         var start = performance.now();
         var tick = function (now) {
           var t = Math.min(1, (now - start) / 1100);
           var v = target * (1 - Math.pow(1 - t, 3));
-          el.textContent = v.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+          el.textContent = fmt(v, decimals);
           if (t < 1) requestAnimationFrame(tick); else el.textContent = text;
         };
         requestAnimationFrame(tick);
@@ -231,8 +304,9 @@
       if (!dialog) {
         dialog = document.createElement("dialog");
         dialog.className = "lightbox";
-        dialog.setAttribute("aria-label", "Enlarged image");
-        dialog.innerHTML = '<div class="lightbox-bar"><button type="button">Close</button></div><img alt="">';
+        dialog.setAttribute("aria-label", T.lightbox_label);
+        dialog.innerHTML = '<div class="lightbox-bar"><button type="button"></button></div><img alt="">';
+        dialog.querySelector("button").textContent = T.close;
         document.body.appendChild(dialog);
         dialog.querySelector("button").addEventListener("click", function () { dialog.close(); });
         dialog.addEventListener("click", function (e) { if (e.target === dialog) dialog.close(); });
@@ -266,7 +340,7 @@
 
   function startMap(panel) {
     var status = panel.querySelector("[data-map-status]");
-    status.textContent = "Loading the interactive map…";
+    status.textContent = T.map_loading;
     var css = document.createElement("link");
     css.rel = "stylesheet";
     css.href = "/vendor/leaflet/leaflet.css";
@@ -278,12 +352,12 @@
       buildMap(panel, res[1]);
       status.textContent = "";
     }).catch(function () {
-      status.textContent = "The interactive map could not load. The picture shows the same data.";
+      status.textContent = T.map_failed;
     });
   }
 
-  var COLOURS = ["#3987e5", "#d95926", "#199e70", "#8a918d"];
-  var LABELS = ["Hospital", "Clinic or doctor", "Pharmacy", "Other"];
+  var COLOURS = ["#3987e5", "#d95926", "#199e70", "#8a918d"]; // same order as the .dot-N classes in style.css
+  var LABELS = T.map_legend || ["Hospital", "Clinic or doctor", "Pharmacy", "Other"];
   var SLOT = [0, 1, 1, 2, 3]; // hospital, clinic, doctors, pharmacy, other
   var PANEL = "#0d1714";
 
@@ -292,8 +366,9 @@
       zoomSnap: 0.25, scrollWheelZoom: false, preferCanvas: true, minZoom: 8, maxZoom: 16
     });
     map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
-    map.attributionControl.addAttribution(
-      'Data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, pulled ' + esc(data.pulled));
+    map.attributionControl.addAttribution(fill(esc(T.map_attribution), {
+      osm: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', date: esc(T.pulled || data.pulled)
+    }));
 
     var lgas = L.geoJSON(data.lgas, {
       style: { color: "#e7ede9", weight: 1, opacity: 0.4, fillColor: "#ffffff", fillOpacity: 0.03 },
@@ -301,7 +376,7 @@
         var c = f.properties.counts;
         var total = c ? c.reduce(function (a, b) { return a + b; }, 0) : null;
         layer.bindTooltip("<strong>" + esc(f.properties.name) + "</strong>" +
-          (total === null ? "" : "<span>" + total + " facilit" + (total === 1 ? "y" : "ies") + " in OpenStreetMap</span>"),
+          (total === null ? "" : "<span>" + esc(total === 1 ? T.map_in_osm_one : fill(T.map_in_osm, { n: fmt(total) })) + "</span>"),
           { sticky: true, direction: "top" });
         layer.on({
           mouseover: function () { layer.setStyle({ fillOpacity: 0.1, opacity: 0.85 }); },
@@ -320,7 +395,7 @@
       var s = SLOT[p[2]];
       counts[s]++;
       L.circleMarker([p[1], p[0]], { radius: 5, color: PANEL, weight: 1.5, fillColor: COLOURS[s], fillOpacity: 1 })
-        .bindTooltip("<strong>" + esc(p[3] || "Unnamed facility") + "</strong><span>" + LABELS[s] + "</span>",
+        .bindTooltip("<strong>" + esc(p[3] || T.map_unnamed) + "</strong><span>" + esc(LABELS[s]) + "</span>",
           { direction: "top", offset: [0, -4] })
         .addTo(groups[s]);
     });
@@ -330,13 +405,12 @@
     var legend = panel.parentNode.querySelector("[data-map-legend]");
     legend.innerHTML = "";
     legend.setAttribute("role", "group");
-    legend.setAttribute("aria-label", "Show or hide facility types");
+    legend.setAttribute("aria-label", T.map_filter);
     LABELS.forEach(function (label, s) {
       var b = document.createElement("button");
       b.type = "button";
       b.setAttribute("aria-pressed", "true");
-      b.style.setProperty("--c", COLOURS[s]);
-      b.innerHTML = "<i></i>" + label + " <b>" + counts[s] + "</b>";
+      b.innerHTML = '<i class="dot-' + s + '"></i>' + esc(label) + " <b>" + fmt(counts[s]) + "</b>";
       b.addEventListener("click", function () {
         var on = b.getAttribute("aria-pressed") === "true";
         b.setAttribute("aria-pressed", on ? "false" : "true");
@@ -347,7 +421,7 @@
     var reset = document.createElement("button");
     reset.type = "button";
     reset.className = "map-reset";
-    reset.textContent = "Reset view";
+    reset.textContent = T.map_reset;
     reset.addEventListener("click", fit);
     legend.appendChild(reset);
 

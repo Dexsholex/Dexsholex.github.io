@@ -1,0 +1,40 @@
+{#page {"kind": "page", "crumb": "Vie privée",
+ "title": "Vie privée · Oluwasola Oyinloye",
+ "description": "Comment ce site traite vos données : aucun cookie, aucune mesure d'audience, aucun pistage et aucun formulaire."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (page.crumb, none)]) }}
+      <h1>Vie privée</h1>
+      <p class="lead">Ce site ne collecte rien sur vous. Les détails sont ci-dessous, y compris ce qui se passe si vous m'écrivez.</p>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="prose page-prose">
+      <h2>Sur ce site</h2>
+      <ul>
+        <li>Aucun cookie, aucune mesure d'audience, aucun script de pistage, aucune publicité et aucun formulaire qui envoie des données.</li>
+        <li>Si vous passez du thème clair au thème sombre, ou si vous choisissez une langue, ce choix est enregistré dans votre propre navigateur pour que le site s'en souvienne. Il n'est jamais envoyé nulle part.</li>
+        <li>Le site ne cherche pas à savoir où vous êtes. Si votre navigateur est réglé sur une autre langue proposée par le site, il peut vous suggérer cette version, et c'est vous qui choisissez.</li>
+        <li>La carte interactive ne charge que des fichiers de ce site. Aucun fond de carte ni aucune police externe n'est demandé.</li>
+        <li>L'outil de demande de la page d'accueil rédige un e-mail dans votre propre messagerie. Rien n'est envoyé tant que vous ne l'envoyez pas vous-même.</li>
+      </ul>
+
+      <h2>Hébergement</h2>
+      <p>Le site est hébergé sur GitHub Pages. Pour faire fonctionner et sécuriser le service, GitHub peut enregistrer des informations techniques comme votre adresse IP. Voir la <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" hreflang="en">déclaration de confidentialité de GitHub</a> (en anglais).</p>
+
+      <h2>Liens vers d'autres services</h2>
+      <p>Les liens vers {% if site.booking_url %}Cal.com, {% endif %}LinkedIn, GitHub, Medium, {% if preprint_url %}Preprints.org {% endif %}et le tableau de bord GeoAID sur Streamlit mènent à ces services, qui ont leurs propres conditions de confidentialité.</p>
+
+      <h2>Quand vous me contactez</h2>
+      <p>{% if site.booking_url %}Si vous réservez un appel, Cal.com gère la réservation et les informations que vous y saisissez, selon sa propre politique de confidentialité. {% endif %}Si vous m'écrivez, j'utilise vos coordonnées uniquement pour vous répondre et travailler avec vous. Je ne les partage pas et ne vous inscris à aucune liste de diffusion. Vous pouvez me demander à tout moment de supprimer nos échanges : <a href="{{ mailto_url }}">{{ site.email }}</a>.</p>
+      <p>Les données de projet sont traitées à part, dans la page <a href="{{ link('/data-protection/') }}">confidentialité et protection des données</a>.</p>
+
+      <p class="small">Dernière mise à jour : octobre 2026.</p>
+    </div>
+  </div>
+</article>
+{% endblock %}

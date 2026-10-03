@@ -1,0 +1,589 @@
+{
+  "sectors": {
+    "agriculture": "Agriculture and plantations",
+    "finance": "Agric lending and finance",
+    "construction": "Real estate, construction and infrastructure",
+    "government": "Government and urban planning",
+    "development": "NGOs, health and development",
+    "environment": "Environment, climate and insurance",
+    "mining": "Mining, quarrying and energy"
+  },
+  "also": "Also: cartography and map production for reports, digitising and data cleaning, geocoding, OpenStreetMap mapping, site suitability studies and GNSS ground control. If your question involves a place, ask.",
+  "services": {
+    "geospatial-ai": {
+      "title": "Geospatial AI and machine learning",
+      "short": "Deep-learning models that find and count objects in imagery, and predictive models tested on ground they have not seen.",
+      "page": {
+        "title": "Geospatial AI and Machine Learning Services · Oluwasola Oyinloye",
+        "description": "Object detection, counting and classification in drone and satellite imagery, plus predictive spatial models tested on ground they have not seen.",
+        "headline": "Geospatial AI and machine learning",
+        "crumb": "Geospatial AI",
+        "lead": "Models that read imagery at a scale no team could manage by hand, and predictive models that tell you how far to trust them. The oil palm project counted 718,751 palms this way.",
+        "get": [
+          "Object detection and counting: trees, buildings or other features in drone, aerial or satellite imagery.",
+          "Classification of land cover, crops or other classes you care about.",
+          "Predictive maps, such as flood susceptibility, built from many spatial factors.",
+          "Explanations of each prediction with SHAP, so you can see what drives a result.",
+          "An honest error rate, from tests on areas the model did not train on rather than on random samples."
+        ],
+        "who": "Plantation and farm operators, lenders and insurers, planners and researchers: anyone with more imagery or more ground than people can review by hand.",
+        "steps": [
+          [
+            "Frame",
+            "The question and the decision it supports"
+          ],
+          [
+            "Label",
+            "A sample annotated by hand, or existing data"
+          ],
+          [
+            "Train",
+            "Compare models on the same test set"
+          ],
+          [
+            "Validate",
+            "Test on held-out areas"
+          ],
+          [
+            "Deploy",
+            "Run at scale and hand over the code"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "How much labelled data do you need?",
+            "a": "Often less than people expect. The oil palm detector was trained on a small hand-annotated set and improved in rounds as new failure patterns showed up."
+          },
+          {
+            "q": "Why test on held-out areas?",
+            "a": "Neighbouring pixels look alike, so random splits flatter a model. GeoAID scored about 0.798 on a random split and about 0.642 under spatial cross-validation. The second number is the one to plan with."
+          },
+          {
+            "q": "Do I get the model?",
+            "a": "Yes. You get the trained model, the code and documentation, so your team can run it again."
+          }
+        ],
+        "where": "Anywhere, done remotely",
+        "chips": [
+          "PyTorch",
+          "Ultralytics YOLOv8",
+          "scikit-learn",
+          "XGBoost",
+          "SHAP",
+          "OpenCV"
+        ]
+      }
+    },
+    "drone-mapping": {
+      "title": "Drone mapping and photogrammetry",
+      "short": "Survey flights planned and flown in-house, then turned into orthomosaics, surface and terrain models, and counts.",
+      "page": {
+        "title": "Drone Mapping and Photogrammetry in Nigeria · Oluwasola Oyinloye",
+        "description": "Drone surveys planned and flown in-house, turned into orthomosaics, elevation models and object counts for plantations, construction and mining in Nigeria.",
+        "headline": "Drone mapping and photogrammetry",
+        "crumb": "Drone mapping",
+        "lead": "Drone surveys across Nigeria, planned and flown in-house, and processed into maps you can measure from: orthomosaics, surface and terrain models, and counts of trees or other objects.",
+        "get": [
+          "An orthomosaic: one georeferenced image of the whole site that you can measure on.",
+          "Digital surface and terrain models for heights, slopes and drainage.",
+          "Object counts and inventories, such as one point per tree, using the same detection approach as the oil palm project.",
+          "Stockpile and earthwork volumes measured from the surface model.",
+          "Files in standard formats (GeoTIFF, GeoPackage, point clouds where useful) and a short note on accuracy and coverage."
+        ],
+        "who": "Plantation managers counting stands and finding gaps, developers and contractors tracking a site, quarry and mining teams measuring stockpiles, and anyone who needs a more detailed picture of a site than satellite imagery can give.",
+        "steps": [
+          [
+            "Scope",
+            "Area, detail needed and deadline"
+          ],
+          [
+            "Plan",
+            "Flight lines, overlap and ground control"
+          ],
+          [
+            "Fly",
+            "Survey flights and GNSS ground control on site"
+          ],
+          [
+            "Process",
+            "DJI Terra, Agisoft Metashape or WebODM"
+          ],
+          [
+            "Deliver",
+            "Maps, models, counts and an accuracy note"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Who flies the survey?",
+            "a": "Flights are planned and flown in-house, and GNSS ground control is set up on site."
+          },
+          {
+            "q": "Do you work outside Nigeria?",
+            "a": "Drone surveys are in Nigeria. Elsewhere I can process imagery that your team or a local pilot collects, and satellite imagery covers almost anywhere."
+          },
+          {
+            "q": "What accuracy can I expect?",
+            "a": "It depends on flight height, the camera and ground control. I report the accuracy achieved on each job, checked against ground control, so you know what the map can support."
+          },
+          {
+            "q": "What do you need from me to start?",
+            "a": "The site boundary or a rough outline, access arrangements, and what you want to measure."
+          }
+        ],
+        "where": "On site in Nigeria",
+        "chips": [
+          "DJI Terra",
+          "Agisoft Metashape",
+          "WebODM / OpenDroneMap",
+          "GNSS ground control",
+          "QGIS"
+        ]
+      }
+    },
+    "remote-sensing": {
+      "title": "Satellite remote sensing",
+      "short": "Land cover, vegetation, water and change over time, read from optical and radar satellite imagery, anywhere.",
+      "page": {
+        "title": "Satellite Remote Sensing Services in Nigeria and Africa · Oluwasola Oyinloye",
+        "description": "Land cover, vegetation, crop, water and change mapping from Sentinel and other satellite imagery, for any area in Nigeria, Africa or beyond, done remotely.",
+        "headline": "Satellite remote sensing",
+        "crumb": "Satellite remote sensing",
+        "lead": "Satellite imagery covers every site on earth, again and again, and much of it is free. I turn it into maps and numbers: what is on the land, how it is changing, and where water and vegetation are.",
+        "get": [
+          "Land use and land cover maps, with the accuracy of each class stated.",
+          "Change detection between dates: new buildings, cleared vegetation, expanded farms.",
+          "Vegetation and crop condition through a season, from indices such as NDVI.",
+          "Flood and water mapping from Sentinel-1 radar, which sees through cloud.",
+          "Farm and plot checks for lenders: whether a farm exists, how large it is and whether it is planted."
+        ],
+        "who": "Agric lenders and insurers, NGOs monitoring programmes, government agencies, researchers, and companies that need to watch many sites without visiting them.",
+        "steps": [
+          [
+            "Question",
+            "Area, dates and what you need to know"
+          ],
+          [
+            "Imagery",
+            "Sentinel-2 optical, Sentinel-1 radar or finer data"
+          ],
+          [
+            "Process",
+            "Google Earth Engine or Python"
+          ],
+          [
+            "Validate",
+            "Checked against reference data"
+          ],
+          [
+            "Deliver",
+            "Maps, statistics and the code"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Can you work on sites outside Nigeria?",
+            "a": "Yes. This work is done remotely, so the site can be anywhere satellite data covers."
+          },
+          {
+            "q": "What level of detail can I expect?",
+            "a": "Free Sentinel-2 imagery has 10 m pixels and Sentinel-1 radar is similar. For smaller objects, high-resolution commercial imagery or a drone survey is the better choice, and I'll say so when we scope the work."
+          },
+          {
+            "q": "How do you check accuracy?",
+            "a": "Against reference points from field data, high-resolution imagery or your own records. I report the result for each class."
+          }
+        ],
+        "where": "Anywhere, done remotely",
+        "chips": [
+          "Google Earth Engine",
+          "geemap",
+          "Sentinel-1 SAR",
+          "Sentinel-2",
+          "SRTM",
+          "ESA WorldCover",
+          "Python"
+        ]
+      }
+    },
+    "eudr-compliance": {
+      "title": "EUDR geolocation and deforestation checks",
+      "short": "Plot points and polygons checked and screened for deforestation since 31 December 2020, ready for your EU due diligence.",
+      "page": {
+        "title": "EUDR Geolocation and Deforestation Checks in Africa · Oluwasola Oyinloye",
+        "description": "Plot geolocation, polygon checks and satellite deforestation screening against the EUDR cut-off of 31 December 2020, for cocoa, palm oil, rubber and wood.",
+        "headline": "EUDR geolocation and deforestation checks",
+        "crumb": "EUDR checks",
+        "lead": "The EU Deforestation Regulation (EUDR) asks companies selling cattle, cocoa, coffee, oil palm, rubber, soya or wood, and products made from them, in the EU to give the location of every plot the commodity came from and to show that the land was not deforested after 31 December 2020. I prepare and check that plot data and screen each plot against satellite imagery.",
+        "get": [
+          "Plot geolocation in the form the EU asks for: a single point is enough for a plot of 4 hectares or less, and larger plots need a polygon, in WGS84 coordinates with six decimal places.",
+          "Checks on the plot data you already hold: polygons that cross themselves or overlap, points that fall in a town or a river, duplicate plots, and areas that don't match the declared size.",
+          "Deforestation screening of each plot, comparing satellite imagery and reference forest maps from before and after 31 December 2020.",
+          "A plot-by-plot evidence pack: maps, imagery dates, the method used, and a list of plots that need a closer look.",
+          "GeoJSON files ready for your due diligence statement, and the code, so the same checks can run on new plots."
+        ],
+        "who": "Exporters, cooperatives and aggregators of cocoa, palm oil, rubber, coffee and wood in Nigeria and across West and Central Africa, EU importers who need checked plot data from their suppliers, and the lenders and certifiers who work with them.",
+        "steps": [
+          [
+            "Scope",
+            "Commodities, plots and what your buyers ask for"
+          ],
+          [
+            "Gather",
+            "Plot records and GPS points you already hold"
+          ],
+          [
+            "Check",
+            "Geometry and data quality"
+          ],
+          [
+            "Screen",
+            "Satellite imagery and forest maps since 2020"
+          ],
+          [
+            "Deliver",
+            "GeoJSON, evidence pack and flagged plots"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Does this make my product EUDR compliant?",
+            "a": "No outside supplier can promise that. The company that places the product on the EU market remains responsible for its due diligence and its statement. What I provide is checked geolocation data and deforestation evidence that make that due diligence easier to complete and to defend."
+          },
+          {
+            "q": "When does the EUDR apply?",
+            "a": "Under the current text, from 30 December 2026 for large and medium operators and from 30 June 2027 for micro and small ones. The dates and the guidance have changed before, so check the European Commission's latest guidance when you plan."
+          },
+          {
+            "q": "Which forest maps do you use?",
+            "a": "Satellite imagery from before and after the cut-off date, read alongside global forest maps such as the European Commission's forest cover map for 2020. No global map is right everywhere, so a flagged plot is checked against the imagery itself, not accepted or rejected automatically."
+          },
+          {
+            "q": "Our farmers' plots are small and scattered. Can you still help?",
+            "a": "Yes. A plot of 4 hectares or less needs only a single point, which your field team can record with a phone. I check what they collect and flag the points that need a second visit."
+          },
+          {
+            "q": "Does it cover legality as well?",
+            "a": "No. The regulation also asks that production was legal in the country of origin, covering land rights, labour and tax, for example. Satellite data cannot show that, so it needs separate evidence."
+          }
+        ],
+        "where": "Remote, for plots anywhere",
+        "chips": [
+          "Google Earth Engine",
+          "Sentinel-2",
+          "QGIS",
+          "GeoPandas",
+          "Shapely",
+          "GeoJSON"
+        ]
+      }
+    },
+    "gis-analysis": {
+      "title": "GIS mapping and spatial analysis",
+      "short": "Site selection, access and proximity analysis, map production and clean, well-structured spatial data.",
+      "page": {
+        "title": "GIS Mapping and Spatial Analysis Services in Nigeria · Oluwasola Oyinloye",
+        "description": "Site selection, access and proximity analysis, map production and clean spatial data, in QGIS and Python, for clients in Nigeria, Africa and worldwide.",
+        "headline": "GIS mapping and spatial analysis",
+        "crumb": "GIS mapping and analysis",
+        "lead": "Most location questions don't need AI. They need clean data, the right analysis and a map people can read.",
+        "get": [
+          "Site selection and suitability studies that weigh distance, land, flood exposure and access.",
+          "Access and proximity analysis: who is within reach of a clinic, school or market.",
+          "Exposure and population analysis using sources such as WorldPop and OpenStreetMap.",
+          "Maps for reports, proposals and presentations, designed to be read.",
+          "Digitising, cleaning and geocoding messy location data into one usable dataset."
+        ],
+        "who": "Developers choosing sites, planners, NGOs and consultancies that need maps and figures for reports, and researchers.",
+        "steps": [
+          [
+            "Question",
+            "What you need to decide"
+          ],
+          [
+            "Data",
+            "Gather, check and clean"
+          ],
+          [
+            "Analyse",
+            "QGIS, Python and PostGIS"
+          ],
+          [
+            "Map",
+            "Clear maps and a short summary"
+          ],
+          [
+            "Hand over",
+            "The data and the method"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Can you work with the data we already have?",
+            "a": "Yes. Spreadsheets with addresses, KML files from Google Earth, shapefiles or GPS tracks: I clean and combine them into one consistent dataset."
+          },
+          {
+            "q": "Which software do you use?",
+            "a": "QGIS, Python (GeoPandas, Rasterio, Shapely) and PostGIS, so you are not tied to a paid licence. I deliver in the formats your team already uses."
+          }
+        ],
+        "where": "On site in Nigeria, remote elsewhere",
+        "chips": [
+          "QGIS",
+          "Google Earth Pro",
+          "GeoPandas",
+          "Rasterio",
+          "Shapely",
+          "PostGIS",
+          "OpenStreetMap"
+        ]
+      }
+    },
+    "flood-climate-risk": {
+      "title": "Flood, climate and environmental risk",
+      "short": "Where flooding is more likely, which people, roads and facilities sit in the way, and how land cover is changing.",
+      "page": {
+        "title": "Flood Risk and Climate Risk Mapping in Nigeria and Africa · Oluwasola Oyinloye",
+        "description": "Flood susceptibility, exposure and environmental change mapping from satellite data, with validation you can check, for sites in Nigeria, Africa and beyond.",
+        "headline": "Flood, climate and environmental risk",
+        "crumb": "Flood and climate risk",
+        "lead": "Before you buy land, plan a programme or insure an asset, it helps to know where water goes and what sits in its way. I map that from satellite data and say how far the map can be trusted.",
+        "get": [
+          "Flood susceptibility maps built from terrain, rainfall, land cover, soil and drainage.",
+          "Flood extent for past events, mapped from Sentinel-1 radar.",
+          "Exposure counts: people, schools, health facilities and roads in each risk tier.",
+          "Rainfall analysis, including near-real-time rainfall from NASA GPM IMERG.",
+          "Environmental change over time: vegetation loss, land conversion and urban growth."
+        ],
+        "who": "Developers and investors screening sites, insurers, emergency planners, NGOs and government agencies.",
+        "steps": [
+          [
+            "Question",
+            "Area and the decision at stake"
+          ],
+          [
+            "Record",
+            "Past floods from radar, plus conditioning factors"
+          ],
+          [
+            "Model",
+            "Susceptibility and exposure"
+          ],
+          [
+            "Validate",
+            "Spatial cross-validation"
+          ],
+          [
+            "Deliver",
+            "Maps, exposure tables and stated limits"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Is a susceptibility map a flood forecast?",
+            "a": "No. It shows where conditions make flooding more likely, not when a flood will happen."
+          },
+          {
+            "q": "How reliable are these maps?",
+            "a": "It depends on the area and the data. GeoAID scored about 0.642 under spatial cross-validation, which suits screening rather than decisions about a single plot. Every map I deliver comes with that kind of number and what it means."
+          },
+          {
+            "q": "Can you do this for a site outside Lagos?",
+            "a": "Yes. The satellite inputs cover Nigeria, Africa and most of the world. The model is rebuilt and validated for each new area."
+          }
+        ],
+        "where": "Anywhere, done remotely",
+        "chips": [
+          "Google Earth Engine",
+          "Sentinel-1 SAR",
+          "NASA GPM IMERG",
+          "CHIRPS",
+          "SRTM",
+          "WorldPop",
+          "SHAP"
+        ]
+      }
+    },
+    "web-gis": {
+      "title": "Web GIS development and dashboards",
+      "short": "Interactive web maps, Streamlit apps and Power BI dashboards that work on any device.",
+      "page": {
+        "title": "Web GIS Development and Map Dashboards · Oluwasola Oyinloye",
+        "description": "Interactive web maps, Streamlit apps and Power BI dashboards that put spatial data on any screen, for clients in Nigeria, across Africa and worldwide.",
+        "headline": "Web GIS development and dashboards",
+        "crumb": "Web GIS and dashboards",
+        "lead": "A map in a PDF gets read once. A web map gets used. I build interactive maps and dashboards that your team, your funders or the public can open on any device.",
+        "get": [
+          "Interactive web maps with filters and pop-ups, like the Lagos Access Map on this site.",
+          "Streamlit apps for models and analysis, like the GeoAID dashboard.",
+          "Power BI dashboards that combine maps with the rest of your reporting.",
+          "Fast, mobile-friendly pages, tested on slow connections.",
+          "The source code and simple instructions for updating the data."
+        ],
+        "who": "NGOs reporting to funders, government teams, companies with field operations, and researchers publishing results.",
+        "steps": [
+          [
+            "Users",
+            "Who will use it and for what"
+          ],
+          [
+            "Data",
+            "Prepared and checked"
+          ],
+          [
+            "Build",
+            "Leaflet, Folium, Streamlit or Power BI"
+          ],
+          [
+            "Test",
+            "Phones and slow networks"
+          ],
+          [
+            "Launch",
+            "Published and handed over"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Where is it hosted?",
+            "a": "Wherever suits you: a free host such as Streamlit Community Cloud or GitHub Pages for public tools, or your organisation's own server."
+          },
+          {
+            "q": "Can it update itself?",
+            "a": "Yes, if the data source allows it. The GeoAID dashboard reads near-real-time rainfall when it runs."
+          },
+          {
+            "q": "Will it work on phones?",
+            "a": "Yes. I build and test for small screens and slow mobile connections first."
+          }
+        ],
+        "where": "Anywhere, done remotely",
+        "chips": [
+          "Leaflet",
+          "Folium",
+          "Streamlit",
+          "Power BI",
+          "Plotly",
+          "PostGIS"
+        ]
+      }
+    },
+    "spatial-data": {
+      "title": "Spatial databases and data engineering",
+      "short": "PostGIS databases and repeatable Python and Earth Engine pipelines that keep spatial data current.",
+      "page": {
+        "title": "Spatial Databases and Geospatial Data Engineering · Oluwasola Oyinloye",
+        "description": "PostGIS databases and repeatable Python and Google Earth Engine pipelines that keep spatial data clean, current and easy to query.",
+        "headline": "Spatial databases and data engineering",
+        "crumb": "Spatial data engineering",
+        "lead": "When the same spatial data is copied between laptops, versions drift and nobody trusts the numbers. I set up one source of truth and the pipelines that keep it current.",
+        "get": [
+          "A PostGIS database designed around the questions your team asks.",
+          "Pipelines in Python or Google Earth Engine that pull, clean and update data on a schedule.",
+          "Quality checks that catch duplicates, broken geometries and missing values.",
+          "Documentation clear enough for the next analyst to run everything."
+        ],
+        "who": "Organisations whose spatial data has outgrown a folder of files: field programmes, multi-site operations and research groups.",
+        "steps": [
+          [
+            "Review",
+            "What data you have and how it is used"
+          ],
+          [
+            "Design",
+            "Tables, keys and update rules"
+          ],
+          [
+            "Build",
+            "Database and migration"
+          ],
+          [
+            "Automate",
+            "Scheduled pipelines and checks"
+          ],
+          [
+            "Hand over",
+            "Documentation and training"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Do we need to pay for software licences?",
+            "a": "No. PostGIS, Python and QGIS are free and open source."
+          },
+          {
+            "q": "Will it work with the tools we already use?",
+            "a": "PostGIS connects to QGIS, ArcGIS, Power BI and most analysis tools, so your team can keep using what they know."
+          }
+        ],
+        "where": "Anywhere, done remotely",
+        "chips": [
+          "PostGIS",
+          "SQL",
+          "Python",
+          "GeoPandas",
+          "Google Earth Engine",
+          "Shapely"
+        ]
+      }
+    },
+    "training": {
+      "title": "Training and capacity building",
+      "short": "Hands-on Python, GIS and remote sensing training for teams, from small workshops to seminars that have reached 1,500 people.",
+      "page": {
+        "title": "GIS, Remote Sensing and Python Training for Teams · Oluwasola Oyinloye",
+        "description": "Hands-on training in Python for geospatial analysis, QGIS and Google Earth Engine for teams, universities and NGOs, in person in Nigeria or online.",
+        "headline": "Training and capacity building",
+        "crumb": "Training",
+        "lead": "I have taught Python for geospatial analysis to 1,500 people through seminars. I also run smaller, hands-on sessions where your team works on its own data.",
+        "get": [
+          "Python for geospatial analysis: GeoPandas, Rasterio and making maps in code.",
+          "Google Earth Engine for satellite analysis at scale.",
+          "QGIS for teams that are new to GIS.",
+          "Course material and exercises your team keeps."
+        ],
+        "who": "NGOs, government agencies, universities and companies building their own geospatial skills.",
+        "steps": [
+          [
+            "Assess",
+            "What the team knows and needs"
+          ],
+          [
+            "Plan",
+            "Sessions built around your data"
+          ],
+          [
+            "Teach",
+            "Hands-on, at the keyboard"
+          ],
+          [
+            "Practise",
+            "Exercises on real problems"
+          ],
+          [
+            "Follow up",
+            "Questions after the course"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Online or in person?",
+            "a": "Either. In person in Nigeria, online anywhere."
+          },
+          {
+            "q": "Can the training use our own data?",
+            "a": "Yes, and it works better that way: people learn faster on problems they recognise."
+          }
+        ],
+        "where": "In person in Nigeria, online anywhere",
+        "chips": [
+          "Python",
+          "Jupyter",
+          "GeoPandas",
+          "Google Earth Engine",
+          "QGIS"
+        ]
+      }
+    }
+  }
+}

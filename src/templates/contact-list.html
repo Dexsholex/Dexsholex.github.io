@@ -1,0 +1,11 @@
+{% import "macros.html" as m with context %}
+<ul class="contact-list">
+  <li><span class="k">{{ t.contact.email }}</span><span class="v"><a href="{{ mailto_url }}" dir="ltr">{{ site.email }}</a><button class="copy" type="button" data-copy="{{ site.email }}" hidden>{{ m.icon('copy') }}<span>{{ t.js.copy }}</span></button></span></li>
+  <li><span class="k">LinkedIn</span><span class="v"><a href="{{ site.links.linkedin }}" rel="me">oluwasola-oyinloye</a></span></li>
+  <li><span class="k">GitHub</span><span class="v"><a href="{{ site.links.github }}" rel="me">Dexsholex</a></span></li>
+  <li><span class="k">Medium</span><span class="v"><a href="{{ site.links.medium }}" rel="me">@Deyley</a></span></li>
+  {% if preprint_url %}
+  <li><span class="k">{{ t.contact.preprint }}</span><span class="v"><a href="{{ preprint_url }}">{{ site.preprint.title }}</a></span></li>
+  {% endif %}
+  <li><span class="k">{{ t.contact.in_brief }}</span><span class="v"><a href="{{ link('/capability-statement/') }}">{{ t.contact.capability }}</a></span></li>
+</ul>

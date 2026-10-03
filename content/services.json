@@ -1,18 +1,16 @@
 {
-  "sectors": {
-    "agriculture": "Agriculture and plantations",
-    "finance": "Agric lending and finance",
-    "construction": "Real estate, construction and infrastructure",
-    "government": "Government and urban planning",
-    "development": "NGOs, health and development",
-    "environment": "Environment, climate and insurance",
-    "mining": "Mining, quarrying and energy"
-  },
+  "sectors": [
+    "agriculture",
+    "finance",
+    "construction",
+    "government",
+    "development",
+    "environment",
+    "mining"
+  ],
   "services": [
     {
       "slug": "geospatial-ai",
-      "title": "Geospatial AI and machine learning",
-      "short": "Deep-learning models that find and count objects in imagery, and predictive models tested on ground they have not seen.",
       "icon": "detect",
       "sectors": [
         "agriculture",
@@ -20,12 +18,14 @@
         "construction",
         "government",
         "environment"
+      ],
+      "related": [
+        "oil-palm",
+        "geoaid"
       ]
     },
     {
       "slug": "drone-mapping",
-      "title": "Drone mapping and photogrammetry",
-      "short": "I plan and fly the survey, then turn the imagery into orthomosaics, surface and terrain models, and counts.",
       "icon": "drone",
       "sectors": [
         "agriculture",
@@ -33,12 +33,13 @@
         "mining",
         "environment",
         "government"
+      ],
+      "related": [
+        "oil-palm"
       ]
     },
     {
       "slug": "remote-sensing",
-      "title": "Satellite remote sensing",
-      "short": "Land cover, vegetation, water and change over time, read from optical and radar satellite imagery, anywhere.",
       "icon": "orbit",
       "sectors": [
         "agriculture",
@@ -47,12 +48,25 @@
         "government",
         "development",
         "mining"
+      ],
+      "related": [
+        "geoaid"
+      ]
+    },
+    {
+      "slug": "eudr-compliance",
+      "icon": "forest",
+      "sectors": [
+        "agriculture",
+        "finance",
+        "environment"
+      ],
+      "related": [
+        "oil-palm"
       ]
     },
     {
       "slug": "gis-analysis",
-      "title": "GIS mapping and spatial analysis",
-      "short": "Site selection, access and proximity analysis, map production and clean, well-structured spatial data.",
       "icon": "layers",
       "sectors": [
         "construction",
@@ -60,12 +74,13 @@
         "development",
         "environment",
         "finance"
+      ],
+      "related": [
+        "access-map"
       ]
     },
     {
       "slug": "flood-climate-risk",
-      "title": "Flood, climate and environmental risk",
-      "short": "Where flooding is more likely, which people, roads and facilities sit in the way, and how land cover is changing.",
       "icon": "wave",
       "sectors": [
         "construction",
@@ -73,12 +88,13 @@
         "development",
         "environment",
         "finance"
+      ],
+      "related": [
+        "geoaid"
       ]
     },
     {
       "slug": "web-gis",
-      "title": "Web GIS development and dashboards",
-      "short": "Interactive web maps, Streamlit apps and Power BI dashboards that work on any device.",
       "icon": "webmap",
       "sectors": [
         "government",
@@ -86,12 +102,14 @@
         "environment",
         "agriculture",
         "construction"
+      ],
+      "related": [
+        "geoaid-dashboard",
+        "access-map"
       ]
     },
     {
       "slug": "spatial-data",
-      "title": "Spatial databases and data engineering",
-      "short": "PostGIS databases and repeatable Python and Earth Engine pipelines that keep spatial data current.",
       "icon": "chart",
       "sectors": [
         "government",
@@ -99,20 +117,22 @@
         "finance",
         "construction",
         "agriculture"
+      ],
+      "related": [
+        "oil-palm",
+        "access-map"
       ]
     },
     {
       "slug": "training",
-      "title": "Training and capacity building",
-      "short": "Hands-on Python, GIS and remote sensing training for teams, from small workshops to seminars that have reached 1,500 people.",
       "icon": "people",
       "sectors": [
         "government",
         "development",
         "agriculture",
         "environment"
-      ]
+      ],
+      "related": []
     }
-  ],
-  "also": "Also: cartography and map production for reports, digitising and data cleaning, geocoding, OpenStreetMap mapping, site suitability studies and GNSS ground control. If your question involves a place, ask."
+  ]
 }

@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
 """Build the site into dist/.
 
-    python tools/build.py            preview build: missing values show as TODO markers
-    python tools/build.py --release  public build: missing values are left out quietly
+    python tools/build.py            preview build: missing items show as TODO markers
+    python tools/build.py --release  public build: missing items are left out quietly
 
-Content lives in content/site.json and content/capabilities.json. Pages are
-src/pages/**/*.html; each starts with a JSON front-matter comment and is wrapped in
-src/partials/layout.html. {{ tokens }} are filled from the content files, from the
-page's own front matter and from the fragments built below. pages/index.html becomes
-/, pages/work/x.html becomes /work/x/. Standard library only, so it runs anywhere
-Python 3.9+ does, including GitHub Actions.
+Pages are Jinja2 templates in src/pages/<lang>/. Each one starts with a front-matter
+comment, {#page {...} #}, holding its kind, title and description. The default language
+(English) is served from the site root and every other language from /<code>/. A page
+and its translations sit at the same path inside their language folders, which is how
+the hreflang links are paired. Service pages are generated from the services data with
+src/templates/service.html.
+
+Content is split in two. content/*.json hold structure: URLs, slugs, numbers, icons.
+content/i18n/<lang>/ hold everything a reader sees: ui.json (interface text and the
+site's own wording), services.json and products.json. Every language must have exactly
+the same keys as English; the build stops and lists any that differ.
 """
 import argparse
+import base64
+import copy
 import datetime as dt
 import gzip
 import hashlib
@@ -24,462 +31,194 @@ import sys
 import urllib.parse
 from pathlib import Path
 
+import jinja2
+from markupsafe import Markup
+
 ROOT = Path(__file__).resolve().parent.parent
 SRC, CONTENT, STATIC, DIST = (ROOT / d for d in ("src", "content", "static", "dist"))
-TOKEN = re.compile(r"\{\{\s*(\w+)\s*\}\}")
-FRONT = re.compile(r"\A<!--page\s*(\{.*?\})\s*-->\s*", re.S)
+TEMPLATES, PAGES, I18N = SRC / "templates", SRC / "pages", CONTENT / "i18n"
+FRONT = re.compile(r"\A\{#page\s*(\{.*?\})\s*#\}\s*", re.S)
 BLANK_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-CATEGORY_LABELS = ["Hospital", "Clinic or doctor", "Clinic or doctor", "Pharmacy", "Other"]
 CATEGORY_SLOT = [0, 1, 1, 2, 3]  # hospital, clinic, doctors, pharmacy, other -> legend slot
+CASES = {"oil-palm": "/work/oil-palm-tree-counting/", "geoaid": "/work/geoaid-flood-susceptibility/",
+         "access-map": "/#access-map"}
+NNBSP, NBSP = " ", " "
+
+# How each language writes numbers and dates. Arabic pages keep Western digits, as most
+# technical and map material in the region does.
+FORMATS = {
+    "en": {"group": ",", "decimal": ".", "pct": "{}%", "locale": "en-GB",
+           "date": "{d} {m} {y}", "month": "{m} {y}",
+           "months": ["January", "February", "March", "April", "May", "June", "July", "August",
+                      "September", "October", "November", "December"]},
+    "fr": {"group": NNBSP, "decimal": ",", "pct": "{}" + NNBSP + "%", "locale": "fr-FR",
+           "date": "{d} {m} {y}", "month": "{m} {y}",
+           "months": ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août",
+                      "septembre", "octobre", "novembre", "décembre"]},
+    "pt": {"group": NNBSP, "decimal": ",", "pct": "{}%", "locale": "pt-PT",
+           "date": "{d} de {m} de {y}", "month": "{m} de {y}",
+           "months": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto",
+                      "setembro", "outubro", "novembro", "dezembro"]},
+    "es": {"group": NNBSP, "decimal": ",", "pct": "{}" + NNBSP + "%", "locale": "es-ES",
+           "date": "{d} de {m} de {y}", "month": "{m} de {y}",
+           "months": ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto",
+                      "septiembre", "octubre", "noviembre", "diciembre"]},
+    "ar": {"group": ",", "decimal": ".", "pct": "{}%", "locale": "ar-EG-u-nu-latn",
+           "date": "{d} {m} {y}", "month": "{m} {y}",
+           "months": ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس",
+                      "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]},
+}
+
+# Runs before the page paints: theme, the "js" class, full layout before a jump to #section,
+# and a move to the visitor's chosen language when this page exists in it.
+HEAD_SCRIPT = (
+    'var d=document.documentElement;'
+    'try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")d.dataset.theme=t;'
+    'var l=localStorage.getItem("lang");'
+    'if(l&&/^[a-z]{2}$/.test(l)&&l!==d.lang){'
+    'var a=document.querySelector(\'link[rel="alternate"][hreflang="\'+l+\'"]\');'
+    'if(a)location.replace(a.href+location.hash)}}catch(e){}'
+    'd.classList.add("js");if(location.hash)d.classList.add("cv-off")'
+)
 
 
-def esc(s):
-    return html.escape(str(s), quote=True)
+class Env(jinja2.Environment):
+    """Dictionary keys win over dict methods, so {{ group.items }} means the key, not dict.items."""
+
+    def getattr(self, obj, attribute):
+        if isinstance(obj, dict) and attribute in obj:
+            return obj[attribute]
+        return super().getattr(obj, attribute)
 
 
-def icon(name, cls=""):
-    c = f' class="{cls}"' if cls else ""
-    return f'<svg{c} aria-hidden="true" focusable="false"><use href="#i-{name}"/></svg>'
+def sha256(text):
+    return "'sha256-" + base64.b64encode(hashlib.sha256(text.encode("utf-8")).digest()).decode() + "'"
 
 
-class Missing:
-    """Collects gaps. Preview builds show a TODO marker; release builds show the fallback."""
-
-    def __init__(self, release):
-        self.release = release
-        self.items = []
-
-    def mark(self, label, fallback=""):
-        if label not in self.items:
-            self.items.append(label)
-        return fallback if self.release else f'<span class="todo">TODO: {esc(label)}</span>'
+def read_json(p):
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
-# ---------- images ----------
-def picture(manifest, name, alt, sizes, cls="", eager=False, hide_below=None):
-    variants = manifest[name]
-    big = variants[-1]
-    default = variants[min(1, len(variants) - 1)]["src"]
-    srcset = ", ".join(f'{v["src"]} {v["w"]}w' for v in variants)
-    load = ' fetchpriority="high"' if eager else ' loading="lazy"'
-    c = f' class="{cls}"' if cls else ""
-    img = (f'<img{c} src="{default}" srcset="{srcset}" sizes="{sizes}" width="{big["w"]}" height="{big["h"]}" '
-           f'alt="{esc(alt)}"{load} decoding="async">')
-    if hide_below:  # small screens get a 1px gif instead of downloading a photo they never show
-        return f'<picture><source media="(max-width: {hide_below - 1}px)" srcset="{BLANK_GIF}">{img}</picture>'
-    return img
+# ---------- languages ----------
+def shape_problems(ref, other, where):
+    """Differences in keys, list lengths or types between the English text and a translation."""
+    if isinstance(ref, dict):
+        if not isinstance(other, dict):
+            return [f"{where}: expected an object"]
+        out = [f"{where}.{k}: missing" for k in ref if k not in other]
+        out += [f"{where}.{k}: not in English" for k in other if k not in ref]
+        for k in ref:
+            if k in other:
+                out += shape_problems(ref[k], other[k], f"{where}.{k}")
+        return out
+    if isinstance(ref, list):
+        if not isinstance(other, list):
+            return [f"{where}: expected a list"]
+        if len(ref) != len(other):
+            return [f"{where}: {len(other)} items, English has {len(ref)}"]
+        out = []
+        for i, (a, b) in enumerate(zip(ref, other)):
+            out += shape_problems(a, b, f"{where}[{i}]")
+        return out
+    if isinstance(other, (dict, list)):
+        return [f"{where}: expected text"]
+    return []
 
 
-def fixed_img(manifest, name, alt, cls="", size=None):
-    v = manifest[name]
-    one, two = v[0], v[-1]
-    s = size or one["w"]
-    return (f'<img class="{cls}" src="{one["src"]}" srcset="{two["src"]} 2x" width="{s}" height="{s}" '
-            f'alt="{esc(alt)}" loading="lazy" decoding="async">')
+def load_text(langs, default):
+    text = {l: {f: read_json(I18N / l / f"{f}.json") for f in ("ui", "services", "products")} for l in langs}
+    problems = []
+    for l in langs:
+        if l != default:
+            for f in text[l]:
+                problems += shape_problems(text[default][f], text[l][f], f"{l}/{f}")
+    return text, problems
 
 
-# ---------- fragments ----------
-def phone_display(number):
-    """+234 909 000 0000 for Nigerian numbers, otherwise +<digits>."""
-    d = "".join(ch for ch in str(number) if ch.isdigit())
-    if d.startswith("234") and len(d) == 13:
-        return f"+234 {d[3:6]} {d[6:9]} {d[9:]}"
-    return "+" + d
+def fmt_num(x, lang, decimals=None):
+    f = FORMATS[lang]
+    if decimals is None:
+        decimals = 0 if isinstance(x, int) else 1
+    s = f"{x:,.{decimals}f}"
+    return s.replace(",", "\0").replace(".", f["decimal"]).replace("\0", f["group"])
 
 
-def service_cards(services, exclude=None):
-    items = []
-    for c in services["services"]:
-        if c["slug"] == exclude:
-            continue
-        items.append(
-            f'<li data-reveal data-sectors="{" ".join(c["sectors"])}"><a class="service-link" href="/services/{c["slug"]}/">'
-            f'<span class="icon">{icon(esc(c["icon"]))}</span><h3>{esc(c["title"])}</h3><p>{esc(c["short"])}</p>'
-            f'<span class="service-more">How it works{icon("arrow")}</span></a></li>')
-    return "\n".join(items)
+def fmt_pct(x, lang):
+    return FORMATS[lang]["pct"].format(fmt_num(x, lang, 1))
 
 
-def service_fragments(services):
-    chips = ['<button type="button" aria-pressed="true" data-sector="all">All sectors</button>']
-    chips += [f'<button type="button" aria-pressed="false" data-sector="{k}">{esc(v)}</button>'
-              for k, v in services["sectors"].items()]
-    return {
-        "capabilities": service_cards(services),
-        "sector_filter": ('<div class="sector-filter" role="group" aria-label="Show services for a sector" '
-                          f'data-sector-filter hidden>{"".join(chips)}</div>'
-                          '<p class="visually-hidden" aria-live="polite" data-sector-status></p>'),
-        "sectors_list": "".join(f"<li>{esc(v)}</li>" for v in services["sectors"].values()),
-        "services_also": esc(services["also"]),
-        "footer_services": "\n".join(f'        <li><a href="/services/{c["slug"]}/">{esc(c["title"])}</a></li>'
-                                     for c in services["services"]),
-        "brief_builder": brief_html(services),
-        "cap_services": "\n".join(f'        <li><strong>{esc(c["title"])}.</strong> {esc(c["short"])}</li>'
-                                  for c in services["services"]),
-    }
+def fmt_date(iso, lang, day=True):
+    f = FORMATS[lang]
+    d = dt.date.fromisoformat(iso if len(iso) == 10 else iso + "-01")
+    m = f["months"][d.month - 1]
+    if not day:
+        return f["month"].format(m=m, y=d.year)
+    n = "1er" if lang == "fr" and d.day == 1 else str(d.day)
+    return f["date"].format(d=n, m=m, y=d.year)
 
 
-def testimonials_html(items, gaps):
-    if not items:
-        return ""  # add an approved quote to content/testimonials.json and the section appears
-    quotes = []
-    for t in items:
-        link = f' · <a href="{esc(t["link"])}">{esc(t.get("link_label", "Case study"))}</a>' if t.get("link") else ""
-        quotes.append(f'<li data-reveal><figure><blockquote><p>{esc(t["quote"])}</p></blockquote>'
-                      f'<figcaption><strong>{esc(t["role"])}</strong><span>{esc(t["org"])}{link}</span></figcaption>'
-                      '</figure></li>')
-    return ('<section class="section testimonials" aria-labelledby="t-title"><div class="wrap">'
-            '<header class="section-head"><p class="eyebrow">Clients</p><h2 id="t-title">What clients say</h2></header>'
-            f'<ul class="quotes">{"".join(quotes)}</ul></div></section>')
+def typography(page_html, lang):
+    """Language-specific spacing in visible text: grouped digits (fr, pt, es) and French high punctuation."""
+    if lang not in ("fr", "pt", "es"):
+        return page_html
+
+    def text(s):
+        s = re.sub(r"(\d) (\d{3})(?!\d)", r"\1" + NNBSP + r"\2", s)
+        if lang in ("fr", "es"):
+            s = re.sub(r"(\d) %", r"\1" + NNBSP + "%", s)
+        if lang == "fr":
+            s = re.sub(r" ([?!;»])", NNBSP + r"\1", s)
+            s = re.sub(r" :(?=\s|$)", NBSP + ":", s)
+            s = s.replace("« ", "«" + NBSP)
+        return s
+
+    def attrs(m):
+        return f'{m.group(1)}="{text(m.group(2))}"'
+
+    parts = re.split(r"(<script\b.*?</script>|<style\b.*?</style>)", page_html, flags=re.S)
+    for i in range(0, len(parts), 2):
+        s = re.sub(r">([^<]+)<", lambda m: ">" + text(m.group(1)) + "<", parts[i])
+        parts[i] = re.sub(r'\b(content|alt|aria-label|title|placeholder)="([^"]*)"', attrs, s)
+    return "".join(parts)
 
 
-def brief_html(services):
-    """Request builder. It only composes an email in the visitor's own mail app; the site sends and stores nothing."""
-    svc = "".join(f'<label class="pick"><input type="checkbox" name="service" value="{esc(c["title"])}">'
-                  f'<span>{esc(c["title"])}</span></label>' for c in services["services"])
-    svc += '<label class="pick"><input type="checkbox" name="service" value="Something else"><span>Something else</span></label>'
-
-    def radios(name, options):
-        return "".join(f'<label class="pick"><input type="radio" name="{name}" value="{esc(o)}"><span>{esc(o)}</span></label>'
-                       for o in options)
-
-    def checks(name, options):
-        return "".join(f'<label class="pick"><input type="checkbox" name="{name}" value="{esc(o)}"><span>{esc(o)}</span></label>'
-                       for o in options)
-
-    return f"""<form class="brief" data-brief data-email="__EMAIL__" hidden aria-labelledby="brief-title">
-      <div class="brief-head">
-        <h3 id="brief-title">Prefer to write it down first?</h3>
-        <p>Tick what applies and your email app opens with a short brief, ready to send. Nothing is sent or stored by this site.</p>
-      </div>
-      <fieldset><legend>What do you need?</legend><div class="picks">{svc}</div></fieldset>
-      <fieldset><legend>Where is the site?</legend><div class="picks">{radios("where", ["Nigeria", "Elsewhere in Africa", "Outside Africa"])}</div>
-        <label class="brief-text">Place (optional)<input type="text" name="place" autocomplete="off" placeholder="City, state or country"></label></fieldset>
-      <fieldset><legend>When?</legend><div class="picks">{radios("when", ["As soon as possible", "Within 3 months", "Just exploring"])}</div></fieldset>
-      <fieldset><legend>Data you already have</legend><div class="picks">{checks("data", ["Drone or aerial imagery", "Satellite imagery", "GIS files or maps", "Spreadsheets with locations", "Nothing yet"])}</div></fieldset>
-      <label class="brief-text">What do you need to decide? (optional)<textarea name="decide" rows="3" placeholder="One or two sentences"></textarea></label>
-      <div class="brief-actions">
-        <button class="btn" type="submit">{icon("mail")}Open in my email app</button>
-        <button class="btn btn-ghost" type="button" data-brief-copy>{icon("copy")}Copy the brief</button>
-        <span class="brief-status" aria-live="polite"></span>
-      </div>
-    </form>"""
+# ---------- content for one language ----------
+def merged_site(site, ui):
+    s = copy.deepcopy(site)
+    u = ui["site"]
+    for k in ("roles", "flagship", "title", "description", "call_subject", "call_body"):
+        s[k] = u[k]
+    s["booking_options"] = [dict(o, label=u["booking"][o["key"]]) for o in site["booking_options"]]
+    s["tools"] = [{"group": u["tool_groups"][g["key"]], "items": [u["tool_items"].get(i, i) for i in g["items"]]}
+                  for g in site["tools"]]
+    return s
 
 
-def faq_html(faq):
-    return "\n".join(f'<details class="faq"><summary>{esc(item["q"])}</summary><p>{esc(item["a"])}</p></details>'
-                     for item in faq)
+def merged_services(struct, text):
+    services = []
+    for s in struct["services"]:
+        t = text["services"][s["slug"]]
+        services.append(dict(s, title=t["title"], short=t["short"], page=dict(t["page"], related=s["related"])))
+    return {"sectors": {k: text["sectors"][k] for k in struct["sectors"]}, "also": text["also"], "services": services}
 
 
-def gallery_item(manifest, name, alt, caption, shape="wide"):
-    full = manifest[name][-1]["src"]
-    sizes = "(min-width: 1024px) 380px, (min-width: 600px) 46vw, 92vw"
-    return (f'<figure class="g-{shape}"><a class="zoomable" href="{full}" data-lightbox>'
-            f'{picture(manifest, name, alt, sizes)}</a><figcaption>{esc(caption)}</figcaption></figure>')
+def merged_products(struct, text):
+    return [dict(p, summary=text[p["id"]]["summary"], audience=text[p["id"]]["audience"], tags=text[p["id"]]["tags"],
+                 links=[dict(l, label=lbl) for l, lbl in zip(p["links"], text[p["id"]]["links"])]) for p in struct]
 
 
-def gallery_video(name, label, caption):
-    return (f'<figure class="g-tall"><video controls preload="none" playsinline width="720" height="1280" '
-            f'poster="/media/{name}-poster.webp" aria-label="{esc(label)}">'
-            f'<source src="/media/{name}.mp4" type="video/mp4"></video><figcaption>{esc(caption)}</figcaption></figure>')
+def pick(value, lang, default):
+    """Testimonials may give a value per language ({"en": ..., "fr": ...}); fall back to the default language."""
+    if isinstance(value, dict) and default in value:
+        return value.get(lang, value[default])
+    if isinstance(value, dict):
+        return {k: pick(v, lang, default) for k, v in value.items()}
+    if isinstance(value, list):
+        return [pick(v, lang, default) for v in value]
+    return value
 
 
-STATUS = {"live": "Live", "building": "In development", "planned": "Planned"}
-NEXT_PRODUCT = (
-    '<li class="product product-next" data-reveal><span class="status status-planned">Next</span>'
-    "<h3>Your question, as a public tool?</h3>"
-    "<p>I build open products where good data can help many people at once. If you hold data, fund public-good "
-    "work or have a question worth answering in the open, let's talk.</p>"
-    '<p class="case-links"><a href="#contact">Get in touch{arrow}</a></p></li>')
-
-
-def products_html(products):
-    cards = []
-    for p in products:
-        links = "".join(
-            f'<a href="{esc(l["url"])}">{esc(l["label"])}{icon("out" if l.get("external") else "arrow")}</a>'
-            for l in p["links"])
-        tags = "".join(f'<li class="tag tag-quiet">{esc(t)}</li>' for t in p["tags"])
-        cards.append(
-            f'<li class="product" data-reveal><div class="product-top"><span class="status status-{esc(p["status"])}">'
-            f'{STATUS[p["status"]]}</span><ul class="tags" aria-label="Topics">{tags}</ul></div>'
-            f'<h3>{esc(p["name"])}</h3><p>{esc(p["summary"])}</p>'
-            f'<p class="product-for"><span>For</span>{esc(p["for"])}</p><p class="case-links">{links}</p></li>')
-    cards.append(NEXT_PRODUCT.format(arrow=icon("arrow")))
-    return "\n".join(cards)
-
-
-def fragments(site, caps, osm, manifest, gaps, products):
-    links, proj, palm = site["links"], site["projects"], site["projects"]["oil_palm"]
-    f = {}
-
-    # WhatsApp appears only when a (business) number is set in site.json; "whatsapp": null hides it everywhere
-    wa_number = site.get("whatsapp")
-    if wa_number:
-        greeting = f"Hello {site['name'].split()[0]}, I'd like to book a call."
-        wa = esc(f"https://wa.me/{wa_number}?text={urllib.parse.quote(greeting)}")
-        f["whatsapp_button"] = f'<a class="btn btn-ghost" href="{wa}">{icon("chat")}WhatsApp</a>'
-        f["whatsapp_item"] = (f'<li><span class="k">WhatsApp</span><span class="v">'
-                              f'<a href="{wa}">{esc(phone_display(wa_number))}</a></span></li>')
-        f["whatsapp_footer"] = f'<li><a href="{wa}">WhatsApp {esc(phone_display(wa_number))}</a></li>'
-        f["privacy_services"] = "WhatsApp, LinkedIn, GitHub, Medium and the GeoAID dashboard on Streamlit"
-    else:
-        f["whatsapp_button"] = f["whatsapp_item"] = f["whatsapp_footer"] = ""
-        f["privacy_services"] = "LinkedIn, GitHub, Medium and the GeoAID dashboard on Streamlit"
-    if site.get("booking_url"):
-        f["privacy_services"] = "Cal.com, " + f["privacy_services"]
-    # Email works for clients anywhere; the body prompts for what a first call needs, time zone included
-    body = site["call_body"].replace("\n", "\r\n")
-    book = f"mailto:{site['email']}?subject={urllib.parse.quote(site['call_subject'])}&body={urllib.parse.quote(body)}"
-    f["call_url"] = esc(site.get("booking_url") or book)
-    f["email_book_url"] = esc(book)
-    f["mailto_url"] = esc(f"mailto:{site['email']}")
-    # With a booking link (Cal.com, Calendly) the main button picks a time and email becomes the alternative
-    if site.get("booking_url"):
-        opts = site.get("booking_options") or [{"label": "Pick a time", "url": site["booking_url"]}]
-        buttons = [f'<a class="btn{"" if i == 0 else " btn-ghost"}" href="{esc(o["url"])}">{icon("calendar")}{esc(o["label"])}</a>'
-                   for i, o in enumerate(opts)]
-        f["contact_actions"] = ("".join(buttons) + f'<a class="btn btn-ghost" href="{f["email_book_url"]}">{icon("mail")}Email me</a>'
-                                + f["whatsapp_button"])
-        f["booking_host"] = esc(site["booking_url"].split("//", 1)[-1])
-        f["privacy_booking"] = ("If you book a call, Cal.com handles the booking and the details you enter there, "
-                                "under its own privacy policy. ")
-    else:
-        f["contact_actions"] = f'<a class="btn" href="{f["email_book_url"]}">{icon("mail")}Book by email</a>' + f["whatsapp_button"]
-        f["booking_host"] = f["email"] if "email" in f else esc(site["email"])
-        f["privacy_booking"] = ""
-    f["roles_line"] = esc(" · ".join(site["roles"]))
-    f["roles_br"] = "<br>".join(esc(r) for r in site["roles"])
-    f["roles_sentence"] = esc(" and ".join(r[0].lower() + r[1:] for r in site["roles"]))
-
-    # A preprint DOI, when set, links the publications figure; nothing shows until then
-    pre = site.get("preprint") or {}
-    if pre.get("doi"):
-        doi_url = esc("https://doi.org/" + pre["doi"].removeprefix("https://doi.org/"))
-        title = esc(pre.get("title") or "Preprint")
-        f["publications_label"] = f'<a href="{doi_url}">research publications</a>'
-        f["publication_item"] = f'<li><span class="k">Preprint</span><span class="v"><a href="{doi_url}">{title}</a></span></li>'
-        f["publication_footer"] = f'<li><a href="{doi_url}">Preprint (DOI)</a></li>'
-        f["cap_publication"] = f'<p class="cap-pub">Preprint: {title}. doi.org/{esc(pre["doi"])}</p>'
-    else:
-        f["publications_label"] = "research publications"
-        f["publication_item"] = f["publication_footer"] = f["cap_publication"] = ""
-
-    # Oil palm
-    for k, v in palm.items():
-        if isinstance(v, str):
-            f[f"palm_{k}"] = esc(v)
-    f["palm_repo_link"] = f'<a href="{esc(palm["repo"])}">Read the code{icon("out")}</a>'
-    if palm.get("accuracy"):
-        f["palm_accuracy_row"] = f'<div><dt>Counting accuracy</dt><dd>{esc(palm["accuracy"])}</dd></div>'
-    else:
-        m = gaps.mark("validated counting accuracy figure")
-        f["palm_accuracy_row"] = f"<div><dt>Counting accuracy</dt><dd>{m}</dd></div>" if m else ""
-    chip = (f'<span class="media-chip"><b>{esc(palm["palms"])}</b> palms<i></i><b>{esc(palm["hectares"])}</b> ha'
-            f'<i></i><b>{esc(palm["blocks"])}</b> blocks</span>')
-    pad_alt = "A survey drone on its landing pad at the edge of an oil palm estate, with mature palms behind it"
-    f["palm_media"] = picture(manifest, "palm-drone-pad", pad_alt, "(min-width: 900px) 560px, 92vw") + chip
-    f["palm_hero"] = picture(manifest, "palm-drone-pad", pad_alt, "(min-width: 1200px) 1152px, 96vw", eager=True)
-    f["palm_hero_full"] = manifest["palm-drone-pad"][-1]["src"]
-    f["palm_gallery"] = "\n".join([
-        gallery_item(manifest, "palm-pilot",
-                     "Oluwasola Oyinloye checking the flight plan on a drone controller in the field",
-                     "Planning the flight on site", "tall"),
-        gallery_video("palm-takeoff", "The survey drone taking off from its case and climbing over the palms",
-                      "Take-off for a mapping flight (14 s, no sound)"),
-        gallery_item(manifest, "palm-gnss", "A GNSS receiver on a tripod in low vegetation on the estate",
-                     "A GNSS receiver set up on the estate"),
-        gallery_item(manifest, "palm-estate-road",
-                     "A straight laterite road running through the plantation to the horizon",
-                     "The scale of the estate"),
-        gallery_item(manifest, "palm-crown", "A mature oil palm with a full crown of fronds",
-                     "A mature crown: what the model learns to find"),
-    ])
-
-    # Access Map
-    if proj.get("access_map_build"):
-        f["access_map_link"] = f'<a href="{esc(proj["access_map_build"])}">Follow the build{icon("out")}</a>'
-    else:
-        f["access_map_link"] = gaps.mark('"Follow the build" link')
-    pulled = dt.date.fromisoformat(osm["pulled"])
-    f["osm_pulled"] = f"{pulled.day} {pulled.strftime('%B %Y')}"
-    f["osm_count"] = f'{len(osm["facilities"]):,}'
-    f["osm_table"] = osm_table(osm)
-
-    # GeoAID
-    f["geoaid_dashboard"] = esc(proj["geoaid_dashboard"])
-    f["geoaid_repo"] = esc(proj["geoaid_repo"])
-    f["geoaid_methods"] = esc(proj["geoaid_methods"])
-    f["geoaid_docs_repo"] = esc(proj["geoaid_docs_repo"])
-
-    # Images
-    f["img_portrait"] = picture(manifest, "portrait", f"Portrait of {site['name']}",
-                                "(min-width: 1200px) 400px, (min-width: 880px) 34vw, 1px", eager=True, hide_below=880)
-    f["img_avatar"] = fixed_img(manifest, "avatar", "", "avatar", 56)
-    f["img_about"] = picture(manifest, "about", f"{site['name']} seated, smiling, in a white shirt",
-                             "(min-width: 880px) 340px, (min-width: 600px) 45vw, 92vw")
-    f["img_contact"] = fixed_img(manifest, "contact", f"{site['name']}", "contact-avatar", 64)
-    f["img_geoaid"] = picture(manifest, "geoaid-flood",
-                              "Map of modelled flood probability across Amuwo-Odofin, from near-white (lower) "
-                              "to deep red (higher), inside the LGA boundary.",
-                              "(min-width: 1100px) 560px, (min-width: 720px) 50vw, 92vw")
-    f["img_geoaid_large"] = picture(manifest, "geoaid-flood",
-                                    "Map of modelled flood probability across Amuwo-Odofin, from near-white (lower) "
-                                    "to deep red (higher), inside the LGA boundary.",
-                                    "(min-width: 1100px) 1000px, 92vw", eager=True)
-    f["geoaid_full"] = manifest["geoaid-flood"][-1]["src"]
-    f["img_access_preview"] = picture(manifest, "access-map-preview",
-                                      "Static map of Lagos State's 20 LGAs with dots for each health facility "
-                                      "tagged in OpenStreetMap; most dots sit in the western and central LGAs.",
-                                      "(min-width: 1100px) 1100px, 96vw", cls="map-preview")
-
-    # Tools
-    f["cap_tools"] = " ".join(f"<b>{esc(g)}:</b> {esc(', '.join(items))}." for g, items in site["tools"].items())
-    f["site_host"] = esc(site["base_url"].split("//", 1)[-1].rstrip("/"))
-    f["today_month"] = dt.date.today().strftime("%B %Y")
-    f["tools"] = "\n".join(
-        f'<div class="tool-group"><h4>{esc(group)}</h4><ul class="chips">'
-        + "".join(f"<li>{esc(t)}</li>" for t in items) + "</ul></div>"
-        for group, items in site["tools"].items())
-    f["products"] = products_html(products)
-
-    meta = []
-    sc = site.get("search_console") or {}
-    if sc.get("google"):
-        meta.append(f'<meta name="google-site-verification" content="{esc(sc["google"])}">')
-    if sc.get("bing"):
-        meta.append(f'<meta name="msvalidate.01" content="{esc(sc["bing"])}">')
-    f["verification_meta"] = "\n".join(meta)
-    return f
-
-
-def osm_table(osm):
-    rows = []
-    for feat in osm["lgas"]["features"]:
-        p = feat["properties"]
-        c = p.get("counts")
-        if not c:
-            continue
-        slots = [0, 0, 0, 0]
-        for i, n in enumerate(c):
-            slots[CATEGORY_SLOT[i]] += n
-        rows.append((p["name"], slots))
-    rows.sort(key=lambda r: -sum(r[1]))
-    body = "".join(f"<tr><th scope=row>{esc(n)}</th>" + "".join(f"<td>{v}</td>" for v in s) +
-                   f"<td>{sum(s)}</td></tr>" for n, s in rows)
-    head = "".join(f"<th scope=col>{h}</th>" for h in ("LGA", "Hospital", "Clinic or doctor", "Pharmacy", "Other", "Total"))
-    return (f"<div class=\"table-scroll\"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>"
-            if rows else "")
-
-
-# ---------- structured data ----------
-def person_and_service(site, caps, manifest):
-    """Person and ProfessionalService nodes shared by every page's structured data."""
-    base = site["base_url"]
-    same_as = [u for u in site["links"].values() if u]
-    address = {"@type": "PostalAddress", "addressLocality": site["locality"], "addressCountry": site["country_code"]}
-    skills = [c["title"] for c in caps]
-    ilorin = {"@type": "CollegeOrUniversity", "name": "University of Ilorin"}
-    miva = {"@type": "CollegeOrUniversity", "name": "Miva Open University"}
-    person = {
-        "@type": "Person", "@id": base + "#person", "name": site["name"], "jobTitle": site["roles"],
-        "url": base, "image": base.rstrip("/") + manifest["portrait"][-1]["src"],
-        "email": "mailto:" + site["email"], "address": address,
-        "alumniOf": [ilorin, miva],
-        "hasCredential": [
-            {"@type": "EducationalOccupationalCredential", "credentialCategory": "degree",
-             "name": "BSc Surveying and Geoinformatics", "recognizedBy": ilorin},
-            {"@type": "EducationalOccupationalCredential", "credentialCategory": "degree",
-             "name": "Master of Information Technology (MIT), AI specialisation", "recognizedBy": miva},
-        ],
-        "knowsAbout": skills + [t for group in site["tools"].values() for t in group], "knowsLanguage": "en",
-        "sameAs": same_as,
-    }
-    if site.get("whatsapp"):
-        person["telephone"] = "+" + str(site["whatsapp"])
-    service = {
-        "@type": "ProfessionalService", "@id": base + "#service", "name": site["name"],
-        "description": site["description"], "url": base, "image": base + "og.png",
-        "email": "mailto:" + site["email"], "address": address,
-        "areaServed": [{"@type": "Country", "name": "Nigeria"}, {"@type": "Continent", "name": "Africa"},
-                       {"@type": "Place", "name": "Worldwide"}],
-        "availableLanguage": "en", "founder": {"@id": base + "#person"},
-        "knowsAbout": skills, "sameAs": same_as,
-        "hasOfferCatalog": {
-            "@type": "OfferCatalog", "name": "GIS and geospatial services",
-            "itemListElement": [{"@type": "Offer", "itemOffered": {
-                "@type": "Service", "name": c["title"], "description": c["short"],
-                "url": base + "services/" + c["slug"] + "/"}} for c in caps]},
-    }
-    if site.get("whatsapp"):
-        service["telephone"] = person["telephone"]
-    return person, service
-
-
-def jsonld(page, site, caps, manifest):
-    base = site["base_url"]
-    url = base.rstrip("/") + page["path"]
-    person, service = person_and_service(site, caps, manifest)
-    website = {"@type": "WebSite", "@id": base + "#website", "url": base, "name": site["name"],
-               "inLanguage": "en", "publisher": {"@id": base + "#person"}}
-    if page["kind"] == "home":
-        graph = [person, service, website, {
-            "@type": "WebPage", "@id": url + "#webpage", "url": url, "name": page["title"],
-            "description": page["description"], "isPartOf": {"@id": base + "#website"},
-            "about": {"@id": base + "#person"}, "mainEntity": {"@id": base + "#service"},
-            "primaryImageOfPage": {"@type": "ImageObject", "url": base + page["og_image"], "width": 1200, "height": 630},
-            "inLanguage": "en"}]
-    elif page["kind"] == "case":
-        graph = [person, website, {
-            "@type": "Article", "@id": url + "#article", "url": url, "headline": page["headline"],
-            "description": page["description"], "image": base + page["og_image"],
-            "author": {"@id": base + "#person"}, "publisher": {"@id": base + "#person"},
-            "datePublished": page["published"], "dateModified": page.get("modified", page["published"]),
-            "isPartOf": {"@id": base + "#website"}, "inLanguage": "en", "keywords": page.get("keywords", [])},
-            {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
-                {"@type": "ListItem", "position": 2, "name": "Case studies", "item": base + "#work"},
-                {"@type": "ListItem", "position": 3, "name": page["crumb"], "item": url}]}]
-    elif page["kind"] == "service":
-        area = [{"@type": "Country", "name": "Nigeria"}, {"@type": "Continent", "name": "Africa"},
-                {"@type": "Place", "name": "Worldwide"}]
-        graph = [person, service, website, {
-            "@type": "Service", "@id": url + "#service", "url": url, "name": page["headline"],
-            "serviceType": page["headline"], "description": page["description"],
-            "provider": {"@id": base + "#service"}, "areaServed": area, "availableLanguage": "en"},
-            {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
-                {"@type": "ListItem", "position": 2, "name": "Services", "item": base + "services/"},
-                {"@type": "ListItem", "position": 3, "name": page["crumb"], "item": url}]}]
-        if page.get("faq"):
-            graph.append({"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
-                {"@type": "Question", "name": item["q"], "acceptedAnswer": {"@type": "Answer", "text": item["a"]}}
-                for item in page["faq"]]})
-    elif page["kind"] == "hub":
-        graph = [person, service, website, {
-            "@type": "CollectionPage", "@id": url + "#webpage", "url": url, "name": page["title"],
-            "description": page["description"], "isPartOf": {"@id": base + "#website"},
-            "about": {"@id": base + "#service"}, "inLanguage": "en"},
-            {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
-                {"@type": "ListItem", "position": 2, "name": "Services", "item": url}]}]
-    elif page["kind"] == "doc":
-        parent = page["parent"]
-        graph = [person, website, {
-            "@type": "TechArticle", "@id": url + "#article", "url": url, "headline": page["headline"],
-            "description": page["description"], "author": {"@id": base + "#person"},
-            "datePublished": page["published"], "isBasedOn": page["source"], "inLanguage": "en",
-            "isPartOf": {"@id": base + "#website"}},
-            {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
-                {"@type": "ListItem", "position": 2, "name": parent["name"], "item": base.rstrip("/") + parent["path"]},
-                {"@type": "ListItem", "position": 3, "name": page["crumb"], "item": url}]}]
-    else:
-        return ""
-    text = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=1)
-    return '<script type="application/ld+json">' + text.replace("</", "<\\/") + "</script>"
-
-
-# ---------- css / js ----------
+# ---------- assets ----------
 def build_css():
     css = (SRC / "style.css").read_text(encoding="utf-8")
     m = re.search(r':root\[data-theme="dark"\]\s*\{(.*?)\}', css, re.S)
@@ -502,33 +241,53 @@ def build_js():
     return js.strip() + "\n"
 
 
-# ---------- rendering ----------
-def render(template, values, where):
-    def sub(m):
-        key = m.group(1)
-        if key not in values:
-            sys.exit(f"build: no value for '{{{{ {key} }}}}' in {where}")
-        return str(values[key])
-    return TOKEN.sub(sub, template)
+# ---------- pages ----------
+def route(lang, rel, default):
+    """URL path for a page file. rel is relative to its language folder, without the suffix."""
+    prefix = "" if lang == default else f"/{lang}"
+    rel = rel.as_posix()
+    if rel == "index":
+        return prefix + "/"
+    if rel == "404":
+        return prefix + "/404.html"
+    return f"{prefix}/{rel}/"
 
 
-def load_pages():
+def out_file(path):
+    if path.endswith(".html"):
+        return Path(path.lstrip("/"))
+    return Path(path.lstrip("/")) / "index.html"
+
+
+PAGE_DEFAULTS = {
+    "og_title": None, "og_image": "og.png", "og_image_alt": None, "noindex": False,
+    "headline": None, "crumb": None, "published": None, "keywords": [], "faq": [],
+}
+
+
+def load_pages(langs, default, services_by_lang):
     pages = []
-    for p in sorted((SRC / "pages").rglob("*.html")):
-        text = p.read_text(encoding="utf-8")
-        m = FRONT.match(text)
-        if not m:
-            sys.exit(f"build: {p} must start with a <!--page {{...}} --> front-matter comment")
-        meta = json.loads(m.group(1))
-        rel = p.relative_to(SRC / "pages").with_suffix("")
-        if rel.name == "index":
-            path, out = "/", Path("index.html")
-        elif rel.name == "404":
-            path, out = "/404.html", Path("404.html")
-        else:
-            path, out = f"/{rel.as_posix()}/", rel / "index.html"
-        meta.update(path=path, out=out, body=text[m.end():], src=p)
-        pages.append(meta)
+    for lang in langs:
+        folder = PAGES / lang
+        for p in sorted(folder.rglob("*.html")):
+            text = p.read_text(encoding="utf-8")
+            m = FRONT.match(text)
+            if not m:
+                sys.exit(f"build: {p} must start with a {{#page {{...}} #}} front-matter comment")
+            meta = dict(PAGE_DEFAULTS, **json.loads(m.group(1)))
+            rel = p.relative_to(folder).with_suffix("")
+            meta.update(lang=lang, path=route(lang, rel, default), key=route(default, rel, default),
+                        template=p.relative_to(PAGES).as_posix(), sources=[p])
+            pages.append(meta)
+        for s in services_by_lang[lang]["services"]:
+            sp = s["page"]
+            rel = Path("services") / s["slug"]
+            meta = dict(PAGE_DEFAULTS, kind="service", title=sp["title"], description=sp["description"],
+                        headline=sp["headline"], crumb=sp["crumb"], faq=sp["faq"], slug=s["slug"])
+            meta.update(lang=lang, path=route(lang, rel, default), key=route(default, rel, default),
+                        template="service.html",
+                        sources=[TEMPLATES / "service.html", CONTENT / "services.json", I18N / lang / "services.json"])
+            pages.append(meta)
     return pages
 
 
@@ -543,20 +302,209 @@ def last_modified(paths):
     return dt.date.today().isoformat()
 
 
+# ---------- structured data ----------
+def jsonld(page, ctx):
+    site, lang, base = ctx["site"], page["lang"], ctx["site"]["base_url"]
+    url = base.rstrip("/") + page["path"]
+    home = base.rstrip("/") + ctx["link"]("/")
+    t = ctx["t"]
+    services = ctx["services"]["services"]
+    address = {"@type": "PostalAddress", "addressLocality": site["locality"], "addressCountry": site["country_code"]}
+    same_as = [u for u in site["links"].values() if u]
+    area = [{"@type": "Country", "name": "Nigeria"}, {"@type": "Continent", "name": "Africa"},
+            {"@type": "Place", "name": "Worldwide"}]
+    ilorin = {"@type": "CollegeOrUniversity", "name": "University of Ilorin"}
+    miva = {"@type": "CollegeOrUniversity", "name": "Miva Open University"}
+    person = {
+        "@type": "Person", "@id": base + "#person", "name": site["name"], "jobTitle": site["roles"],
+        "url": base, "image": base.rstrip("/") + ctx["manifest"]["portrait"][-1]["src"],
+        "email": "mailto:" + site["email"], "address": address, "alumniOf": [ilorin, miva],
+        "hasCredential": [
+            {"@type": "EducationalOccupationalCredential", "credentialCategory": "degree",
+             "name": "BSc Surveying and Geoinformatics", "recognizedBy": ilorin},
+            {"@type": "EducationalOccupationalCredential", "credentialCategory": "degree",
+             "name": "Master of Information Technology (MIT), AI specialisation", "recognizedBy": miva},
+        ],
+        "knowsAbout": [s["title"] for s in services] + [i for g in site["tools"] for i in g["items"]],
+        "knowsLanguage": "en", "sameAs": same_as,
+    }
+    service = {
+        "@type": "ProfessionalService", "@id": base + "#service", "name": site["name"],
+        "description": site["description"], "url": home, "image": base + ctx["og_default"],
+        "email": "mailto:" + site["email"], "address": address, "areaServed": area,
+        "availableLanguage": "en", "founder": {"@id": base + "#person"},
+        "knowsAbout": [s["title"] for s in services], "sameAs": same_as,
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog", "name": t["nav"]["services"],
+            "itemListElement": [{"@type": "Offer", "itemOffered": {
+                "@type": "Service", "name": s["title"], "description": s["short"],
+                "url": base.rstrip("/") + ctx["link"](f"/services/{s['slug']}/")}} for s in services]},
+    }
+    website = {"@type": "WebSite", "@id": home + "#website", "url": home, "name": site["name"],
+               "inLanguage": lang, "publisher": {"@id": base + "#person"}}
+
+    def crumbs(*items):
+        return {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": n, "item": u} for i, (n, u) in enumerate(items)]}
+
+    nav = t["nav"]
+    kind = page["kind"]
+    if kind == "home":
+        graph = [person, service, website, {
+            "@type": "WebPage", "@id": url + "#webpage", "url": url, "name": page["title"],
+            "description": page["description"], "isPartOf": {"@id": home + "#website"},
+            "about": {"@id": base + "#person"}, "mainEntity": {"@id": base + "#service"},
+            "primaryImageOfPage": {"@type": "ImageObject", "url": base + page["og_image"], "width": 1200, "height": 630},
+            "inLanguage": lang}]
+    elif kind == "case":
+        article = {
+            "@type": "Article", "@id": url + "#article", "url": url, "headline": page["headline"],
+            "description": page["description"], "image": base + page["og_image"],
+            "author": {"@id": base + "#person"}, "publisher": {"@id": base + "#person"},
+            "datePublished": page["published"], "dateModified": page.get("modified", page["published"]),
+            "isPartOf": {"@id": home + "#website"}, "inLanguage": lang, "keywords": page["keywords"]}
+        graph = [person, website, article,
+                 crumbs((nav["home"], home), (nav["case_studies"], home + "#work"), (page["crumb"], url))]
+        pre = site["preprint"]
+        if page.get("preprint") and pre.get("doi"):
+            doi_url = ctx["preprint_url"]
+            authors = [{"@id": base + "#person"}] + [{"@type": "Person", "name": n} for n in pre["author_names"][1:]]
+            graph.append({
+                "@type": "ScholarlyArticle", "@id": doi_url, "url": doi_url, "headline": pre["title"],
+                "author": authors, "datePublished": pre["posted"], "inLanguage": "en",
+                "publisher": {"@type": "Organization", "name": pre["server"]},
+                "identifier": {"@type": "PropertyValue", "propertyID": "DOI", "value": pre["doi"]}})
+            article["citation"] = {"@id": doi_url}
+    elif kind == "service":
+        graph = [person, service, website, {
+            "@type": "Service", "@id": url + "#service", "url": url, "name": page["headline"],
+            "serviceType": page["headline"], "description": page["description"],
+            "provider": {"@id": base + "#service"}, "areaServed": area, "availableLanguage": "en"},
+            crumbs((nav["home"], home), (nav["services"], base.rstrip("/") + ctx["link"]("/services/")), (page["crumb"], url))]
+        if page["faq"]:
+            graph.append({"@type": "FAQPage", "@id": url + "#faq", "inLanguage": lang, "mainEntity": [
+                {"@type": "Question", "name": item["q"], "acceptedAnswer": {"@type": "Answer", "text": item["a"]}}
+                for item in page["faq"]]})
+    elif kind == "hub":
+        graph = [person, service, website, {
+            "@type": "CollectionPage", "@id": url + "#webpage", "url": url, "name": page["title"],
+            "description": page["description"], "isPartOf": {"@id": home + "#website"},
+            "about": {"@id": base + "#service"}, "inLanguage": lang},
+            crumbs((nav["home"], home), (nav["services"], url))]
+    elif kind == "doc":
+        parent = page["parent"]
+        graph = [person, website, {
+            "@type": "TechArticle", "@id": url + "#article", "url": url, "headline": page["headline"],
+            "description": page["description"], "author": {"@id": base + "#person"},
+            "datePublished": page["published"], "isBasedOn": page["source"], "inLanguage": lang,
+            "isPartOf": {"@id": home + "#website"}},
+            crumbs((nav["home"], home), (parent["name"], base.rstrip("/") + parent["path"]), (page["crumb"], url))]
+    elif kind == "page" and not page["noindex"]:
+        graph = [website, {
+            "@type": "WebPage", "@id": url + "#webpage", "url": url, "name": page["title"],
+            "description": page["description"], "isPartOf": {"@id": home + "#website"}, "inLanguage": lang},
+            crumbs((nav["home"], home), (page["crumb"] or page["title"], url))]
+    else:
+        return Markup("")
+    text = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=1)
+    return Markup('<script type="application/ld+json">' + text.replace("</", "<\\/") + "</script>")
+
+
+# ---------- per-language context ----------
+def language_context(lang, data, todo, routes, release):
+    default = data["site"]["default_language"]
+    text = data["text"][lang]
+    t = text["ui"]
+    site = merged_site(data["site"], t)
+    conf = next(l for l in data["site"]["languages"] if l["code"] == lang)
+
+    def link(path):
+        """A site path in this language when the page exists in it, otherwise the default-language page."""
+        p, _, frag = path.partition("#")
+        if lang != default and f"/{lang}{p}" in routes:
+            p = f"/{lang}{p}"
+        return p + ("#" + frag if frag else "")
+
+    q = urllib.parse.quote
+    body = site["call_body"].replace("\n", "\r\n")
+    email_book = f"mailto:{site['email']}?subject={q(site['call_subject'])}&body={q(body)}"
+    palm_raw = site["projects"]["oil_palm"]
+    palm = {k: (fmt_num(v, lang) if isinstance(v, (int, float)) and not isinstance(v, bool) else v)
+            for k, v in palm_raw.items()}
+    palm["double_count_share"] = fmt_pct(palm_raw["double_count_share"], lang)
+    palm["as_of"] = fmt_date(palm_raw["as_of"], lang, day=False)
+    palm["density"] = fmt_num(palm_raw["density"], lang, 1)
+    osm = data["osm"]
+    rows = []
+    for feat in osm["lgas"]["features"]:
+        props = feat["properties"]
+        if not props.get("counts"):
+            continue
+        slots = [0, 0, 0, 0]
+        for i, n in enumerate(props["counts"]):
+            slots[CATEGORY_SLOT[i]] += n
+        rows.append({"name": props["name"], "slots": [fmt_num(v, lang) for v in slots],
+                     "total": fmt_num(sum(slots), lang), "sort": sum(slots)})
+    rows.sort(key=lambda r: -r["sort"])
+    pre = site["preprint"]
+    suggest = {l: {"text": data["text"][l]["ui"]["js"]["lang_suggest"], "switch": data["text"][l]["ui"]["js"]["lang_switch"],
+                   "stay": data["text"][l]["ui"]["js"]["lang_stay"],
+                   "dir": next(x["dir"] for x in data["site"]["languages"] if x["code"] == l)} for l in data["text"]}
+    f = FORMATS[lang]
+    js_strings = dict(t["js"], lang=lang, suggest=suggest, pulled=fmt_date(osm["pulled"], lang),
+                      num={"group": f["group"], "decimal": f["decimal"]})
+    return {
+        "lang": lang, "dir": conf["dir"], "t": t, "site": site,
+        "services": merged_services(data["services"], text["services"]),
+        "products": merged_products(data["products"], text["products"]),
+        "testimonial_items": pick(data["testimonials"], lang, default),
+        "manifest": data["manifest"], "blank_gif": BLANK_GIF, "release": release, "todo": todo,
+        "year": dt.date.today().year, "link": link,
+        "call_url": site.get("booking_url") or email_book, "email_book_url": email_book,
+        "mailto_url": f"mailto:{site['email']}",
+        "preprint_url": "https://doi.org/" + pre["doi"] if pre.get("doi") else None,
+        "palm": palm, "osm_rows": rows, "osm_count": fmt_num(len(osm["facilities"]), lang),
+        "osm_pulled": fmt_date(osm["pulled"], lang), "cases": CASES,
+        "today_month": fmt_date(dt.date.today().isoformat(), lang, day=False),
+        "site_host": site["base_url"].split("//", 1)[-1].rstrip("/"),
+        "og_default": "og.png" if lang == default else f"og-{lang}.png",
+        "pdf": "oluwasola-oyinloye-capability-statement" + ("" if lang == default else f"-{lang}") + ".pdf",
+        "js_strings": js_strings, "num": lambda x, d=None: fmt_num(x, lang, d),
+    }
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--release", action="store_true", help="leave out missing items instead of showing TODO markers")
     args = ap.parse_args()
 
-    site = json.loads((CONTENT / "site.json").read_text(encoding="utf-8"))
-    services = json.loads((CONTENT / "services.json").read_text(encoding="utf-8"))
-    caps = services["services"]
-    osm = json.loads((STATIC / "data" / "lagos-health-osm.json").read_text(encoding="utf-8"))
-    manifest = json.loads((STATIC / "img" / "manifest.json").read_text(encoding="utf-8"))
-    products = json.loads((CONTENT / "products.json").read_text(encoding="utf-8"))
-    testimonials = json.loads((CONTENT / "testimonials.json").read_text(encoding="utf-8"))
+    site = read_json(CONTENT / "site.json")
     if not site["base_url"].endswith("/"):
         sys.exit("build: base_url must end with '/'")
+    langs = [l["code"] for l in site["languages"]]
+    default = site["default_language"]
+    unready = [l for l in langs if not (I18N / l).is_dir() or not (PAGES / l).is_dir()]
+    if unready and args.release:
+        sys.exit(f"build: no text or pages yet for: {', '.join(unready)}")
+    if unready:
+        print(f"  Skipping languages with no text or pages yet: {', '.join(unready)}")
+        langs = [l for l in langs if l not in unready]
+    site["languages"] = [l for l in site["languages"] if l["code"] in langs]
+    text, problems = load_text(langs, default)
+    if problems:
+        sys.exit("build: translations differ from English:\n  " + "\n  ".join(problems))
+    data = {
+        "site": site, "services": read_json(CONTENT / "services.json"), "products": read_json(CONTENT / "products.json"),
+        "testimonials": read_json(CONTENT / "testimonials.json"), "text": text,
+        "osm": read_json(STATIC / "data" / "lagos-health-osm.json"), "manifest": read_json(STATIC / "img" / "manifest.json"),
+    }
+
+    gaps = []
+
+    def todo(label):
+        if label not in gaps:
+            gaps.append(label)
+        return Markup("") if args.release else Markup('<span class="todo">TODO: {}</span>').format(label)
 
     # Empty dist/ rather than deleting it: on Windows a folder that a shell or
     # the preview server has open cannot be removed.
@@ -566,86 +514,98 @@ def main():
     shutil.copytree(STATIC, DIST, dirs_exist_ok=True)
     (DIST / "img" / "manifest.json").unlink(missing_ok=True)
 
+    css = build_css()
     js = build_js()
+    js_name = f"main.{hashlib.sha256(js.encode()).hexdigest()[:10]}.js"
     (DIST / "assets").mkdir(exist_ok=True)
-    (DIST / "assets" / "main.js").write_text(js, encoding="utf-8", newline="\n")
+    (DIST / "assets" / js_name).write_text(js, encoding="utf-8", newline="\n")
+    csp = "; ".join([
+        "default-src 'self'", f"script-src 'self' {sha256(HEAD_SCRIPT)}", f"style-src 'self' {sha256(css)}",
+        "img-src 'self' data:", "media-src 'self'", "font-src 'self'", "connect-src 'self'",
+        "object-src 'none'", "base-uri 'self'", "form-action 'self'"])
 
-    gaps = Missing(args.release)
-    shared = {
-        "base_url": esc(site["base_url"]),
-        "name": esc(site["name"]),
-        "flagship": esc(site["flagship"]),
-        "email": esc(site["email"]),
-        "timezone": esc(site["timezone"]),
-        "linkedin": esc(site["links"]["linkedin"]),
-        "github": esc(site["links"]["github"]),
-        "medium": esc(site["links"]["medium"]),
-        "year": dt.date.today().year,
-        "css": build_css(),
-        "js_version": hashlib.sha1(js.encode()).hexdigest()[:8],
-    }
-    shared.update(fragments(site, caps, osm, manifest, gaps, products))
-    shared.update(service_fragments(services))
-    shared["testimonials"] = testimonials_html(testimonials, gaps)
-    shared["brief_builder"] = shared["brief_builder"].replace("__EMAIL__", esc(site["email"]))
-    shared["email"] = esc(site["email"])
-    partials = {p.stem: p.read_text(encoding="utf-8") for p in (SRC / "partials").glob("*.html")}
+    env = Env(loader=jinja2.FileSystemLoader([str(TEMPLATES), str(PAGES)]), autoescape=True,
+              trim_blocks=True, lstrip_blocks=True, undefined=jinja2.StrictUndefined)
+    env.globals.update(css=Markup(css), head_script=Markup(HEAD_SCRIPT), csp=csp, js_src=f"/assets/{js_name}")
 
-    pages = load_pages()
+    services_by_lang = {l: merged_services(data["services"], text[l]["services"]) for l in langs}
+    pages = load_pages(langs, default, services_by_lang)
+    routes = {p["path"] for p in pages}
+    by_key = {}
+    for p in pages:
+        by_key.setdefault(p["key"], {})[p["lang"]] = p
+    contexts = {l: language_context(l, data, todo, routes, args.release) for l in langs}
+    og_locale = {l["code"]: l["og_locale"] for l in site["languages"]}
+    names = {l["code"]: l["name"] for l in site["languages"]}
+    base = site["base_url"].rstrip("/")
+
     sitemap = []
     for page in pages:
-        title = page.get("title") or site["title"]
-        description = page.get("description") or site["description"]
-        page.setdefault("title", title)
-        page["title"], page["description"] = title, description
-        page.setdefault("og_image", "og.png")
-        canonical = site["base_url"].rstrip("/") + page["path"]
-        values = dict(shared)
-        values.update({
-            "page_title": esc(title),
-            "page_description": esc(description),
-            "canonical": esc(canonical),
-            "og_title": esc(page.get("og_title") or title),
-            "og_image": esc(site["base_url"] + page["og_image"]),
-            "og_image_alt": esc(page.get("og_image_alt") or f'{site["name"]}: {site["flagship"]}'),
-            "og_type": "article" if page["kind"] in ("case", "doc") else "website",
-            "robots": "noindex" if page.get("noindex") else "index, follow, max-image-preview:large",
-            "body_class": "page-" + page["kind"],
-            "nav_prefix": "" if page["kind"] == "home" else "/",
-            "jsonld": jsonld(page, site, caps, manifest),
-        })
+        ctx = dict(contexts[page["lang"]])
+        lang = page["lang"]
         if page["kind"] == "service":
-            values["service_faq"] = faq_html(page.get("faq", []))
-            values["other_services"] = service_cards(services, exclude=page["service"])
-        values["content"] = render(page["body"], values, page["src"].name)
-        for name in ("header", "footer"):
-            values[name] = render(partials[name], values, f"partials/{name}.html")
-        layout = page.get("layout", "layout")
-        out = render(partials[layout], values, f"partials/{layout}.html")
-        target = DIST / page["out"]
+            ctx["service"] = next(s for s in ctx["services"]["services"] if s["slug"] == page["slug"])
+        if lang != default and page["og_image"] == "og.png":
+            page["og_image"] = f"og-{lang}.png"
+        siblings = by_key[page["key"]]
+        alternates = []
+        if not page["noindex"] and sum(not s["noindex"] for s in siblings.values()) > 1:
+            alternates = [{"lang": l, "url": base + siblings[l]["path"], "og_locale": og_locale[l]}
+                          for l in langs if l in siblings and not siblings[l]["noindex"]]
+        page["alternates"] = alternates
+        home_path = ctx["link"]("/")
+        ctx.update(
+            page=page, canonical=base + page["path"], alternates=alternates,
+            x_default=base + siblings[default]["path"] if default in siblings else base + "/",
+            language_links=[{"code": l, "name": names[l], "current": l == lang,
+                             "href": siblings[l]["path"] if l in siblings else ("/" if l == default else f"/{l}/")}
+                            for l in langs],
+            section=lambda sid, _home=(page["key"] == "/"), _hp=home_path: f"#{sid}" if _home else f"{_hp}#{sid}",
+        )
+        ctx["jsonld"] = jsonld(page, ctx)
+        try:
+            out = env.get_template(page["template"]).render(ctx)
+        except jinja2.TemplateError as e:
+            sys.exit(f"build: {page['template']} ({lang}): {e}")
+        out = typography(out, lang)
+        target = DIST / out_file(page["path"])
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(out, encoding="utf-8", newline="\n")
-        if not page.get("noindex"):
-            sitemap.append((canonical, last_modified([page["src"], CONTENT])))
+        if not page["noindex"]:
+            sitemap.append((page, last_modified(page["sources"] + [CONTENT])))
         page["bytes"] = len(out.encode("utf-8"))
         page["gz"] = len(gzip.compress(out.encode("utf-8")))
 
-    base = site["base_url"]
-    (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {base}sitemap.xml\n", encoding="utf-8", newline="\n")
-    urls = "".join(f"  <url>\n    <loc>{esc(u)}</loc>\n    <lastmod>{d}</lastmod>\n  </url>\n" for u, d in sitemap)
-    (DIST / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
-                                      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-                                      f"{urls}</urlset>\n", encoding="utf-8", newline="\n")
+    (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {base}/sitemap.xml\n",
+                                     encoding="utf-8", newline="\n")
+    esc = lambda s: html.escape(s, quote=True)
+    urls = []
+    for page, lastmod in sitemap:
+        links = "".join(f'    <xhtml:link rel="alternate" hreflang="{a["lang"]}" href="{esc(a["url"])}"/>\n'
+                        for a in page["alternates"])
+        if page["alternates"]:
+            links += f'    <xhtml:link rel="alternate" hreflang="x-default" href="{esc(base + by_key[page["key"]][default]["path"])}"/>\n'
+        urls.append(f"  <url>\n    <loc>{esc(base + page['path'])}</loc>\n    <lastmod>{lastmod}</lastmod>\n{links}  </url>\n")
+    (DIST / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+        + "".join(urls) + "</urlset>\n", encoding="utf-8", newline="\n")
     (DIST / ".nojekyll").write_text("", encoding="utf-8")
 
-    print(f"Built {'release' if args.release else 'preview'} -> {DIST}")
+    print(f"Built {'release' if args.release else 'preview'} -> {DIST}: {len(pages)} pages in {len(langs)} languages")
+    by_lang = {}
     for page in pages:
-        print(f"  {page['path']:<40} {page['bytes'] / 1024:5.1f} KB raw, {page['gz'] / 1024:4.1f} KB gzipped")
-    print(f"  /assets/main.js {len(js.encode()) / 1024:.1f} KB")
-    if gaps.items:
+        by_lang.setdefault(page["lang"], []).append(page)
+    for l in langs:
+        ps = by_lang.get(l, [])
+        if ps:
+            print(f"  {l}: {len(ps):3d} pages, largest {max(p['bytes'] for p in ps) / 1024:5.1f} KB raw, "
+                  f"{max(p['gz'] for p in ps) / 1024:4.1f} KB gzipped")
+    print(f"  /assets/{js_name} {len(js.encode()) / 1024:.1f} KB · inline CSS {len(css.encode()) / 1024:.1f} KB")
+    if gaps:
         verb = "left out" if args.release else "shown as TODO"
-        print(f"  {len(gaps.items)} missing item(s) {verb}:")
-        for g in gaps.items:
+        print(f"  {len(gaps)} missing item(s) {verb}:")
+        for g in gaps:
             print(f"    - {g}")
 
 

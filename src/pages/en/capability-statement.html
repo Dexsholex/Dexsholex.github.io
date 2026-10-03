@@ -1,0 +1,87 @@
+{#page {"kind": "page", "noindex": true,
+ "title": "Capability statement · Oluwasola Oyinloye",
+ "description": "One-page capability statement: GIS and geospatial services, selected work, tools and education."} #}
+{% extends "print.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<div class="cap-bar">
+  <a href="{{ link('/') }}">← {{ t.cta.back_to_site }}</a>
+  <a class="btn btn-sm" href="/{{ pdf }}" download>{{ t.cta.download_pdf }}</a>
+</div>
+<main class="cap">
+  <header class="cap-head">
+    <div>
+      <h1 class="cap-name">{{ site.name }}</h1>
+      <p class="cap-role">{{ site.roles|join(' · ') }}</p>
+      <p class="cap-tag">GIS · Remote sensing · Drone mapping · Geospatial AI</p>
+    </div>
+    <ul class="cap-contact">
+      <li>{{ site.email }}</li>
+      <li>{{ site_host }}</li>
+      <li>linkedin.com/in/oluwasola-oyinloye</li>
+      <li>github.com/Dexsholex</li>
+      <li>Lagos, Nigeria · {{ site.timezone }}</li>
+    </ul>
+  </header>
+
+  <section class="cap-summary">
+    <p>I'm a geospatial data scientist and geospatial AI specialist in Lagos with five years of professional GIS and remote sensing work. I take on drone surveys in Nigeria, planned and flown in-house, and work remotely from satellite data for clients across Africa and beyond. Every result I deliver comes with how it was validated and the code that produced it.</p>
+  </section>
+
+  <div class="cap-grid">
+    <div>
+      <h2>Services</h2>
+      <ul class="cap-list cap-cols">
+        {% for s in services.services %}
+        <li>{{ s.title }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2>Selected work</h2>
+      <div class="cap-work">
+        <h3>Oil palm counting from aerial imagery</h3>
+        <p>For a commercial oil palm plantation: a YOLOv8 crown-detection pipeline that mapped {{ palm.palms }} palms across {{ palm.hectares }} ha in {{ palm.blocks }} blocks. Overlapping deliveries were resolved so every hectare is counted once, removing {{ palm.double_counts }} double counts.</p>
+      </div>
+      <div class="cap-work">
+        <h3>GeoAID flood susceptibility, Amuwo-Odofin (Lagos)</h3>
+        <p>An open model with a live dashboard: structural flood susceptibility, near-real-time rainfall and exposure of people, schools, clinics and roads. ROC-AUC about 0.798 on a random split and about 0.642 under spatial cross-validation, reported side by side.</p>
+      </div>
+      <div class="cap-work">
+        <h3>Lagos Access Map (in development)</h3>
+        <p>A ward-by-ward audit of how complete OpenStreetMap's record of health facilities is in Lagos, with confidence intervals, as the base for access-to-care mapping.</p>
+      </div>
+
+      <h2>Sectors</h2>
+      <ul class="cap-list tight">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+    </div>
+
+    <div>
+      <h2>Where</h2>
+      <p>On site in Nigeria. Remote across Africa and worldwide.</p>
+
+      <h2>Ways to work</h2>
+      <p>Pilot · Project · Monitoring · Advisory days · Training. Written scope for every engagement; NDA on request.</p>
+
+      <h2>Tools</h2>
+      <p class="cap-tools">{% for g in site.tools %}<b>{{ g.group }}:</b> {{ g['items']|join(', ') }}. {% endfor %}</p>
+
+      <h2>Education</h2>
+      <ul class="cap-list tight">
+        <li>Master of Information Technology (MIT), AI specialisation, Miva Open University</li>
+        <li>BSc Surveying and Geoinformatics, University of Ilorin</li>
+      </ul>
+
+      <h2>Teaching and research</h2>
+      <p>Taught Python for geospatial analysis to 1,500 people through seminars.</p>
+      {% if preprint_url %}
+      <p class="cap-pub">Preprint: Oyinloye, O. A. and Mustapha, I. O. ({{ site.preprint.year }}). {{ site.preprint.title }}. {{ site.preprint.server }}. doi.org/{{ site.preprint.doi }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <footer class="cap-foot">
+    <p>Book a call: {{ site.booking_url.split('//', 1)[-1] if site.booking_url else site.email }} · {{ site.email }}</p>
+    <p>Updated {{ today_month }}</p>
+  </footer>
+</main>
+{% endblock %}

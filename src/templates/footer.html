@@ -1,0 +1,54 @@
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <p class="footer-name">{{ site.name }}</p>
+      <p>{{ site.roles|join(' · ') }}</p>
+      <p>{{ t.footer.based }} · {{ site.timezone }}</p>
+      <p>{{ t.footer.where }}</p>
+    </div>
+    <nav aria-label="{{ t.nav.services }}">
+      <p class="footer-head">{{ t.nav.services }}</p>
+      <ul>
+        {%- for c in services.services %}
+        <li><a href="{{ link('/services/' ~ c.slug ~ '/') }}">{{ c.title }}</a></li>
+        {%- endfor %}
+      </ul>
+    </nav>
+    <nav aria-label="{{ t.footer.site }}">
+      <p class="footer-head">{{ t.footer.site }}</p>
+      <ul>
+        <li><a href="{{ section('work') }}">{{ t.footer.case_studies }}</a></li>
+        <li><a href="{{ section('products') }}">{{ t.nav.products }}</a></li>
+        <li><a href="{{ section('about') }}">{{ t.nav.about }}</a></li>
+        <li><a href="{{ section('engage') }}">{{ t.footer.ways }}</a></li>
+        <li><a href="{{ link('/capability-statement/') }}">{{ t.footer.capability }}</a></li>
+        <li><a href="{{ link('/data-protection/') }}">{{ t.footer.data_protection }}</a></li>
+        <li><a href="{{ link('/privacy/') }}">{{ t.footer.privacy }}</a></li>
+      </ul>
+    </nav>
+    <div>
+      <p class="footer-head">{{ t.footer.elsewhere }}</p>
+      <ul>
+        <li><a href="{{ site.links.linkedin }}" rel="me">LinkedIn</a></li>
+        <li><a href="{{ site.links.github }}" rel="me">GitHub</a></li>
+        <li><a href="{{ site.links.medium }}" rel="me">Medium</a></li>
+        {%- if site.preprint.doi %}
+        <li><a href="{{ preprint_url }}">{{ t.footer.preprint }}</a></li>
+        {%- endif %}
+      </ul>
+    </div>
+    <div>
+      <p class="footer-head">{{ t.nav.contact }}</p>
+      <ul>
+        <li><a href="{{ mailto_url }}" dir="ltr">{{ site.email }}</a></li>
+        {%- if site.booking_url %}
+        <li><a href="{{ site.booking_url }}">{{ t.footer.book_online }}</a></li>
+        {%- endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <p>© {{ year }} {{ site.name }}</p>
+    <p>{{ t.footer.no_tracking }} <a href="{{ link('/privacy/') }}">{{ t.footer.privacy }}</a></p>
+  </div>
+</footer>

@@ -1,0 +1,58 @@
+{#page {"kind": "hub", "title": "Serviços SIG e geoespaciais na Nigéria e em África · Oluwasola Oyinloye", "description": "SIG, mapeamento com drones, deteção remota, IA geoespacial, controlos EUDR, risco de inundação, SIG web, bases de dados espaciais e formação."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.services, none)]) }}
+      <p class="eyebrow">Serviços</p>
+      <h1>Serviços SIG e geoespaciais</h1>
+      <p class="lead">Levantamentos com drones, análise de satélite, modelos preditivos, mapas web e formação, com um valor de precisão associado a cada resultado. Escolha um serviço abaixo, ou descreva o problema e digo-lhe qual se adequa.</p>
+      <div class="hero-actions">
+        {{ m.book_button() }}
+        <a class="btn btn-ghost" href="{{ section('work') }}">{{ t.cta.see_case_studies }}{{ m.icon('arrow') }}</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="all-title">
+    <div class="wrap">
+      <header class="section-head">
+        <h2 id="all-title">Nove áreas de serviço</h2>
+        <p>Escolha o seu setor para ver onde posso ajudar.</p>
+      </header>
+      {{ m.sector_filter() }}
+      <ul class="services" data-sector-list>
+        {{ m.service_cards() }}
+      </ul>
+      <p class="services-also">{{ services.also }}</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="sectors-title">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">Setores</p>
+        <h2 id="sectors-title">Com quem trabalho</h2>
+        <p class="small">Se a sua organização toma decisões sobre terra, água, pessoas ou bens num lugar, quase sempre há uma pergunta geoespacial por trás.</p>
+      </div>
+      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="where-title-2">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">Onde</p>
+        <h2 id="where-title-2">Nigéria, África e mais além</h2>
+      </div>
+      <div class="prose">
+        <p>Na Nigéria trabalho no terreno: levantamentos com drones, pontos de controlo GNSS e verificações de campo, até à análise e à entrega.</p>
+        <p>No resto de África e noutros continentes trabalho à distância. Os dados de satélite abertos cobrem todo o continente, por isso a maioria dos projetos pode começar sem visita ao local, e quando são precisas imagens de drone posso processar as que uma equipa local recolher.</p>
+        <p>A hora de Lagos (UTC+1) coincide com a de Angola e fica a uma hora da de Moçambique. Veja as <a href="{{ section('engage') }}">formas de colaboração</a>.</p>
+      </div>
+    </div>
+  </section>
+</article>
+{% endblock %}

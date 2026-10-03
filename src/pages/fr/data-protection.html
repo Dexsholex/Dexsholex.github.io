@@ -1,0 +1,48 @@
+{#page {"kind": "page", "crumb": "Protection des données",
+ "title": "Confidentialité et protection des données · Oluwasola Oyinloye",
+ "description": "Comment sont traitées les données et images des clients : usage limité au projet, accord de confidentialité, restitution ou suppression, NDPA et RGPD."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (page.crumb, none)]) }}
+      <p class="eyebrow">Pour les clients</p>
+      <h1>Confidentialité et protection des données</h1>
+      <p class="lead">Inventaires de plantation, limites d'exploitations, plans de site et images de relevé sont souvent sensibles sur le plan commercial. Voici comment je les traite.</p>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="prose page-prose">
+      <h2>Avant le début de la mission</h2>
+      <ul>
+        <li>Je signe volontiers un accord de confidentialité avant que vous ne partagiez quoi que ce soit, le vôtre ou le mien, selon votre préférence.</li>
+        <li>Le périmètre écrit précise les données que je recevrai, ce que je produirai et à qui appartiennent les résultats.</li>
+      </ul>
+
+      <h2>Pendant le projet</h2>
+      <ul>
+        <li>Vos données servent uniquement à votre projet. Elles ne servent pas à entraîner des modèles pour d'autres clients, et elles ne sont pas partagées.</li>
+        <li>L'accès est limité aux personnes qui travaillent sur votre projet, et toute personne qui y travaille est tenue par les mêmes engagements de confidentialité.</li>
+        <li>Les données de localisation sont retirées des photos avant que l'une d'elles ne soit montrée en dehors du projet.</li>
+      </ul>
+
+      <h2>À la fin</h2>
+      <ul>
+        <li>Vous recevez les résultats, le code et la documentation.</li>
+        <li>Je vous restitue ou je supprime vos données, selon votre choix, et je le confirme par écrit.</li>
+      </ul>
+
+      <h2>Données personnelles</h2>
+      <p>Certains projets comportent des données personnelles, comme des noms de producteurs associés à des parcelles ou la localisation de ménages. Je les traite conformément à la loi nigériane sur la protection des données de 2023 (Nigeria Data Protection Act) et, lorsqu'il s'applique, au Règlement général sur la protection des données de l'UE (RGPD) : seules les données personnelles nécessaires au projet, utilisées uniquement pour l'objectif convenu, et conservées pas plus longtemps que nécessaire.</p>
+
+      <h2>Vos projets sur ce site</h2>
+      <p>Une mission client n'apparaît ici qu'avec l'accord du client, et de façon anonyme sauf s'il en décide autrement. L'étude de cas sur les palmiers à huile est publiée ainsi.</p>
+
+      <p>Pour toute question : <a href="{{ mailto_url }}">{{ site.email }}</a>.</p>
+      <p class="small">Dernière mise à jour : octobre 2026.</p>
+    </div>
+  </div>
+</article>
+{% endblock %}

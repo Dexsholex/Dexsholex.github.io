@@ -1,117 +1,159 @@
 {
   "base_url": "https://dexsholex.github.io/",
   "name": "Oluwasola Oyinloye",
-  "roles": [
-    "Geospatial data scientist",
-    "Geospatial AI specialist"
+  "languages": [
+    {
+      "code": "en",
+      "name": "English",
+      "og_locale": "en_GB",
+      "dir": "ltr"
+    },
+    {
+      "code": "fr",
+      "name": "Français",
+      "og_locale": "fr_FR",
+      "dir": "ltr"
+    },
+    {
+      "code": "pt",
+      "name": "Português",
+      "og_locale": "pt_PT",
+      "dir": "ltr"
+    },
+    {
+      "code": "es",
+      "name": "Español",
+      "og_locale": "es_ES",
+      "dir": "ltr"
+    },
+    {
+      "code": "ar",
+      "name": "العربية",
+      "og_locale": "ar_AR",
+      "dir": "rtl"
+    }
   ],
-  "flagship": "Geospatial analysis you can verify.",
-  "title": "GIS & Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye",
-  "description": "GIS, drone mapping, satellite remote sensing and geospatial AI from Lagos, for clients in Nigeria, across Africa and worldwide. Book a call.",
+  "default_language": "en",
   "locality": "Lagos",
   "country_code": "NG",
-  "country": "Nigeria",
-  "areas": [
-    "Nigeria",
-    "Africa",
-    "Worldwide"
-  ],
   "timezone": "WAT, UTC+1",
   "email": "o.oyin1115@gmail.com",
   "whatsapp": null,
-  "call_subject": "Call request",
-  "call_body": "Hello Oluwasola,\n\nI'd like to book a call.\n\nOrganisation:\nCountry or area of interest:\nWhat I need to decide:\nData we already have:\nTwo or three times that suit me (with time zone):\n",
   "booking_url": "https://cal.com/oluwasola-oyinloye",
   "booking_options": [
     {
-      "label": "30-minute scoping call",
+      "key": "scoping",
       "url": "https://cal.com/oluwasola-oyinloye/30min"
     },
     {
-      "label": "15-minute intro",
+      "key": "intro",
       "url": "https://cal.com/oluwasola-oyinloye/15min"
     }
   ],
   "links": {
     "linkedin": "https://www.linkedin.com/in/oluwasola-oyinloye",
     "github": "https://github.com/Dexsholex",
-    "medium": "https://medium.com/@Deyley",
-    "researchgate": null
+    "medium": "https://medium.com/@Deyley"
   },
   "preprint": {
-    "title": null,
-    "doi": null
+    "title": "GeoAID: An Explainable Geospatial Disaster Intelligence Framework for Urban Flood Risk in a Data-Poor Coastal Megacity",
+    "authors": "Oyinloye, O. A. and Mustapha, I. O.",
+    "author_names": [
+      "Oluwasola Abdullahi Oyinloye",
+      "Ismail Olamide Mustapha"
+    ],
+    "posted": "2026-09-20",
+    "year": 2026,
+    "server": "Preprints.org",
+    "doi": "10.20944/preprints202609.1630.v1"
   },
-  "tools": {
-    "Programming and analysis": [
-      "Python",
-      "SQL",
-      "Jupyter",
-      "pandas",
-      "NumPy",
-      "SciPy",
-      "statsmodels"
-    ],
-    "Machine learning and AI": [
-      "PyTorch",
-      "Ultralytics YOLOv8",
-      "scikit-learn",
-      "XGBoost",
-      "SHAP",
-      "OpenCV"
-    ],
-    "Earth observation": [
-      "Google Earth Engine",
-      "geemap",
-      "Sentinel-1 SAR",
-      "Sentinel-2",
-      "SRTM",
-      "CHIRPS",
-      "NASA GPM IMERG",
-      "ESA WorldCover",
-      "WorldPop"
-    ],
-    "GIS and spatial data": [
-      "QGIS",
-      "Google Earth Pro",
-      "PostGIS",
-      "GeoPandas",
-      "Rasterio",
-      "Shapely",
-      "PyProj",
-      "OpenStreetMap"
-    ],
-    "Drone mapping": [
-      "DJI Terra",
-      "Agisoft Metashape",
-      "WebODM / OpenDroneMap",
-      "GNSS ground control"
-    ],
-    "Dashboards and web maps": [
-      "Streamlit",
-      "Power BI",
-      "Plotly",
-      "Folium",
-      "Leaflet"
-    ]
-  },
+  "tools": [
+    {
+      "key": "programming",
+      "items": [
+        "Python",
+        "SQL",
+        "Jupyter",
+        "pandas",
+        "NumPy",
+        "SciPy",
+        "statsmodels"
+      ]
+    },
+    {
+      "key": "ml",
+      "items": [
+        "PyTorch",
+        "Ultralytics YOLOv8",
+        "scikit-learn",
+        "XGBoost",
+        "SHAP",
+        "OpenCV"
+      ]
+    },
+    {
+      "key": "eo",
+      "items": [
+        "Google Earth Engine",
+        "geemap",
+        "Sentinel-1 SAR",
+        "Sentinel-2",
+        "SRTM",
+        "CHIRPS",
+        "NASA GPM IMERG",
+        "ESA WorldCover",
+        "WorldPop"
+      ]
+    },
+    {
+      "key": "gis",
+      "items": [
+        "QGIS",
+        "Google Earth Pro",
+        "PostGIS",
+        "GeoPandas",
+        "Rasterio",
+        "Shapely",
+        "PyProj",
+        "OpenStreetMap"
+      ]
+    },
+    {
+      "key": "drone",
+      "items": [
+        "DJI Terra",
+        "Agisoft Metashape",
+        "WebODM / OpenDroneMap",
+        "GNSS ground control"
+      ]
+    },
+    {
+      "key": "web",
+      "items": [
+        "Streamlit",
+        "Power BI",
+        "Plotly",
+        "Folium",
+        "Leaflet"
+      ]
+    }
+  ],
   "projects": {
     "oil_palm": {
-      "palms": "718,751",
-      "naive_palms": "1,021,163",
-      "double_counts": "302,412",
-      "double_count_share": "29.6%",
-      "hectares": "12,166.6",
-      "overlap_hectares": "5,194.7",
-      "overlap_pairs": "51",
-      "blocks": "26",
-      "density": "59.1",
-      "iterations": "9",
-      "chm_blocks": "5",
-      "as_of": "August 2026",
+      "palms": 718751,
+      "naive_palms": 1021163,
+      "double_counts": 302412,
+      "double_count_share": 29.6,
+      "hectares": 12166.6,
+      "overlap_hectares": 5194.7,
+      "overlap_pairs": 51,
+      "blocks": 26,
+      "density": 59.1,
+      "iterations": 9,
+      "chm_blocks": 5,
+      "as_of": "2026-08",
       "repo": "https://github.com/Dexsholex/oil-palm-crown-detection",
-      "accuracy": null,
-      "detection_image": null
+      "accuracy": null
     },
     "access_map_build": null,
     "geoaid_dashboard": "https://geoaid-lagos-flood.streamlit.app/",

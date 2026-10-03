@@ -1,0 +1,589 @@
+{
+  "sectors": {
+    "agriculture": "Agricultura y plantaciones",
+    "finance": "Crédito agrícola y finanzas",
+    "construction": "Inmobiliario, construcción e infraestructuras",
+    "government": "Administración pública y urbanismo",
+    "development": "ONG, salud y desarrollo",
+    "environment": "Medio ambiente, clima y seguros",
+    "mining": "Minería, canteras y energía"
+  },
+  "also": "Además: cartografía y producción de mapas para informes, digitalización y limpieza de datos, geocodificación, cartografía en OpenStreetMap, estudios de aptitud de terrenos y puntos de control GNSS. Si su pregunta tiene que ver con un lugar, consúlteme.",
+  "services": {
+    "geospatial-ai": {
+      "title": "IA geoespacial y machine learning",
+      "short": "Modelos de deep learning que encuentran y cuentan objetos en imágenes, y modelos predictivos probados en zonas que nunca han visto.",
+      "page": {
+        "title": "IA geoespacial y machine learning · Oluwasola Oyinloye",
+        "description": "Detección, conteo y clasificación de objetos en imágenes de dron y de satélite, y modelos espaciales predictivos probados en zonas que nunca han visto.",
+        "headline": "IA geoespacial y machine learning",
+        "crumb": "IA geoespacial",
+        "lead": "Modelos que leen imágenes a una escala que ningún equipo podría revisar a mano, y modelos predictivos que indican hasta qué punto se puede confiar en ellos. El proyecto de palma aceitera contó 718 751 palmas de esta forma.",
+        "get": [
+          "Detección y conteo de objetos: árboles, edificios u otros elementos en imágenes de dron, aéreas o de satélite.",
+          "Clasificación de la cobertura del suelo, de los cultivos o de otras clases que le interesen.",
+          "Mapas predictivos, como la susceptibilidad a inundaciones, construidos a partir de muchos factores espaciales.",
+          "Explicación de cada predicción con SHAP, para ver qué determina un resultado.",
+          "Una tasa de error honesta, medida en zonas donde el modelo no se entrenó y no en muestras aleatorias."
+        ],
+        "who": "Operadores de plantaciones y fincas, prestamistas y aseguradoras, planificadores e investigadores: quien tenga más imágenes o más territorio del que un equipo puede revisar a mano.",
+        "steps": [
+          [
+            "Plantear",
+            "La pregunta y la decisión que apoya"
+          ],
+          [
+            "Etiquetar",
+            "Una muestra anotada a mano, o datos existentes"
+          ],
+          [
+            "Entrenar",
+            "Comparar modelos con el mismo conjunto de prueba"
+          ],
+          [
+            "Validar",
+            "Probar en zonas reservadas"
+          ],
+          [
+            "Desplegar",
+            "Aplicar a escala y entregar el código"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Cuántos datos etiquetados necesita?",
+            "a": "A menudo menos de lo que se cree. El detector de palmas se entrenó con un pequeño conjunto anotado a mano y se mejoró por etapas a medida que aparecían nuevos tipos de error."
+          },
+          {
+            "q": "¿Por qué probar en zonas reservadas?",
+            "a": "Los píxeles vecinos se parecen, así que una división aleatoria favorece al modelo. GeoAID obtuvo alrededor de 0,798 con una división aleatoria y alrededor de 0,642 con validación cruzada espacial. El segundo número es el que hay que usar para planificar."
+          },
+          {
+            "q": "¿Me quedo con el modelo?",
+            "a": "Sí. Recibe el modelo entrenado, el código y la documentación, para que su equipo pueda volver a ejecutarlo."
+          }
+        ],
+        "where": "En cualquier lugar, a distancia",
+        "chips": [
+          "PyTorch",
+          "Ultralytics YOLOv8",
+          "scikit-learn",
+          "XGBoost",
+          "SHAP",
+          "OpenCV"
+        ]
+      }
+    },
+    "drone-mapping": {
+      "title": "Cartografía con drones y fotogrametría",
+      "short": "Vuelos de levantamiento planificados y realizados con equipo propio, convertidos en ortomosaicos, modelos de superficie y del terreno, y conteos.",
+      "page": {
+        "title": "Cartografía con drones y fotogrametría en Nigeria · Oluwasola Oyinloye",
+        "description": "Levantamientos con dron planificados y realizados con equipo propio: ortomosaicos, modelos de elevación y conteos para plantaciones, obras y minas en Nigeria.",
+        "headline": "Cartografía con drones y fotogrametría",
+        "crumb": "Cartografía con drones",
+        "lead": "Levantamientos con dron en toda Nigeria, planificados y realizados con equipo propio, y procesados en mapas sobre los que se puede medir: ortomosaicos, modelos de superficie y del terreno, y conteos de árboles u otros objetos.",
+        "get": [
+          "Un ortomosaico: una imagen georreferenciada de todo el lugar sobre la que se puede medir.",
+          "Modelos digitales de superficie y del terreno para alturas, pendientes y drenaje.",
+          "Conteos e inventarios de objetos, como un punto por árbol, con el mismo enfoque de detección que el proyecto de palma aceitera.",
+          "Volúmenes de acopios y movimientos de tierra medidos sobre el modelo de superficie.",
+          "Archivos en formatos estándar (GeoTIFF, GeoPackage, nubes de puntos cuando sean útiles) y una nota breve sobre precisión y cobertura."
+        ],
+        "who": "Gestores de plantaciones que cuentan sus plantas y buscan huecos, promotores y constructoras que siguen una obra, equipos de canteras y minas que miden acopios, y cualquiera que necesite una imagen del terreno más detallada que la de satélite.",
+        "steps": [
+          [
+            "Definir",
+            "Área, detalle necesario y plazo"
+          ],
+          [
+            "Planificar",
+            "Líneas de vuelo, solape y puntos de control"
+          ],
+          [
+            "Volar",
+            "Vuelos de levantamiento y puntos de control GNSS en el lugar"
+          ],
+          [
+            "Procesar",
+            "DJI Terra, Agisoft Metashape o WebODM"
+          ],
+          [
+            "Entregar",
+            "Mapas, modelos, conteos y nota de precisión"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Quién realiza los vuelos?",
+            "a": "Los vuelos se planifican y realizan con equipo propio, y los puntos de control GNSS se colocan en el lugar."
+          },
+          {
+            "q": "¿Trabaja fuera de Nigeria?",
+            "a": "Los levantamientos con dron son en Nigeria. En otros países puedo procesar las imágenes que tome su equipo o un piloto local, y las imágenes de satélite cubren casi cualquier lugar."
+          },
+          {
+            "q": "¿Qué precisión puedo esperar?",
+            "a": "Depende de la altura de vuelo, la cámara y los puntos de control. Indico la precisión obtenida en cada trabajo, comprobada con los puntos de control, para que sepa lo que el mapa permite."
+          },
+          {
+            "q": "¿Qué necesita de mí para empezar?",
+            "a": "El límite del lugar o un croquis, las condiciones de acceso y lo que quiere medir."
+          }
+        ],
+        "where": "Sobre el terreno en Nigeria",
+        "chips": [
+          "DJI Terra",
+          "Agisoft Metashape",
+          "WebODM / OpenDroneMap",
+          "Puntos de control GNSS",
+          "QGIS"
+        ]
+      }
+    },
+    "remote-sensing": {
+      "title": "Teledetección satelital",
+      "short": "Cobertura del suelo, vegetación, agua y cambios en el tiempo, leídos en imágenes de satélite ópticas y de radar, en cualquier lugar.",
+      "page": {
+        "title": "Teledetección satelital en África · Oluwasola Oyinloye",
+        "description": "Cartografía de cobertura del suelo, vegetación, cultivos, agua y cambios con imágenes Sentinel y de otros satélites, para cualquier zona de África o del mundo.",
+        "headline": "Teledetección satelital",
+        "crumb": "Teledetección",
+        "lead": "Las imágenes de satélite cubren todos los lugares del planeta, una y otra vez, y muchas son gratuitas. Las convierto en mapas y cifras: qué hay sobre el terreno, cómo está cambiando y dónde están el agua y la vegetación.",
+        "get": [
+          "Mapas de uso y cobertura del suelo, con la precisión de cada clase.",
+          "Detección de cambios entre fechas: edificios nuevos, vegetación desbrozada, fincas ampliadas.",
+          "Estado de la vegetación y los cultivos a lo largo de una campaña, a partir de índices como el NDVI.",
+          "Cartografía de agua e inundaciones con el radar Sentinel-1, que ve a través de las nubes.",
+          "Comprobación de fincas y parcelas para prestamistas: si la finca existe, qué tamaño tiene y si está cultivada."
+        ],
+        "who": "Prestamistas y aseguradoras agrícolas, ONG que siguen sus programas, organismos públicos, investigadores y empresas que necesitan vigilar muchos lugares sin visitarlos.",
+        "steps": [
+          [
+            "Pregunta",
+            "Área, fechas y lo que necesita saber"
+          ],
+          [
+            "Imágenes",
+            "Óptico Sentinel-2, radar Sentinel-1 o datos más finos"
+          ],
+          [
+            "Proceso",
+            "Google Earth Engine o Python"
+          ],
+          [
+            "Validación",
+            "Comparación con datos de referencia"
+          ],
+          [
+            "Entrega",
+            "Mapas, estadísticas y el código"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Puede trabajar en lugares fuera de Nigeria?",
+            "a": "Sí. Este trabajo se hace a distancia, así que el lugar puede estar en cualquier sitio cubierto por datos de satélite."
+          },
+          {
+            "q": "¿Qué nivel de detalle puedo esperar?",
+            "a": "Las imágenes gratuitas de Sentinel-2 tienen píxeles de 10 m y el radar Sentinel-1 una resolución similar. Para objetos más pequeños, las imágenes comerciales de alta resolución o un levantamiento con dron son mejor opción, y se lo diré al definir el trabajo."
+          },
+          {
+            "q": "¿Cómo comprueba la precisión?",
+            "a": "Con puntos de referencia de datos de campo, imágenes de alta resolución o sus propios registros. Indico el resultado para cada clase."
+          }
+        ],
+        "where": "En cualquier lugar, a distancia",
+        "chips": [
+          "Google Earth Engine",
+          "geemap",
+          "Sentinel-1 SAR",
+          "Sentinel-2",
+          "SRTM",
+          "ESA WorldCover",
+          "Python"
+        ]
+      }
+    },
+    "eudr-compliance": {
+      "title": "EUDR: geolocalización y control de la deforestación",
+      "short": "Puntos y polígonos de parcelas verificados y revisados frente a la deforestación desde el 31 de diciembre de 2020, listos para su diligencia debida en la UE.",
+      "page": {
+        "title": "EUDR: geolocalización y deforestación en África · Oluwasola Oyinloye",
+        "description": "Geolocalización de parcelas, revisión de polígonos y detección satelital de deforestación desde el 31 de diciembre de 2020, para el EUDR.",
+        "headline": "EUDR: geolocalización y control de la deforestación",
+        "crumb": "Controles EUDR",
+        "lead": "El Reglamento de la UE sobre deforestación (EUDR) exige a las empresas que venden en la UE ganado, cacao, café, aceite de palma, caucho, soja o madera, y productos derivados, indicar la ubicación de cada parcela de origen y demostrar que el terreno no fue deforestado después del 31 de diciembre de 2020. Preparo y compruebo esos datos de parcelas y reviso cada parcela con imágenes de satélite.",
+        "get": [
+          "Geolocalización de parcelas en la forma que exige la UE: un solo punto basta para una parcela de 4 hectáreas o menos, y las parcelas más grandes necesitan un polígono, en coordenadas WGS84 con seis decimales.",
+          "Revisión de los datos de parcelas que ya tiene: polígonos que se cruzan o se solapan, puntos que caen en una ciudad o un río, parcelas duplicadas y superficies que no coinciden con el tamaño declarado.",
+          "Detección de deforestación en cada parcela, comparando imágenes de satélite y mapas forestales de referencia de antes y después del 31 de diciembre de 2020.",
+          "Un expediente de pruebas parcela por parcela: mapas, fechas de las imágenes, el método utilizado y una lista de las parcelas que conviene revisar con más detalle.",
+          "Archivos GeoJSON listos para su declaración de diligencia debida, y el código, para repetir las mismas comprobaciones en parcelas nuevas."
+        ],
+        "who": "Exportadores, cooperativas y acopiadores de cacao, aceite de palma, caucho, café y madera en Nigeria y en África occidental y central, importadores europeos que necesitan datos de parcelas comprobados, y los prestamistas y certificadores que trabajan con ellos.",
+        "steps": [
+          [
+            "Definir",
+            "Productos, parcelas y lo que piden sus compradores"
+          ],
+          [
+            "Reunir",
+            "Registros de parcelas y puntos GPS existentes"
+          ],
+          [
+            "Comprobar",
+            "Geometría y calidad de los datos"
+          ],
+          [
+            "Revisar",
+            "Imágenes de satélite y mapas forestales desde 2020"
+          ],
+          [
+            "Entregar",
+            "GeoJSON, expediente de pruebas y parcelas señaladas"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Esto hace que mi producto cumpla el EUDR?",
+            "a": "Ningún proveedor externo puede garantizarlo. La empresa que comercializa el producto en la UE sigue siendo responsable de su diligencia debida y de su declaración. Lo que aporto son datos de geolocalización comprobados y pruebas sobre la deforestación, que hacen esa diligencia más fácil de completar y de defender."
+          },
+          {
+            "q": "¿Cuándo se aplica el EUDR?",
+            "a": "Según el texto actual, a partir del 30 de diciembre de 2026 para los operadores grandes y medianos, y del 30 de junio de 2027 para las microempresas y pequeñas empresas. Las fechas y las orientaciones ya han cambiado antes, así que consulte las orientaciones más recientes de la Comisión Europea al planificar."
+          },
+          {
+            "q": "¿Qué mapas forestales utiliza?",
+            "a": "Imágenes de satélite de antes y después de la fecha límite, leídas junto con mapas forestales mundiales como el mapa de cobertura forestal de 2020 de la Comisión Europea. Ningún mapa mundial acierta en todas partes, así que una parcela señalada se revisa en la propia imagen, en lugar de aceptarla o rechazarla automáticamente."
+          },
+          {
+            "q": "Las parcelas de nuestros productores son pequeñas y están dispersas. ¿Puede ayudarnos igualmente?",
+            "a": "Sí. Una parcela de 4 hectáreas o menos solo necesita un punto, que su equipo de campo puede registrar con un teléfono móvil. Compruebo lo que recogen y señalo los puntos que requieren una nueva visita."
+          },
+          {
+            "q": "¿También cubre la legalidad?",
+            "a": "No. El reglamento también exige que la producción haya sido legal en el país de origen, por ejemplo en materia de derechos sobre la tierra, trabajo e impuestos. Los datos de satélite no pueden demostrarlo, así que hacen falta otras pruebas."
+          }
+        ],
+        "where": "A distancia, para parcelas en cualquier lugar",
+        "chips": [
+          "Google Earth Engine",
+          "Sentinel-2",
+          "QGIS",
+          "GeoPandas",
+          "Shapely",
+          "GeoJSON"
+        ]
+      }
+    },
+    "gis-analysis": {
+      "title": "Cartografía SIG y análisis espacial",
+      "short": "Selección de emplazamientos, análisis de accesibilidad y proximidad, producción de mapas y datos espaciales limpios y bien estructurados.",
+      "page": {
+        "title": "Cartografía SIG y análisis espacial · Oluwasola Oyinloye",
+        "description": "Selección de emplazamientos, análisis de accesibilidad y proximidad, mapas y datos espaciales limpios con QGIS y Python, para África y el mundo.",
+        "headline": "Cartografía SIG y análisis espacial",
+        "crumb": "Cartografía SIG y análisis",
+        "lead": "La mayoría de las preguntas sobre ubicación no necesitan IA. Necesitan datos limpios, el análisis adecuado y un mapa que la gente pueda leer.",
+        "get": [
+          "Selección de emplazamientos y estudios de aptitud que ponderan distancia, terreno, exposición a inundaciones y acceso.",
+          "Análisis de accesibilidad y proximidad: quién está al alcance de un centro de salud, una escuela o un mercado.",
+          "Análisis de exposición y de población con fuentes como WorldPop y OpenStreetMap.",
+          "Mapas para informes, propuestas y presentaciones, pensados para leerse.",
+          "Digitalización, limpieza y geocodificación de datos de ubicación dispersos en un único conjunto utilizable."
+        ],
+        "who": "Promotores que eligen emplazamientos, planificadores, ONG y consultoras que necesitan mapas y cifras para sus informes, e investigadores.",
+        "steps": [
+          [
+            "Pregunta",
+            "Lo que necesita decidir"
+          ],
+          [
+            "Datos",
+            "Reunir, comprobar y limpiar"
+          ],
+          [
+            "Análisis",
+            "QGIS, Python y PostGIS"
+          ],
+          [
+            "Mapas",
+            "Mapas claros y un resumen breve"
+          ],
+          [
+            "Entrega",
+            "Los datos y el método"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Puede trabajar con los datos que ya tenemos?",
+            "a": "Sí. Hojas de cálculo con direcciones, archivos KML de Google Earth, shapefiles o recorridos GPS: los limpio y los reúno en un único conjunto coherente."
+          },
+          {
+            "q": "¿Qué software utiliza?",
+            "a": "QGIS, Python (GeoPandas, Rasterio, Shapely) y PostGIS, para que no dependa de una licencia de pago. Entrego en los formatos que su equipo ya usa."
+          }
+        ],
+        "where": "Sobre el terreno en Nigeria, a distancia en otros países",
+        "chips": [
+          "QGIS",
+          "Google Earth Pro",
+          "GeoPandas",
+          "Rasterio",
+          "Shapely",
+          "PostGIS",
+          "OpenStreetMap"
+        ]
+      }
+    },
+    "flood-climate-risk": {
+      "title": "Riesgo de inundación, climático y ambiental",
+      "short": "Dónde son más probables las inundaciones, qué personas, carreteras e instalaciones están en su camino, y cómo está cambiando la cobertura del suelo.",
+      "page": {
+        "title": "Cartografía del riesgo de inundación en África · Oluwasola Oyinloye",
+        "description": "Cartografía de la susceptibilidad a inundaciones, la exposición y los cambios ambientales con datos de satélite, con una validación que puede comprobar.",
+        "headline": "Riesgo de inundación, climático y ambiental",
+        "crumb": "Inundaciones y clima",
+        "lead": "Antes de comprar un terreno, planificar un programa o asegurar un bien, conviene saber adónde va el agua y qué hay en su camino. Lo cartografío con datos de satélite y digo hasta qué punto se puede confiar en el mapa.",
+        "get": [
+          "Mapas de susceptibilidad a inundaciones construidos a partir del relieve, la lluvia, la cobertura del suelo, los suelos y el drenaje.",
+          "Extensión de inundaciones pasadas, cartografiada con el radar Sentinel-1.",
+          "Conteos de exposición: población, escuelas, centros de salud y carreteras en cada nivel de riesgo.",
+          "Análisis de la lluvia, incluida la lluvia casi en tiempo real de NASA GPM IMERG.",
+          "Cambios ambientales a lo largo del tiempo: pérdida de vegetación, cambio de uso del suelo y crecimiento urbano."
+        ],
+        "who": "Promotores e inversores que evalúan emplazamientos, aseguradoras, planificadores de emergencias, ONG y organismos públicos.",
+        "steps": [
+          [
+            "Pregunta",
+            "El área y la decisión en juego"
+          ],
+          [
+            "Historial",
+            "Inundaciones pasadas por radar y factores condicionantes"
+          ],
+          [
+            "Modelo",
+            "Susceptibilidad y exposición"
+          ],
+          [
+            "Validación",
+            "Validación cruzada espacial"
+          ],
+          [
+            "Entrega",
+            "Mapas, tablas de exposición y límites explícitos"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Un mapa de susceptibilidad es un pronóstico de inundaciones?",
+            "a": "No. Muestra dónde las condiciones hacen más probable una inundación, no cuándo va a ocurrir."
+          },
+          {
+            "q": "¿Qué fiabilidad tienen estos mapas?",
+            "a": "Depende de la zona y de los datos. GeoAID obtuvo alrededor de 0,642 con validación cruzada espacial, lo que sirve para un cribado y no para decisiones sobre una parcela concreta. Cada mapa que entrego viene con ese tipo de cifra y con lo que significa."
+          },
+          {
+            "q": "¿Puede hacerlo para un lugar fuera de Lagos?",
+            "a": "Sí. Los datos de satélite cubren Nigeria, África y la mayor parte del mundo. El modelo se reconstruye y se valida para cada nueva zona."
+          }
+        ],
+        "where": "En cualquier lugar, a distancia",
+        "chips": [
+          "Google Earth Engine",
+          "Sentinel-1 SAR",
+          "NASA GPM IMERG",
+          "CHIRPS",
+          "SRTM",
+          "WorldPop",
+          "SHAP"
+        ]
+      }
+    },
+    "web-gis": {
+      "title": "SIG web y paneles",
+      "short": "Mapas web interactivos, aplicaciones Streamlit y paneles de Power BI que funcionan en cualquier dispositivo.",
+      "page": {
+        "title": "SIG web y paneles cartográficos · Oluwasola Oyinloye",
+        "description": "Mapas web interactivos, aplicaciones Streamlit y paneles de Power BI que llevan sus datos espaciales a cualquier pantalla, para clientes en África y el mundo.",
+        "headline": "SIG web y paneles",
+        "crumb": "SIG web y paneles",
+        "lead": "Un mapa en un PDF se lee una vez. Un mapa web se usa. Desarrollo mapas interactivos y paneles que su equipo, sus financiadores o el público pueden abrir en cualquier dispositivo.",
+        "get": [
+          "Mapas web interactivos con filtros y ventanas emergentes, como la Lagos Access Map de este sitio.",
+          "Aplicaciones Streamlit para modelos y análisis, como el panel de GeoAID.",
+          "Paneles de Power BI que combinan mapas con el resto de sus informes.",
+          "Páginas rápidas y adaptadas al móvil, probadas con conexiones lentas.",
+          "El código fuente e instrucciones sencillas para actualizar los datos."
+        ],
+        "who": "ONG que rinden cuentas a sus financiadores, equipos de la administración, empresas con operaciones sobre el terreno e investigadores que publican resultados.",
+        "steps": [
+          [
+            "Usuarios",
+            "Quién lo usará y para qué"
+          ],
+          [
+            "Datos",
+            "Preparados y comprobados"
+          ],
+          [
+            "Desarrollo",
+            "Leaflet, Folium, Streamlit o Power BI"
+          ],
+          [
+            "Pruebas",
+            "Móviles y redes lentas"
+          ],
+          [
+            "Lanzamiento",
+            "Publicado y entregado"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Dónde se aloja?",
+            "a": "Donde le convenga: un alojamiento gratuito como Streamlit Community Cloud o GitHub Pages para herramientas públicas, o el servidor de su organización."
+          },
+          {
+            "q": "¿Puede actualizarse solo?",
+            "a": "Sí, si la fuente de datos lo permite. El panel de GeoAID lee la lluvia casi en tiempo real cada vez que se ejecuta."
+          },
+          {
+            "q": "¿Funciona en móviles?",
+            "a": "Sí. Diseño y pruebo primero para pantallas pequeñas y conexiones móviles lentas."
+          }
+        ],
+        "where": "En cualquier lugar, a distancia",
+        "chips": [
+          "Leaflet",
+          "Folium",
+          "Streamlit",
+          "Power BI",
+          "Plotly",
+          "PostGIS"
+        ]
+      }
+    },
+    "spatial-data": {
+      "title": "Bases de datos espaciales e ingeniería de datos",
+      "short": "Bases de datos PostGIS y procesos repetibles en Python y Earth Engine que mantienen los datos espaciales al día.",
+      "page": {
+        "title": "Bases de datos espaciales e ingeniería de datos · Oluwasola Oyinloye",
+        "description": "Bases de datos PostGIS y procesos repetibles en Python y Google Earth Engine que mantienen los datos espaciales limpios, al día y fáciles de consultar.",
+        "headline": "Bases de datos espaciales e ingeniería de datos",
+        "crumb": "Ingeniería de datos",
+        "lead": "Cuando los mismos datos espaciales se copian de un ordenador a otro, las versiones divergen y nadie se fía de las cifras. Creo una única fuente de verdad y los procesos que la mantienen al día.",
+        "get": [
+          "Una base de datos PostGIS diseñada en torno a las preguntas que se hace su equipo.",
+          "Procesos en Python o Google Earth Engine que obtienen, limpian y actualizan los datos de forma programada.",
+          "Controles de calidad que detectan duplicados, geometrías inválidas y valores ausentes.",
+          "Documentación lo bastante clara para que el siguiente analista pueda ejecutarlo todo."
+        ],
+        "who": "Organizaciones cuyos datos espaciales ya no caben en una carpeta de archivos: programas de campo, operaciones en varios emplazamientos y grupos de investigación.",
+        "steps": [
+          [
+            "Revisión",
+            "Qué datos tiene y cómo se usan"
+          ],
+          [
+            "Diseño",
+            "Tablas, claves y reglas de actualización"
+          ],
+          [
+            "Construcción",
+            "Base de datos y migración"
+          ],
+          [
+            "Automatización",
+            "Procesos programados y controles"
+          ],
+          [
+            "Entrega",
+            "Documentación y formación"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Tenemos que pagar licencias de software?",
+            "a": "No. PostGIS, Python y QGIS son gratuitos y de código abierto."
+          },
+          {
+            "q": "¿Funciona con las herramientas que ya usamos?",
+            "a": "PostGIS se conecta a QGIS, ArcGIS, Power BI y a la mayoría de las herramientas de análisis, así que su equipo puede seguir usando lo que ya conoce."
+          }
+        ],
+        "where": "En cualquier lugar, a distancia",
+        "chips": [
+          "PostGIS",
+          "SQL",
+          "Python",
+          "GeoPandas",
+          "Google Earth Engine",
+          "Shapely"
+        ]
+      }
+    },
+    "training": {
+      "title": "Formación y desarrollo de capacidades",
+      "short": "Formación práctica en Python, SIG y teledetección para equipos, desde talleres pequeños hasta seminarios que han llegado a 1 500 personas.",
+      "page": {
+        "title": "Formación en SIG, teledetección y Python · Oluwasola Oyinloye",
+        "description": "Formación práctica en Python para análisis geoespacial, QGIS y Google Earth Engine para equipos, universidades y ONG, presencial en Nigeria o en línea.",
+        "headline": "Formación y desarrollo de capacidades",
+        "crumb": "Formación",
+        "lead": "He enseñado Python para análisis geoespacial a 1 500 personas en seminarios. También imparto sesiones más pequeñas y prácticas, en las que su equipo trabaja con sus propios datos.",
+        "get": [
+          "Python para análisis geoespacial: GeoPandas, Rasterio y mapas hechos con código.",
+          "Google Earth Engine para análisis satelital a gran escala.",
+          "QGIS para equipos que empiezan con los SIG.",
+          "Materiales y ejercicios que se quedan con su equipo."
+        ],
+        "who": "ONG, organismos públicos, universidades y empresas que están desarrollando sus propias capacidades geoespaciales.",
+        "steps": [
+          [
+            "Evaluar",
+            "Lo que el equipo sabe y necesita"
+          ],
+          [
+            "Planificar",
+            "Sesiones construidas en torno a sus datos"
+          ],
+          [
+            "Enseñar",
+            "En la práctica, frente al teclado"
+          ],
+          [
+            "Practicar",
+            "Ejercicios con problemas reales"
+          ],
+          [
+            "Seguimiento",
+            "Preguntas después del curso"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿En línea o presencial?",
+            "a": "Las dos. Presencial en Nigeria, en línea en cualquier lugar."
+          },
+          {
+            "q": "¿La formación puede usar nuestros propios datos?",
+            "a": "Sí, y funciona mejor así: la gente aprende más rápido con problemas que reconoce."
+          }
+        ],
+        "where": "Presencial en Nigeria, en línea en cualquier lugar",
+        "chips": [
+          "Python",
+          "Jupyter",
+          "GeoPandas",
+          "Google Earth Engine",
+          "QGIS"
+        ]
+      }
+    }
+  }
+}

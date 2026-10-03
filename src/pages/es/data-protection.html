@@ -1,0 +1,48 @@
+{#page {"kind": "page", "crumb": "Protección de datos",
+ "title": "Confidencialidad y protección de datos · Oluwasola Oyinloye",
+ "description": "Cómo se tratan los datos e imágenes de los clientes: uso solo en el proyecto, acuerdo de confidencialidad, devolución o borrado al final, NDPA y RGPD."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (page.crumb, none)]) }}
+      <p class="eyebrow">Para clientes</p>
+      <h1>Confidencialidad y protección de datos</h1>
+      <p class="lead">Los inventarios de plantaciones, los límites de fincas, los planos de emplazamientos y las imágenes de levantamientos suelen ser sensibles desde el punto de vista comercial. Así es como los trato.</p>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="prose page-prose">
+      <h2>Antes de empezar</h2>
+      <ul>
+        <li>Firmo con gusto un acuerdo de confidencialidad antes de que comparta nada. El suyo o el mío, como prefiera.</li>
+        <li>El alcance por escrito indica qué datos recibiré, qué voy a producir y a quién pertenecen los resultados.</li>
+      </ul>
+
+      <h2>Durante el proyecto</h2>
+      <ul>
+        <li>Sus datos se usan solo para su proyecto. No se usan para entrenar modelos para nadie más ni se comparten.</li>
+        <li>El acceso se limita a las personas que trabajan en su proyecto, y cualquiera que trabaje en él queda sujeto a las mismas condiciones de confidencialidad.</li>
+        <li>Los datos de ubicación se eliminan de las fotos antes de mostrar cualquiera de ellas fuera del proyecto.</li>
+      </ul>
+
+      <h2>Al terminar</h2>
+      <ul>
+        <li>Recibe los resultados, el código y la documentación.</li>
+        <li>Le devuelvo o borro sus datos, como prefiera, y se lo confirmo por escrito.</li>
+      </ul>
+
+      <h2>Datos personales</h2>
+      <p>Algunos proyectos incluyen datos personales, como nombres de productores vinculados a parcelas o ubicaciones de hogares. Los trato conforme a la Ley de Protección de Datos de Nigeria de 2023 (Nigeria Data Protection Act) y, cuando sea aplicable, al Reglamento General de Protección de Datos de la UE (RGPD): solo los datos personales que el proyecto necesita, usados solo para el fin acordado y conservados no más tiempo del necesario.</p>
+
+      <h2>Su trabajo en este sitio</h2>
+      <p>Un trabajo para un cliente solo aparece aquí con su permiso, y anonimizado salvo que acuerde otra cosa. El caso de estudio de la palma aceitera se publica así.</p>
+
+      <p>Preguntas sobre cualquiera de estos puntos: <a href="{{ mailto_url }}">{{ site.email }}</a>.</p>
+      <p class="small">Última actualización: octubre de 2026.</p>
+    </div>
+  </div>
+</article>
+{% endblock %}

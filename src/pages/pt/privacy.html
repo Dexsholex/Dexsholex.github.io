@@ -1,0 +1,40 @@
+{#page {"kind": "page", "crumb": "Privacidade",
+ "title": "Privacidade · Oluwasola Oyinloye",
+ "description": "Como este site trata os seus dados: sem cookies, sem estatísticas, sem rastreamento e sem formulários."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (page.crumb, none)]) }}
+      <h1>Privacidade</h1>
+      <p class="lead">Este site não recolhe nada sobre si. Os pormenores estão abaixo, incluindo o que acontece se me enviar um e-mail.</p>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="prose page-prose">
+      <h2>Neste site</h2>
+      <ul>
+        <li>Sem cookies, sem estatísticas, sem scripts de rastreamento, sem publicidade e sem formulários que enviem dados.</li>
+        <li>Se mudar entre o modo claro e o escuro, ou escolher um idioma, essa escolha fica guardada no seu próprio navegador para que o site a lembre. Nunca é enviada para lado nenhum.</li>
+        <li>O site não procura saber onde está. Se o seu navegador estiver configurado noutro idioma disponível no site, pode sugerir essa versão, e quem escolhe é você.</li>
+        <li>O mapa interativo só carrega ficheiros deste site. Não são pedidos mosaicos de mapas nem tipos de letra a terceiros.</li>
+        <li>A ferramenta de pedido da página inicial escreve um e-mail no seu próprio programa de correio. Nada é enviado até ser você a enviá-lo.</li>
+      </ul>
+
+      <h2>Alojamento</h2>
+      <p>O site está alojado no GitHub Pages. Para operar e proteger o serviço, o GitHub pode registar dados técnicos como o seu endereço IP. Consulte a <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" hreflang="en">declaração de privacidade do GitHub</a> (em inglês).</p>
+
+      <h2>Ligações para outros serviços</h2>
+      <p>As ligações para {% if site.booking_url %}Cal.com, {% endif %}LinkedIn, GitHub, Medium, {% if preprint_url %}Preprints.org {% endif %}e o painel do GeoAID no Streamlit levam a esses serviços, que têm as suas próprias condições de privacidade.</p>
+
+      <h2>Quando me contacta</h2>
+      <p>{% if site.booking_url %}Se marcar uma chamada, o Cal.com trata da marcação e dos dados que lá introduzir, segundo a sua própria política de privacidade. {% endif %}Se me enviar um e-mail, uso os seus dados apenas para responder e trabalhar consigo. Não os partilho nem o incluo em nenhuma lista de correio. Pode pedir-me a qualquer momento que apague a nossa correspondência: <a href="{{ mailto_url }}">{{ site.email }}</a>.</p>
+      <p>Os dados de projetos são tratados à parte, em <a href="{{ link('/data-protection/') }}">confidencialidade e proteção de dados</a>.</p>
+
+      <p class="small">Última atualização: outubro de 2026.</p>
+    </div>
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,254 @@
+{
+  "lang_name": "English",
+  "og_locale": "en_GB",
+  "skip": "Skip to content",
+  "nav": {
+    "main": "Main",
+    "work": "Work",
+    "services": "Services",
+    "products": "Products",
+    "about": "About",
+    "contact": "Contact",
+    "language": "Language",
+    "theme": "Switch colour theme",
+    "breadcrumb": "Breadcrumb",
+    "home": "Home",
+    "case_studies": "Case studies",
+    "more_cases": "More case studies",
+    "project_type": "Project type"
+  },
+  "cta": {
+    "book": "Book a call",
+    "email_me": "Email me",
+    "book_by_email": "Book by email",
+    "see_work": "See the work",
+    "explore_services": "Explore services",
+    "all_services": "All services",
+    "all_services_sectors": "All services and sectors",
+    "read_case": "Read the case study",
+    "read_code": "Read the code",
+    "live_dashboard": "Live dashboard",
+    "open_dashboard": "Open the live dashboard",
+    "read_methods": "Read the methods log",
+    "read_preprint": "Read the preprint",
+    "follow_build": "Follow the build",
+    "get_in_touch": "Get in touch",
+    "how_it_works": "How it works",
+    "see_case_studies": "See the case studies",
+    "enlarge": "Enlarge",
+    "enlarge_map": "Enlarge map",
+    "next_case": "Next case study",
+    "back_home": "Go to the home page",
+    "download_pdf": "Download PDF",
+    "back_to_site": "Back to the site"
+  },
+  "footer": {
+    "based": "Based in Lagos, Nigeria",
+    "where": "On site in Nigeria, remote everywhere else",
+    "site": "Site",
+    "case_studies": "Case studies",
+    "ways": "Ways to work together",
+    "capability": "Capability statement",
+    "data_protection": "Confidentiality and data protection",
+    "privacy": "Privacy",
+    "elsewhere": "Elsewhere",
+    "preprint": "GeoAID preprint (DOI)",
+    "book_online": "Book a call online",
+    "no_tracking": "No cookies, analytics or tracking."
+  },
+  "services": {
+    "filter_label": "Show services for a sector",
+    "all_sectors": "All sectors"
+  },
+  "products": {
+    "status": {
+      "live": "Live",
+      "building": "In development",
+      "planned": "Planned"
+    },
+    "topics": "Topics",
+    "for": "For",
+    "next": "Next",
+    "next_title": "Your question, as a public tool?",
+    "next_text": "I build open products where good data can help many people at once. If you hold data, fund public-good work or have a question worth answering in the open, let's talk."
+  },
+  "palm": {
+    "palms": "palms",
+    "blocks": "blocks",
+    "sum_of_blocks": "Sum of block counts",
+    "counted_once": "Each hectare counted once"
+  },
+  "geoaid": {
+    "auc_caption": "How well the model tells flooded from dry locations (ROC-AUC, where 0.5 is a coin toss and 1.0 is perfect)",
+    "random_split": "Random split",
+    "spatial_cv": "Spatial cross-validation",
+    "lower": "Lower",
+    "higher": "Higher flood probability",
+    "map_alt": "Map of modelled flood probability across Amuwo-Odofin, from near-white (lower) to deep red (higher), inside the LGA boundary."
+  },
+  "access": {
+    "table_head": [
+      "LGA",
+      "Hospital",
+      "Clinic or doctor",
+      "Pharmacy",
+      "Other",
+      "Total"
+    ],
+    "map_label": "Interactive map of health facilities in OpenStreetMap, Lagos State",
+    "preview_alt": "Static map of Lagos State's 20 LGAs with dots for each health facility tagged in OpenStreetMap; most dots sit in the western and central LGAs.",
+    "legend": [
+      "Hospital",
+      "Clinic or doctor",
+      "Pharmacy",
+      "Other"
+    ],
+    "caption": "What OpenStreetMap holds today: {count} health facilities across Lagos State's 20 LGAs, pulled {date}. Whether that is most of them or a fraction is what the audit will measure.",
+    "data_credit": "Map data ©",
+    "contributors": "OpenStreetMap contributors",
+    "table_summary": "See the counts by LGA as a table"
+  },
+  "testimonials": {
+    "eyebrow": "Clients",
+    "title": "What clients say"
+  },
+  "brief": {
+    "title": "Prefer to write it down first?",
+    "intro": "Tick what applies and your email app opens with a short brief, ready to send. Nothing is sent or stored by this site.",
+    "need": "What do you need?",
+    "something_else": "Something else",
+    "where": "Where is the site?",
+    "where_options": [
+      "Nigeria",
+      "Elsewhere in Africa",
+      "Outside Africa"
+    ],
+    "place": "Place (optional)",
+    "place_hint": "City, state or country",
+    "when": "When?",
+    "when_options": [
+      "As soon as possible",
+      "Within 3 months",
+      "Just exploring"
+    ],
+    "data": "Data you already have",
+    "data_options": [
+      "Drone or aerial imagery",
+      "Satellite imagery",
+      "GIS files or maps",
+      "Spreadsheets with locations",
+      "Nothing yet"
+    ],
+    "decide": "What do you need to decide? (optional)",
+    "decide_hint": "One or two sentences",
+    "open_mail": "Open in my email app",
+    "copy": "Copy the brief"
+  },
+  "js": {
+    "theme_to_dark": "Switch to dark theme",
+    "theme_to_light": "Switch to light theme",
+    "copy": "Copy",
+    "copied": "Copied",
+    "copy_label": "Copy email address",
+    "email_copied": "Email address copied",
+    "lightbox_label": "Enlarged image",
+    "close": "Close",
+    "services_count": "{n} services",
+    "services_for": "{n} services for {sector}",
+    "map_loading": "Loading the interactive map…",
+    "map_failed": "The interactive map could not load. The picture shows the same data.",
+    "map_filter": "Show or hide facility types",
+    "map_reset": "Reset view",
+    "map_in_osm": "{n} facilities in OpenStreetMap",
+    "map_in_osm_one": "1 facility in OpenStreetMap",
+    "map_unnamed": "Unnamed facility",
+    "map_legend": [
+      "Hospital",
+      "Clinic or doctor",
+      "Pharmacy",
+      "Other"
+    ],
+    "map_attribution": "Data © {osm}, pulled {date}",
+    "brief_hello": "Hello Oluwasola,",
+    "brief_book": "I'd like to book a call.",
+    "brief_services": "Services",
+    "brief_site": "Site",
+    "brief_timing": "Timing",
+    "brief_data": "Data we have",
+    "brief_decide": "What I need to decide",
+    "brief_org": "Organisation:",
+    "brief_times": "Two or three times that suit me (with time zone):",
+    "brief_subject": "Call request",
+    "brief_opening": "Opening your email app…",
+    "brief_copied": "Brief copied. Paste it into any message.",
+    "lang_suggest": "This page is also available in English.",
+    "lang_switch": "Read it in English",
+    "lang_stay": "Stay here"
+  },
+  "service": {
+    "eyebrow": "Service",
+    "get": "What you get",
+    "who": "Who it's for",
+    "how": "How it works",
+    "steps_label": "Steps",
+    "faq": "Questions clients ask",
+    "glance": "At a glance",
+    "where": "Where",
+    "timezone": "Time zone",
+    "keep": "You keep",
+    "keep_value": "The results, the code and the documentation",
+    "related": "Related work",
+    "unsure_title": "Not sure this is the right service?",
+    "unsure_text": "Describe the problem. If I can't help, I'll say so.",
+    "others": "Other services"
+  },
+  "related": {
+    "oil-palm": "Case study: counting 718,751 oil palms from aerial imagery",
+    "geoaid": "Case study: GeoAID flood susceptibility, Amuwo-Odofin",
+    "access-map": "Lagos Access Map: health facilities in OpenStreetMap",
+    "geoaid-dashboard": "The GeoAID live dashboard"
+  },
+  "contact": {
+    "email": "Email",
+    "preprint": "Preprint",
+    "in_brief": "In brief",
+    "capability": "Capability statement"
+  },
+  "site": {
+    "roles": [
+      "Geospatial data scientist",
+      "Geospatial AI specialist"
+    ],
+    "flagship": "Geospatial analysis you can verify.",
+    "title": "GIS & Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye",
+    "description": "GIS, drone mapping, satellite remote sensing and geospatial AI from Lagos, for clients in Nigeria, across Africa and worldwide. Book a call.",
+    "call_subject": "Call request",
+    "call_body": "Hello Oluwasola,\n\nI'd like to book a call.\n\nOrganisation:\nCountry or area of interest:\nWhat I need to decide:\nData we already have:\nTwo or three times that suit me (with time zone):\n",
+    "booking": {
+      "scoping": "30-minute scoping call",
+      "intro": "15-minute intro"
+    },
+    "tool_groups": {
+      "programming": "Programming and analysis",
+      "ml": "Machine learning and AI",
+      "eo": "Earth observation",
+      "gis": "GIS and spatial data",
+      "drone": "Drone mapping",
+      "web": "Dashboards and web maps"
+    },
+    "tool_items": {
+      "GNSS ground control": "GNSS ground control"
+    }
+  },
+  "og": {
+    "home_kicker": "Geospatial data science · Geospatial AI",
+    "home_sub": "From Lagos, for Nigeria, Africa and worldwide",
+    "palm_kicker": "Case study · Geospatial AI",
+    "palm_title": "Counting oil palms from aerial imagery",
+    "palm_sub": "YOLOv8 crown detection, block by block",
+    "palm_chip": "{palms} palms · {ha} ha",
+    "geoaid_kicker": "Case study · Spatial ML",
+    "geoaid_title": "GeoAID: flood risk mapping in Lagos",
+    "geoaid_sub": "Amuwo-Odofin pilot · spatially cross-validated"
+  }
+}

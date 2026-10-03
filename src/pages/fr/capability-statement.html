@@ -1,0 +1,87 @@
+{#page {"kind": "page", "noindex": true,
+ "title": "Présentation des compétences · Oluwasola Oyinloye",
+ "description": "Présentation des compétences sur une page : services SIG et géospatiaux, réalisations, outils et formation."} #}
+{% extends "print.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<div class="cap-bar">
+  <a href="{{ link('/') }}">← {{ t.cta.back_to_site }}</a>
+  <a class="btn btn-sm" href="/{{ pdf }}" download>{{ t.cta.download_pdf }}</a>
+</div>
+<main class="cap">
+  <header class="cap-head">
+    <div>
+      <h1 class="cap-name">{{ site.name }}</h1>
+      <p class="cap-role">{{ site.roles|join(' · ') }}</p>
+      <p class="cap-tag">SIG · Télédétection · Cartographie par drone · IA géospatiale</p>
+    </div>
+    <ul class="cap-contact">
+      <li>{{ site.email }}</li>
+      <li>{{ site_host }}/fr/</li>
+      <li>linkedin.com/in/oluwasola-oyinloye</li>
+      <li>github.com/Dexsholex</li>
+      <li>Lagos, Nigeria · {{ site.timezone }}</li>
+    </ul>
+  </header>
+
+  <section class="cap-summary">
+    <p>Data scientist géospatial et spécialiste de l'IA géospatiale basé à Lagos, avec cinq ans d'expérience professionnelle en SIG et télédétection. Je prends en charge des relevés par drone au Nigeria, planifiés et réalisés en interne, et je travaille à distance à partir de données satellite pour des clients en Afrique et au-delà. Chaque résultat livré est accompagné de sa méthode de validation et du code qui l'a produit. Je travaille principalement en anglais ; vous pouvez m'écrire en français.</p>
+  </section>
+
+  <div class="cap-grid">
+    <div>
+      <h2>Services</h2>
+      <ul class="cap-list cap-cols">
+        {% for s in services.services %}
+        <li>{{ s.title }}</li>
+        {% endfor %}
+      </ul>
+
+      <h2>Réalisations</h2>
+      <div class="cap-work">
+        <h3>Comptage de palmiers à huile par imagerie aérienne</h3>
+        <p>Pour une plantation commerciale : une chaîne de détection des couronnes YOLOv8 qui a cartographié {{ palm.palms }} palmiers sur {{ palm.hectares }} ha répartis en {{ palm.blocks }} blocs. Les livraisons qui se chevauchaient ont été réconciliées pour que chaque hectare soit compté une fois, ce qui a supprimé {{ palm.double_counts }} doubles comptages.</p>
+      </div>
+      <div class="cap-work">
+        <h3>Susceptibilité aux inondations GeoAID, Amuwo-Odofin (Lagos)</h3>
+        <p>Un modèle ouvert avec un tableau de bord en ligne : susceptibilité structurelle, précipitations en quasi temps réel et exposition de la population, des écoles, des centres de santé et des routes. ROC-AUC d'environ 0,798 sur un découpage aléatoire et d'environ 0,642 en validation croisée spatiale, présentés côte à côte.</p>
+      </div>
+      <div class="cap-work">
+        <h3>Lagos Access Map (en développement)</h3>
+        <p>Un audit, quartier par quartier, du recensement des établissements de santé de Lagos dans OpenStreetMap, avec intervalles de confiance, comme base d'une cartographie de l'accès aux soins.</p>
+      </div>
+
+      <h2>Secteurs</h2>
+      <ul class="cap-list tight">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+    </div>
+
+    <div>
+      <h2>Où</h2>
+      <p>Sur site au Nigeria. À distance en Afrique et dans le monde.</p>
+
+      <h2>Modes de collaboration</h2>
+      <p>Pilote · Projet · Suivi · Jours de conseil · Formation. Périmètre écrit pour chaque mission ; accord de confidentialité sur demande.</p>
+
+      <h2>Outils</h2>
+      <p class="cap-tools">{% for g in site.tools %}<b>{{ g.group }} :</b> {{ g['items']|join(', ') }}. {% endfor %}</p>
+
+      <h2>Formation</h2>
+      <ul class="cap-list tight">
+        <li>Master of Information Technology (MIT), spécialisation IA, Miva Open University</li>
+        <li>BSc Surveying and Geoinformatics, Université d'Ilorin</li>
+      </ul>
+
+      <h2>Enseignement et recherche</h2>
+      <p>A enseigné Python pour l'analyse géospatiale à 1 500 personnes lors de séminaires.</p>
+      {% if preprint_url %}
+      <p class="cap-pub">Prépublication (en anglais) : Oyinloye, O. A. and Mustapha, I. O. ({{ site.preprint.year }}). {{ site.preprint.title }}. {{ site.preprint.server }}. doi.org/{{ site.preprint.doi }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <footer class="cap-foot">
+    <p>Réserver un appel : {{ site.booking_url.split('//', 1)[-1] if site.booking_url else site.email }} · {{ site.email }}</p>
+    <p>Mis à jour en {{ today_month }}</p>
+  </footer>
+</main>
+{% endblock %}

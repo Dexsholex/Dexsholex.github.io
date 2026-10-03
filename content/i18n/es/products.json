@@ -1,0 +1,14 @@
+{
+  "geoaid": {
+    "summary": "Dónde Amuwo-Odofin es estructuralmente propenso a inundaciones, si la lluvia está activando ese riesgo ahora, y qué personas, escuelas, centros de salud y carreteras están expuestos.",
+    "audience": "Planificadores, servicios de emergencia, ONG e investigadores",
+    "tags": ["Riesgo de inundación", "Código abierto", "Lagos"],
+    "links": ["Abrir el panel en línea", "Leer el preprint", "Leer el caso de estudio"]
+  },
+  "access-map": {
+    "summary": "La primera fase mide, barrio por barrio, hasta qué punto OpenStreetMap registra los centros de salud, para que cualquier mapa de acceso a la atención parta de datos comprobados.",
+    "audience": "Planificadores sanitarios, ONG y la comunidad de OpenStreetMap",
+    "tags": ["Acceso a la salud", "OpenStreetMap", "Lagos"],
+    "links": ["Ver la vista previa del mapa"]
+  }
+}

@@ -1,0 +1,34 @@
+{% import "macros.html" as m with context %}
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="{{ link('/') }}">
+      <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" class="brand-bg"/><g class="brand-fg"><circle cx="16" cy="16" r="7.5" fill="none" stroke-width="2"/><path d="M16 4.5v5.5M16 22v5.5M4.5 16H10M22 16h5.5" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" stroke="none"/></g></svg>
+      <span>{{ site.name }}</span>
+    </a>
+    <nav class="site-nav" aria-label="{{ t.nav.main }}">
+      <ul>
+        <li><a href="{{ section('work') }}">{{ t.nav.work }}</a></li>
+        <li><a href="{{ link('/services/') }}">{{ t.nav.services }}</a></li>
+        <li><a href="{{ section('products') }}">{{ t.nav.products }}</a></li>
+        <li><a href="{{ section('about') }}">{{ t.nav.about }}</a></li>
+        <li><a href="{{ section('contact') }}">{{ t.nav.contact }}</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <details class="lang-menu" data-lang-menu>
+        <summary>{{ m.icon('globe') }}<span class="visually-hidden">{{ t.nav.language }}: </span>{% for l in language_links if l.current %}<span class="visually-hidden">{{ l.name }}</span><span aria-hidden="true">{{ l.code|upper }}</span>{% endfor %}</summary>
+        <ul>
+          {% for l in language_links %}
+          <li><a href="{{ l.href }}" hreflang="{{ l.code }}" lang="{{ l.code }}" data-lang-choice="{{ l.code }}"{% if l.current %} aria-current="true"{% endif %}>{{ l.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </details>
+      <button class="theme-toggle" type="button" data-theme-toggle hidden>
+        {{ m.icon('sun', 'i-sun') }}
+        {{ m.icon('moon', 'i-moon') }}
+        <span class="visually-hidden">{{ t.nav.theme }}</span>
+      </button>
+      {{ m.book_button('btn btn-sm') }}
+    </div>
+  </div>
+</header>

@@ -1,0 +1,184 @@
+{#- Reusable components. Pages import these with: {% import "macros.html" as m with context %} -#}
+
+{% macro icon(name, cls="") -%}
+<svg class="i-{{ name }}{% if cls and cls != 'i-' ~ name %} {{ cls }}{% endif %}" aria-hidden="true" focusable="false"><use href="#i-{{ name }}"/></svg>
+{%- endmacro %}
+
+{#- Responsive image from static/img/manifest.json. hide_below: phones get a 1px gif instead of the photo. -#}
+{% macro picture(name, alt, sizes, cls="", eager=false, hide_below=none) -%}
+{%- set v = manifest[name] -%}
+{%- set big = v[-1] -%}
+{%- set img -%}
+<img{% if cls %} class="{{ cls }}"{% endif %} src="{{ v[[1, v|length - 1]|min].src }}" srcset="{% for x in v %}{{ x.src }} {{ x.w }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="{{ sizes }}" width="{{ big.w }}" height="{{ big.h }}" alt="{{ alt }}"{% if eager %} fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+{%- endset -%}
+{%- if hide_below -%}
+<picture><source media="(max-width: {{ hide_below - 1 }}px)" srcset="{{ blank_gif }}">{{ img }}</picture>
+{%- else -%}{{ img }}{%- endif -%}
+{%- endmacro %}
+
+{% macro fixed_img(name, alt, cls, size) -%}
+{%- set v = manifest[name] -%}
+<img class="{{ cls }}" src="{{ v[0].src }}" srcset="{{ v[-1].src }} 2x" width="{{ size }}" height="{{ size }}" alt="{{ alt }}" loading="lazy" decoding="async">
+{%- endmacro %}
+
+{#- A horizontal bar drawn in SVG, so no inline style is needed (the page's security policy forbids them).
+    Percent widths keep the 4px rounding true at any size; the square rect keeps the baseline end flat. -#}
+{% macro bar(fraction) -%}
+<svg class="bar-svg" width="100%" height="10" aria-hidden="true" focusable="false"><g class="bar-track"><rect width="100%" height="100%" rx="4"/><rect width="8" height="100%"/></g><g class="bar-fill"><rect width="{{ '%.1f' % (fraction * 100) }}%" height="100%" rx="4"/><rect width="8" height="100%"/></g></svg>
+{%- endmacro %}
+
+{% macro auc_figure() -%}
+<figure class="auc">
+  <figcaption>{{ t.geoaid.auc_caption }}</figcaption>
+  <div class="auc-row"><span class="auc-label">{{ t.geoaid.random_split }}</span><span class="auc-value">≈ 0.798</span>{{ bar(0.596) }}</div>
+  <div class="auc-row is-key"><span class="auc-label">{{ t.geoaid.spatial_cv }}</span><span class="auc-value">≈ 0.642</span>{{ bar(0.284) }}</div>
+  <div class="auc-axis" aria-hidden="true"><span>0.5</span><span>0.75</span><span>1.0</span></div>
+</figure>
+{%- endmacro %}
+
+{% macro palm_bars(caption, note=none) -%}
+<figure class="bars">
+  <figcaption>{{ caption }}</figcaption>
+  <div class="bar-row"><span class="bar-label">{{ t.palm.sum_of_blocks }}</span><span class="bar-value">{{ palm.naive_palms }}</span>{{ bar(1.0) }}</div>
+  <div class="bar-row is-key"><span class="bar-label">{{ t.palm.counted_once }}</span><span class="bar-value">{{ palm.palms }}</span>{{ bar(0.704) }}</div>
+  {% if note %}<p class="bar-note">{{ note }}</p>{% endif %}
+</figure>
+{%- endmacro %}
+
+{% macro palm_chip() -%}
+<span class="media-chip"><b>{{ palm.palms }}</b> {{ t.palm.palms }}<i></i><b>{{ palm.hectares }}</b> ha<i></i><b>{{ palm.blocks }}</b> {{ t.palm.blocks }}</span>
+{%- endmacro %}
+
+{% macro ramp_legend(inline=false) -%}
+<span class="ramp-legend{% if inline %} is-inline{% endif %}"><span>{{ t.geoaid.lower }}</span><i></i><span>{{ t.geoaid.higher }}</span></span>
+{%- endmacro %}
+
+{% macro service_cards(exclude=none) -%}
+{%- for c in services.services if c.slug != exclude %}
+<li data-reveal data-sectors="{{ c.sectors|join(' ') }}"><a class="service-link" href="{{ link('/services/' ~ c.slug ~ '/') }}"><span class="icon">{{ icon(c.icon) }}</span><h3>{{ c.title }}</h3><p>{{ c.short }}</p><span class="service-more">{{ t.cta.how_it_works }}{{ icon('arrow') }}</span></a></li>
+{%- endfor %}
+{%- endmacro %}
+
+{% macro sector_filter() -%}
+<div class="sector-filter" role="group" aria-label="{{ t.services.filter_label }}" data-sector-filter hidden>
+  <button type="button" aria-pressed="true" data-sector="all">{{ t.services.all_sectors }}</button>
+  {%- for key, name in services.sectors.items() %}
+  <button type="button" aria-pressed="false" data-sector="{{ key }}">{{ name }}</button>
+  {%- endfor %}
+</div>
+<p class="visually-hidden" aria-live="polite" data-sector-status></p>
+{%- endmacro %}
+
+{% macro faq_list(items) -%}
+{%- for item in items %}
+<details class="faq"><summary>{{ item.q }}</summary><p>{{ item.a }}</p></details>
+{%- endfor %}
+{%- endmacro %}
+
+{% macro gallery_item(name, alt, caption) -%}
+<figure><a class="zoomable" href="{{ manifest[name][-1].src }}" data-lightbox>{{ picture(name, alt, "(min-width: 1024px) 380px, (min-width: 600px) 46vw, 92vw") }}</a><figcaption>{{ caption }}</figcaption></figure>
+{%- endmacro %}
+
+{% macro gallery_video(name, label, caption) -%}
+<figure><video controls preload="none" playsinline width="720" height="1280" poster="/media/{{ name }}-poster.webp" aria-label="{{ label }}"><source src="/media/{{ name }}.mp4" type="video/mp4"></video><figcaption>{{ caption }}</figcaption></figure>
+{%- endmacro %}
+
+{% macro product_cards() -%}
+{%- for p in products %}
+<li class="product" data-reveal>
+  <div class="product-top"><span class="status status-{{ p.status }}">{{ t.products.status[p.status] }}</span><ul class="tags" aria-label="{{ t.products.topics }}">{% for tag in p.tags %}<li class="tag tag-quiet">{{ tag }}</li>{% endfor %}</ul></div>
+  <h3>{{ p.name }}</h3><p>{{ p.summary }}</p>
+  <p class="product-for"><span>{{ t.products.for }}</span>{{ p.audience }}</p>
+  <p class="case-links">{% for l in p.links %}{% set ext = l.external|default(false) %}<a href="{{ l.url if ext else link(l.url) }}">{{ l.label }}{{ icon('out' if ext else 'arrow') }}</a>{% endfor %}</p>
+</li>
+{%- endfor %}
+<li class="product product-next" data-reveal>
+  <span class="status status-planned">{{ t.products.next }}</span>
+  <h3>{{ t.products.next_title }}</h3>
+  <p>{{ t.products.next_text }}</p>
+  <p class="case-links"><a href="{{ section('contact') }}">{{ t.cta.get_in_touch }}{{ icon('arrow') }}</a></p>
+</li>
+{%- endmacro %}
+
+{% macro tool_groups() -%}
+{%- for g in site.tools %}
+<div class="tool-group"><h4>{{ g.group }}</h4><ul class="chips">{% for item in g.items %}<li>{{ item }}</li>{% endfor %}</ul></div>
+{%- endfor %}
+{%- endmacro %}
+
+{% macro contact_actions() -%}
+{%- if site.booking_url -%}
+{%- for o in site.booking_options -%}
+<a class="btn{% if not loop.first %} btn-ghost{% endif %}" href="{{ o.url }}">{{ icon('calendar') }}{{ o.label }}</a>
+{%- endfor -%}
+<a class="btn btn-ghost" href="{{ email_book_url }}">{{ icon('mail') }}{{ t.cta.email_me }}</a>
+{%- else -%}
+<a class="btn" href="{{ email_book_url }}">{{ icon('mail') }}{{ t.cta.book_by_email }}</a>
+{%- endif -%}
+{%- endmacro %}
+
+{% macro book_button(cls="btn") -%}
+<a class="{{ cls }}" href="{{ call_url }}">{{ icon('calendar') }}{{ t.cta.book }}</a>
+{%- endmacro %}
+
+{#- Request builder: composes an email in the visitor's own mail app; the site sends and stores nothing -#}
+{% macro brief_builder() -%}
+{%- set b = t.brief -%}
+<form class="brief" data-brief data-email="{{ site.email }}" hidden aria-labelledby="brief-title">
+  <div class="brief-head">
+    <h3 id="brief-title">{{ b.title }}</h3>
+    <p>{{ b.intro }}</p>
+  </div>
+  <fieldset><legend>{{ b.need }}</legend><div class="picks">
+    {%- for c in services.services %}<label class="pick"><input type="checkbox" name="service" value="{{ c.title }}"><span>{{ c.title }}</span></label>{% endfor -%}
+    <label class="pick"><input type="checkbox" name="service" value="{{ b.something_else }}"><span>{{ b.something_else }}</span></label>
+  </div></fieldset>
+  <fieldset><legend>{{ b.where }}</legend><div class="picks">
+    {%- for o in b.where_options %}<label class="pick"><input type="radio" name="where" value="{{ o }}"><span>{{ o }}</span></label>{% endfor -%}
+  </div>
+    <label class="brief-text">{{ b.place }}<input type="text" name="place" autocomplete="off" placeholder="{{ b.place_hint }}"></label></fieldset>
+  <fieldset><legend>{{ b.when }}</legend><div class="picks">
+    {%- for o in b.when_options %}<label class="pick"><input type="radio" name="when" value="{{ o }}"><span>{{ o }}</span></label>{% endfor -%}
+  </div></fieldset>
+  <fieldset><legend>{{ b.data }}</legend><div class="picks">
+    {%- for o in b.data_options %}<label class="pick"><input type="checkbox" name="data" value="{{ o }}"><span>{{ o }}</span></label>{% endfor -%}
+  </div></fieldset>
+  <label class="brief-text">{{ b.decide }}<textarea name="decide" rows="3" placeholder="{{ b.decide_hint }}"></textarea></label>
+  <div class="brief-actions">
+    <button class="btn" type="submit">{{ icon('mail') }}{{ b.open_mail }}</button>
+    <button class="btn btn-ghost" type="button" data-brief-copy>{{ icon('copy') }}{{ b.copy }}</button>
+    <span class="brief-status" aria-live="polite"></span>
+  </div>
+</form>
+{%- endmacro %}
+
+{% macro testimonials() -%}
+{%- if testimonial_items %}
+<section class="section testimonials" aria-labelledby="t-title"><div class="wrap">
+  <header class="section-head"><p class="eyebrow">{{ t.testimonials.eyebrow }}</p><h2 id="t-title">{{ t.testimonials.title }}</h2></header>
+  <ul class="quotes">
+  {%- for q in testimonial_items %}
+    <li data-reveal><figure><blockquote><p>{{ q.quote }}</p></blockquote><figcaption><strong>{{ q.role }}</strong><span>{{ q.org }}{% if q.link %} · <a href="{{ link(q.link) }}">{{ q.link_label or t.cta.read_case }}</a>{% endif %}</span></figcaption></figure></li>
+  {%- endfor %}
+  </ul>
+</div></section>
+{%- endif %}
+{%- endmacro %}
+
+{% macro osm_table() -%}
+<div class="table-scroll"><table>
+  <thead><tr>{% for h in t.access.table_head %}<th scope="col">{{ h }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for row in osm_rows %}<tr><th scope="row">{{ row.name }}</th>{% for v in row.slots %}<td>{{ v }}</td>{% endfor %}<td>{{ row.total }}</td></tr>{% endfor %}</tbody>
+</table></div>
+{%- endmacro %}
+
+{% macro crumbs(items) -%}
+<nav class="crumbs" aria-label="{{ t.nav.breadcrumb }}">
+  <ol>{% for label, href in items %}{% if href %}<li><a href="{{ href }}">{{ label }}</a></li>{% else %}<li aria-current="page">{{ label }}</li>{% endif %}{% endfor %}</ol>
+</nav>
+{%- endmacro %}
+
+{#- Preprint line used on the home page, case study and capability statement -#}
+{% macro preprint_link(text=none) -%}
+{%- if site.preprint.doi -%}<a href="{{ preprint_url }}">{{ text or site.preprint.title }}</a>{%- endif -%}
+{%- endmacro %}

@@ -1,0 +1,313 @@
+{#page {"kind": "home", "title": "Servicios SIG y geoespaciales en África · Oluwasola Oyinloye", "description": "SIG, cartografía con drones, teledetección satelital e IA geoespacial desde Lagos, para clientes en Nigeria, en África y en todo el mundo. Reserve una llamada."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="byline">{{ m.fixed_img('avatar', '', 'avatar', 56) }}<span><strong>{{ site.name }}</strong><span>{% for r in site.roles %}{{ r }}{% if not loop.last %}<br>{% endif %}{% endfor %}</span></span></p>
+      <p class="kicker">SIG · Teledetección · Cartografía con drones · IA geoespacial</p>
+      <h1 id="hero-title">{{ site.flagship }}</h1>
+      <p class="lead">Hago trabajos de SIG, teledetección, cartografía con drones e IA geoespacial para plantaciones, prestamistas agrícolas, exportadores, promotores, gobiernos y ONG, en Nigeria y en el extranjero. Convierto imágenes y datos de ubicación en respuestas, y le digo hasta qué punto puede fiarse de cada una.</p>
+      <div class="hero-actions">
+        {{ m.book_button() }}
+        <a class="btn btn-ghost" href="{{ link('/services/') }}">{{ t.cta.explore_services }}{{ m.icon('arrow') }}</a>
+      </div>
+      <p class="hero-meta">Con sede en Lagos ({{ site.timezone }}) · Sobre el terreno en toda Nigeria · A distancia para clientes de cualquier lugar · <a href="#work">{{ t.cta.see_work }}</a></p>
+    </div>
+    <div class="hero-portrait">
+      <div class="portrait-frame">{{ m.picture('portrait', 'Retrato de ' ~ site.name, '(min-width: 1200px) 400px, (min-width: 880px) 34vw, 1px', eager=true, hide_below=880) }}</div>
+      <svg class="portrait-mark" viewBox="0 0 120 120" aria-hidden="true" focusable="false"><circle cx="60" cy="60" r="36"/><circle cx="60" cy="60" r="15"/><path d="M60 8v32M60 80v32M8 60h32M80 60h32"/><circle cx="60" cy="60" r="3.5" class="dot"/></svg>
+      <p class="coord-chip" aria-hidden="true">6,455° N · 3,384° E</p>
+    </div>
+  </div>
+</section>
+
+<section class="proof" aria-label="Resultados">
+  <div class="wrap">
+    <ul class="stats">
+      <li><span class="stat-value" data-count>{{ palm.palms }}</span><span class="stat-label">palmas aceiteras cartografiadas en {{ palm.hectares }} ha para una plantación</span></li>
+      <li><span class="stat-value" data-count>1 500</span><span class="stat-label">personas formadas en Python geoespacial en seminarios</span></li>
+      <li><span class="stat-value">2</span><span class="stat-label">{% if preprint_url %}<a href="{{ preprint_url }}">publicaciones de investigación</a>{% else %}publicaciones de investigación{% endif %}</span></li>
+      <li><span class="stat-value" data-count>5</span><span class="stat-label">años de trabajo profesional en SIG y teledetección</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="work" aria-labelledby="work-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">Trabajos seleccionados</p>
+      <h2 id="work-title">Casos de estudio</h2>
+      <p>Lo que he construido y hasta qué punto se ha probado.</p>
+    </header>
+
+    <div class="cases">
+      <article class="case" data-reveal>
+        <a class="case-media" href="{{ link(cases['oil-palm']) }}" tabindex="-1" aria-hidden="true">{{ m.picture('palm-drone-pad', 'Un dron de levantamiento sobre su plataforma de despegue en el borde de una plantación de palma aceitera, con palmas adultas detrás', '(min-width: 900px) 560px, 92vw') }}{{ m.palm_chip() }}</a>
+        <div class="case-body">
+          <ul class="tags" aria-label="{{ t.nav.project_type }}">
+            <li class="tag">Trabajo para cliente</li>
+            <li class="tag tag-quiet">IA geoespacial</li>
+            <li class="tag tag-quiet">Anonimizado</li>
+          </ul>
+          <h3><a href="{{ link(cases['oil-palm']) }}">Contar palmas aceiteras con imágenes aéreas</a></h3>
+          <p>Para una plantación comercial de palma aceitera, un modelo YOLOv8 encuentra cada copa en las imágenes aéreas y la convierte en un árbol cartografiado y contable, bloque por bloque.</p>
+          {{ m.palm_bars('Los bloques se solapaban, así que sumarlos contaría algunas palmas dos veces. Total de la plantación:') }}
+          <p class="small">{{ palm.double_counts }} conteos duplicados eliminados ({{ palm.double_count_share }}). Cada hectárea se asigna a un solo bloque.</p>
+          <p class="case-links">
+            <a class="more" href="{{ link(cases['oil-palm']) }}">{{ t.cta.read_case }}{{ m.icon('arrow') }}</a>
+            <a href="{{ palm.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
+          </p>
+        </div>
+      </article>
+
+      <article class="case" data-reveal>
+        <a class="case-media case-media-map" href="{{ link(cases['geoaid']) }}" tabindex="-1" aria-hidden="true">
+          {{ m.picture('geoaid-flood', t.geoaid.map_alt, '(min-width: 1100px) 560px, (min-width: 720px) 50vw, 92vw') }}
+          {{ m.ramp_legend() }}
+        </a>
+        <div class="case-body">
+          <ul class="tags" aria-label="{{ t.nav.project_type }}">
+            <li class="tag">Interés público</li>
+            <li class="tag tag-quiet">ML espacial</li>
+            <li class="tag tag-quiet">Preprint</li>
+          </ul>
+          <h3><a href="{{ link(cases['geoaid']) }}">Susceptibilidad a inundaciones GeoAID: proyecto piloto en <span class="nowrap">Amuwo-Odofin</span></a></h3>
+          <p>Un modelo de machine learning que cartografía las partes de Amuwo-Odofin más propensas a inundarse, construido con datos de satélite, publicado como panel en línea y descrito en un preprint.</p>
+          {{ m.auc_figure() }}
+          <p class="small">La puntuación espacial prueba el modelo en zonas que nunca vio durante el entrenamiento. El descenso indica que puede señalar zonas que conviene revisar, pero todavía no debe decidir nada sobre un lugar concreto.</p>
+          <p class="case-links">
+            <a class="more" href="{{ link(cases['geoaid']) }}">{{ t.cta.read_case }}{{ m.icon('arrow') }}</a>
+            <a href="{{ site.projects.geoaid_dashboard }}">{{ t.cta.live_dashboard }}{{ m.icon('out') }}</a>
+            {% if preprint_url %}<a href="{{ preprint_url }}">{{ t.cta.read_preprint }}{{ m.icon('out') }}</a>{% endif %}
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <article class="feature" id="access-map" aria-labelledby="access-title" data-reveal>
+      <div class="feature-text">
+        <div class="feature-intro">
+          <ul class="tags" aria-label="Estado del proyecto">
+            <li class="tag tag-progress">En curso</li>
+            <li class="tag tag-quiet">Interés público</li>
+          </ul>
+          <h3 id="access-title">Lagos Access Map</h3>
+          <p>¿Hasta qué punto recoge OpenStreetMap los centros de salud de Lagos? La primera fase lo comprueba barrio por barrio, comparándolo con una lista de referencia de centros conocidos.</p>
+          <p class="case-links">{% if site.projects.access_map_build %}<a href="{{ site.projects.access_map_build }}">{{ t.cta.follow_build }}{{ m.icon('out') }}</a>{% else %}{{ todo('"Follow the build" link') }}{% endif %}</p>
+        </div>
+        <div class="feature-facts">
+          <dl class="facts">
+            <div><dt>Mide</dt><dd>La proporción de centros conocidos que aparecen, por barrio, con un intervalo de confianza del 95 %</dd></div>
+            <div><dt>Además</dt><dd>Centros por km² y por cada 10 000 habitantes</dd></div>
+            <div><dt>Resultados</dt><dd>Todavía no. Se publicarán aquí.</dd></div>
+          </dl>
+          <p class="note">Los conteos por sí solos no muestran si el registro está completo. Un barrio con pocos centros de salud en el mapa puede tener, sencillamente, pocos.</p>
+        </div>
+      </div>
+      {% include "access-map.html" %}
+    </article>
+  </div>
+</section>
+
+<section class="section section-alt" id="products" aria-labelledby="products-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">Productos</p>
+      <h2 id="products-title">Productos geoespaciales abiertos</h2>
+      <p>Herramientas públicas y gratuitas que desarrollo y mantengo junto al trabajo para clientes. Cada una documenta sus fuentes de datos y sus límites conocidos.</p>
+    </header>
+    <ul class="products">
+      {{ m.product_cards() }}
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="clients" aria-labelledby="clients-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">Con quién trabajo</p>
+      <h2 id="clients-title">Las preguntas que traen los clientes</h2>
+    </header>
+    <ul class="audiences">
+      <li data-reveal>
+        <span class="icon">{{ m.icon('leaf') }}</span>
+        <h3>Plantaciones</h3>
+        <p class="q">¿Cuántas palmas tenemos, bloque por bloque, y dónde están los huecos?</p>
+        <p>Conteos de árboles y mapas de plantación a partir de levantamientos con dron planificados y realizados con equipo propio, o de imágenes de satélite.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('bank') }}</span>
+        <h3>Prestamistas agrícolas</h3>
+        <p class="q">¿Existe esta finca, qué tamaño tiene y está cultivada?</p>
+        <p>Comprobación de límites, superficie y cultivos con imágenes de satélite, antes y después del préstamo.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('forest') }}</span>
+        <h3>Exportadores y cooperativas</h3>
+        <p class="q">¿Podemos demostrar a nuestros compradores europeos que nuestras parcelas no se deforestaron después de 2020?</p>
+        <p>Comprobación de la geolocalización de parcelas y detección de deforestación para el <a href="{{ link('/services/eudr-compliance/') }}">Reglamento de la UE sobre deforestación</a>.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('building') }}</span>
+        <h3>Promotores</h3>
+        <p class="q">¿Qué riesgo de inundación tiene este terreno y qué hay a su alrededor?</p>
+        <p>Evaluación de la susceptibilidad a inundaciones y de la exposición antes de comprar, diseñar o construir.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('layers') }}</span>
+        <h3>Organismos públicos</h3>
+        <p class="q">¿Dónde están expuestas las personas y las infraestructuras, y dónde deben ir los próximos servicios?</p>
+        <p>Exposición a inundaciones, acceso a servicios y cambios en la cobertura del suelo, con los datos y el código que su equipo conserva.</p>
+      </li>
+      <li data-reveal>
+        <span class="icon">{{ m.icon('people') }}</span>
+        <h3>ONG</h3>
+        <p class="q">¿Quién vive lejos de un centro de salud, y podemos fiarnos de los datos del mapa?</p>
+        <p>Mapas de acceso y cobertura, y comprobación de los datos en los que se basa su programa.</p>
+      </li>
+    </ul>
+
+    <div class="where" aria-labelledby="where-title">
+      <h3 id="where-title">Dónde trabajo</h3>
+      <ul class="where-grid">
+        <li data-reveal>
+          <p class="where-place">Nigeria</p>
+          <p class="where-mode">Sobre el terreno</p>
+          <p>Levantamientos con dron planificados y realizados con equipo propio, puntos de control GNSS y comprobaciones de campo, hasta el análisis y la entrega.</p>
+        </li>
+        <li data-reveal>
+          <p class="where-place">En África</p>
+          <p class="where-mode">A distancia, primero por satélite</p>
+          <p>Los datos de satélite abiertos cubren todo el continente, así que un trabajo sobre cobertura del suelo, vegetación, riesgo de inundación o cambios en el tiempo puede empezar sin visitar el lugar.</p>
+        </li>
+        <li data-reveal>
+          <p class="where-place">En todo el mundo</p>
+          <p class="where-mode">A distancia, a su ritmo</p>
+          <p>Acordamos el alcance por escrito, le envío avances periódicos y recibe formatos estándar (GeoTIFF, GeoPackage, PostGIS) con el código. La hora de Lagos (UTC+1) coincide con la de Guinea Ecuatorial y con la de España en invierno.</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="services" aria-labelledby="services-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">Servicios</p>
+      <h2 id="services-title">Servicios SIG y geoespaciales</h2>
+      <p>Nueve áreas de servicio, desde levantamientos con dron hasta controles EUDR y formación. Elija su sector para ver dónde puedo ayudar.</p>
+    </header>
+    {{ m.sector_filter() }}
+    <ul class="services" data-sector-list>
+      {{ m.service_cards() }}
+    </ul>
+    <p class="services-also">{{ services.also }}</p>
+    <p class="case-links"><a class="more" href="{{ link('/services/') }}">{{ t.cta.all_services_sectors }}{{ m.icon('arrow') }}</a></p>
+    <div class="tools">
+      <h3>Herramientas con las que trabajo</h3>
+      <div class="tool-groups">
+        {{ m.tool_groups() }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="process" aria-labelledby="process-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">Proceso</p>
+      <h2 id="process-title">Cómo trabajo</h2>
+    </header>
+    <ol class="steps">
+      <li data-reveal>
+        <h3>Llamada de definición</h3>
+        <p>Una llamada de 15 o 30 minutos: usted me cuenta la decisión que tiene que tomar, y yo le digo si los datos espaciales pueden ayudar y qué haría falta.</p>
+      </li>
+      <li data-reveal>
+        <h3>Piloto con sus datos</h3>
+        <p>Pruebo el enfoque en una pequeña parte de su zona e indico su tasa de error, para que pueda valorarlo antes de comprometerse.</p>
+      </li>
+      <li data-reveal>
+        <h3>Una entrega que conserva</h3>
+        <p>Recibe los resultados, el código que los generó y una documentación que su equipo puede seguir.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section section-alt" id="engage" aria-labelledby="engage-title">
+  <div class="wrap">
+    <header class="section-head">
+      <p class="eyebrow">Modalidades</p>
+      <h2 id="engage-title">Formas de colaborar</h2>
+      <p>Elija el formato que mejor encaje con su presupuesto y con su grado de certeza sobre el enfoque.</p>
+    </header>
+    <ul class="engage">
+      <li data-reveal>
+        <h3>Piloto</h3>
+        <p>Una prueba de alcance fijo en una parte de su zona. Ve el método, el resultado y su tasa de error antes de comprometerse con el trabajo completo.</p>
+      </li>
+      <li data-reveal>
+        <h3>Proyecto</h3>
+        <p>Un entregable definido, como un inventario de árboles, una evaluación del riesgo de inundación o un mapa web, con alcance, calendario y criterios de aceptación por escrito.</p>
+      </li>
+      <li data-reveal>
+        <h3>Seguimiento</h3>
+        <p>El mismo análisis repetido cada mes, cada campaña o cada año, para programas y carteras que necesitan seguir los cambios.</p>
+      </li>
+      <li data-reveal>
+        <h3>Días de asesoría</h3>
+        <p>Apoyo por días para programas de ONG, consultoras y equipos de investigación: revisión de datos y métodos, o participación en una licitación como especialista geoespacial.</p>
+      </li>
+      <li data-reveal>
+        <h3>Formación</h3>
+        <p>Talleres construidos en torno a los datos de su equipo, presenciales en Nigeria o en línea.</p>
+      </li>
+    </ul>
+    <p class="engage-note">{{ m.icon('shield') }}<span>Cada colaboración empieza con un alcance por escrito. Acuerdo de confidencialidad si lo solicita. <a href="{{ link('/data-protection/') }}">Cómo trato sus datos</a></span></p>
+  </div>
+</section>
+
+<section class="section" id="about" aria-labelledby="about-title">
+  <div class="wrap about-grid">
+    <div class="about-photo" data-reveal>{{ m.picture('about', site.name ~ ' sentado, sonriendo, con camisa blanca', '(min-width: 880px) 340px, (min-width: 600px) 45vw, 92vw') }}</div>
+    <div class="about-text">
+      <p class="eyebrow">Sobre mí</p>
+      <h2 id="about-title">Hola, soy Oluwasola</h2>
+      <p>Soy {{ site.name }}, científico de datos geoespaciales y especialista en IA geoespacial, con sede en Lagos.</p>
+      <p>Me formé en Topografía y Geoinformática en la Universidad de Ilorin (BSc) y después obtuve un Master of Information Technology (MIT), con especialización en IA, en la Miva Open University.</p>
+      <p>Tengo cinco años de trabajo profesional en SIG y teledetección, y he enseñado Python para análisis geoespacial a 1 500 personas en seminarios.</p>
+      <p>Hago levantamientos con dron en Nigeria, planificados y realizados con equipo propio, y trabajo a distancia con datos de satélite para clientes en África y en otros continentes.</p>
+      <p>Indico cómo se validó cada resultado, también cuando las cifras son menos favorables. Junto al trabajo para clientes, desarrollo herramientas públicas y gratuitas como la Lagos Access Map y GeoAID{% if preprint_url %}, descrito en un <a href="{{ preprint_url }}">preprint</a> (en inglés){% endif %}.</p>
+      <dl class="creds">
+        <div><dt>Formación</dt><dd>BSc Surveying and Geoinformatics, Universidad de Ilorin<br>Master of Information Technology (MIT), especialización en IA, Miva Open University</dd></div>
+        <div><dt>Trabajo con</dt><dd>Imágenes de satélite, dron y aéreas · machine learning espacial · SIG</dd></div>
+        <div><dt>Clientes</dt><dd>Nigeria (sobre el terreno) · África y el mundo (a distancia)</dd></div>
+        <div><dt>Idiomas</dt><dd>Trabajo principalmente en inglés. Puede escribirme en español.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+{{ m.testimonials() }}
+
+<section class="section section-alt" id="contact" aria-labelledby="contact-title">
+  <div class="wrap">
+    <div class="contact-panel" data-reveal>
+      <div class="contact-pitch">
+        <p class="eyebrow">Contacto</p>
+        <h2 id="contact-title">Reservar una llamada</h2>
+        <p>Cuénteme qué necesita decidir, dónde y qué datos tiene ya. Le diré con franqueza si puedo ayudarle. Reserve 15 minutos para presentarse o 30 para definir un proyecto, en un horario que se muestra en su propia zona horaria. Si prefiere escribir, el correo se abre con una plantilla breve.</p>
+        <div class="contact-person">{{ m.fixed_img('contact', site.name, 'contact-avatar', 64) }}<p><strong>Hablará directamente conmigo.</strong><span>Lagos, Nigeria · {{ site.timezone }}</span></p></div>
+        <div class="contact-actions">
+          {{ m.contact_actions() }}
+        </div>
+      </div>
+      {% include "contact-list.html" %}
+    </div>
+    {{ m.brief_builder() }}
+  </div>
+</section>
+{% endblock %}

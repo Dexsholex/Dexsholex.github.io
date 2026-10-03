@@ -1,0 +1,16 @@
+{#page {"kind": "error", "title": "Page not found · Oluwasola Oyinloye", "description": "This page does not exist.", "noindex": true} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<section class="wrap notfound">
+  <p class="eyebrow">Error 404</p>
+  <h1>This page isn't on the map.</h1>
+  <p>The link may be old or mistyped. The case studies and contact details are on the home page.</p>
+  <ul class="notfound-langs">
+    {% for l in language_links if not l.current %}
+    <li><a href="/{{ l.code }}/" hreflang="{{ l.code }}" lang="{{ l.code }}">{{ l.name }}</a></li>
+    {% endfor %}
+  </ul>
+  <a class="btn" href="/">{{ t.cta.back_home }}</a>
+</section>
+{% endblock %}

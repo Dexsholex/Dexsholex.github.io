@@ -1,0 +1,58 @@
+{#page {"kind": "hub", "title": "خدمات نظم المعلومات الجغرافية في نيجيريا وأفريقيا · Oluwasola Oyinloye", "description": "نظم المعلومات الجغرافية، والتخريط بالطائرات المسيّرة، والاستشعار عن بُعد، والذكاء الاصطناعي الجغرافي، وفحوصات EUDR، ومخاطر الفيضانات، وخرائط الويب، والتدريب."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.services, none)]) }}
+      <p class="eyebrow">الخدمات</p>
+      <h1>خدمات نظم المعلومات الجغرافية والخدمات الجغرافية المكانية</h1>
+      <p class="lead">مسوح بالطائرات المسيّرة، وتحليل صور الأقمار الصناعية، ونماذج تنبؤية، وخرائط ويب، وتدريب، مع رقم للدقة مرفق بكل نتيجة. اختر خدمة من القائمة أدناه، أو صِف المشكلة وسأخبرك بالخدمة المناسبة.</p>
+      <div class="hero-actions">
+        {{ m.book_button() }}
+        <a class="btn btn-ghost" href="{{ section('work') }}">{{ t.cta.see_case_studies }}{{ m.icon('arrow') }}</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="all-title">
+    <div class="wrap">
+      <header class="section-head">
+        <h2 id="all-title">تسعة مجالات خدمة</h2>
+        <p>اختر قطاعك لترى أين يمكنني المساعدة.</p>
+      </header>
+      {{ m.sector_filter() }}
+      <ul class="services" data-sector-list>
+        {{ m.service_cards() }}
+      </ul>
+      <p class="services-also">{{ services.also }}</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="sectors-title">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">القطاعات</p>
+        <h2 id="sectors-title">مع من أعمل</h2>
+        <p class="small">إن كانت مؤسستك تتخذ قرارات بشأن أرض أو مياه أو سكان أو أصول في مكان ما، ففي الغالب هناك سؤال جغرافي مكاني وراء ذلك.</p>
+      </div>
+      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="where-title-2">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">أين</p>
+        <h2 id="where-title-2">نيجيريا وأفريقيا وما بعدهما</h2>
+      </div>
+      <div class="prose">
+        <p>في نيجيريا أعمل ميدانيًا: مسوح بالطائرات المسيّرة، ونقاط تحكم أرضية GNSS، وتحقق ميداني، وصولًا إلى التحليل والتسليم.</p>
+        <p>في بقية أفريقيا وخارجها أعمل عن بُعد. تغطي بيانات الأقمار الصناعية المفتوحة القارة كلها، فيمكن لمعظم المشروعات أن تبدأ دون زيارة الموقع، وحين تلزم صور الطائرات المسيّرة أستطيع معالجة ما يلتقطه فريق محلي.</p>
+        <p>توقيت لاغوس (UTC+1) يطابق توقيت الجزائر وتونس. اطّلع على <a href="{{ section('engage') }}">طرق التعاون</a>.</p>
+      </div>
+    </div>
+  </section>
+</article>
+{% endblock %}

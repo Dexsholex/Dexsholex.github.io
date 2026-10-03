@@ -1,0 +1,48 @@
+{#page {"kind": "page", "crumb": "Data protection",
+ "title": "Confidentiality and Data Protection · Oluwasola Oyinloye",
+ "description": "How client data, imagery and project results are handled: used only for your project, NDA on request, returned or deleted at the end, NDPA and GDPR."} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (page.crumb, none)]) }}
+      <p class="eyebrow">For clients</p>
+      <h1>Confidentiality and data protection</h1>
+      <p class="lead">Plantation inventories, farm boundaries, site plans and survey imagery are often commercially sensitive. This is how I handle them.</p>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="prose page-prose">
+      <h2>Before the work starts</h2>
+      <ul>
+        <li>I'm happy to sign a non-disclosure agreement before you share anything. Yours or mine, whichever you prefer.</li>
+        <li>The written scope says what data I will receive, what I will produce and who owns the results.</li>
+      </ul>
+
+      <h2>During the project</h2>
+      <ul>
+        <li>Your data is used only for your project. It is not used to train models for anyone else, and it is not shared.</li>
+        <li>Access is limited to the people working on your project, and anyone who works on it is bound by the same confidentiality terms.</li>
+        <li>Location data is removed from photos before any of them are shown outside the project.</li>
+      </ul>
+
+      <h2>At the end</h2>
+      <ul>
+        <li>You receive the results, the code and the documentation.</li>
+        <li>I return or delete your data, as you choose, and confirm it in writing.</li>
+      </ul>
+
+      <h2>Personal data</h2>
+      <p>Some projects involve personal data, such as farmer names linked to plots, or household locations. I handle it in line with the Nigeria Data Protection Act 2023 and, where it applies, the EU General Data Protection Regulation (GDPR): only the personal data the project needs, used only for the agreed purpose, and kept no longer than necessary.</p>
+
+      <h2>Your work on this site</h2>
+      <p>Client work appears here only with the client's permission, and anonymised unless they agree otherwise. The oil palm case study is published that way.</p>
+
+      <p>Questions about any of this: <a href="{{ mailto_url }}">{{ site.email }}</a>.</p>
+      <p class="small">Last updated October 2026.</p>
+    </div>
+  </div>
+</article>
+{% endblock %}

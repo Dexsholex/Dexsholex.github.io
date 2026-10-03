@@ -1,0 +1,114 @@
+{#page {"kind": "case", "preprint": true,
+ "title": "Cartographie du risque d'inondation GeoAID, Lagos · Oluwasola Oyinloye",
+ "headline": "GeoAID : où Amuwo-Odofin est le plus exposé aux inondations",
+ "description": "Étude de cas : un modèle ouvert et explicable de susceptibilité aux inondations pour Amuwo-Odofin (Lagos), testé par validation croisée spatiale.",
+ "og_title": "GeoAID : où Amuwo-Odofin est le plus exposé aux inondations",
+ "og_image": "og-geoaid-fr.png",
+ "og_image_alt": "Étude de cas : carte de susceptibilité aux inondations GeoAID pour Amuwo-Odofin, Lagos.",
+ "crumb": "Susceptibilité aux inondations GeoAID",
+ "published": "2026-10-03",
+ "keywords": ["susceptibilité aux inondations", "inondations à Lagos", "Amuwo-Odofin", "random forest", "validation croisée spatiale", "SHAP", "Sentinel-1"]} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.case_studies, section('work')), (page.crumb, none)]) }}
+      <ul class="tags" aria-label="{{ t.nav.project_type }}">
+        <li class="tag">Intérêt général</li>
+        <li class="tag tag-quiet">ML spatial</li>
+        <li class="tag tag-quiet">Prépublication</li>
+      </ul>
+      <h1>Où <span class="nowrap">Amuwo-Odofin</span> est le plus exposé aux inondations</h1>
+      <p class="lead">GeoAID est un modèle ouvert de susceptibilité aux inondations pour une LGA (collectivité locale) de Lagos. Il montre où les inondations sont structurellement plus probables, pourquoi, et qui est exposé. Il indique aussi comment il se comporte sur un terrain qu'il n'a pas vu.</p>
+      <dl class="kpis">
+        <div><dt>ROC-AUC, découpage aléatoire</dt><dd>≈ 0,798</dd></div>
+        <div><dt>Validation croisée spatiale</dt><dd>≈ 0,642</dd></div>
+        <div><dt>Grille</dt><dd>100 m</dd></div>
+        <div><dt>Inondations utilisées</dt><dd>4, de 2017 à 2022</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-map">
+      <a class="zoomable" href="{{ manifest['geoaid-flood'][-1].src }}" data-lightbox>
+        {{ m.picture('geoaid-flood', t.geoaid.map_alt, '(min-width: 1100px) 1000px, 92vw', eager=true) }}
+        <span class="zoom-hint">{{ m.icon('expand') }}{{ t.cta.enlarge_map }}</span>
+      </a>
+      <figcaption>
+        {{ m.ramp_legend(inline=true) }}
+        Probabilité d'inondation modélisée sur la LGA d'Amuwo-Odofin (Random Forest, grille de 100 m).
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>La question</h2>
+      <p>Où, à Amuwo-Odofin, les inondations sont-elles les plus probables, et pourquoi ? Les cartes d'inondation fondées sur des pondérations fixées par des experts ne sont souvent pas confrontées à des inondations réelles, et elles expliquent rarement pourquoi un endroit obtient un score plus élevé qu'un autre. GeoAID est entraîné sur des inondations observées et explique chaque prédiction.</p>
+
+      <h2>Trois niveaux</h2>
+      <ol class="layer-list">
+        <li><b>Susceptibilité structurelle</b><span>Quelles zones sont intrinsèquement inondables ? 14 facteurs issus de données satellite alimentent un Random Forest qui produit une carte de risque à quatre niveaux.</span></li>
+        <li><b>Activation en direct</b><span>Ce risque est-il activé en ce moment ? Les précipitations en quasi temps réel de NASA GPM IMERG sont comparées à la carte de risque.</span></li>
+        <li><b>Exposition</b><span>Qui et quoi se trouve sur le passage de l'eau ? La population WorldPop, et les écoles, établissements de santé et routes d'OpenStreetMap, superposés aux niveaux de risque.</span></li>
+      </ol>
+
+      <h2>Données et modèle</h2>
+      <p>L'historique des inondations provient du radar Sentinel-1, sur 4 inondations vérifiées à Lagos entre 2017 et 2022, avec un masque qui exclut les eaux permanentes. Les facteurs de conditionnement couvrent le relief, les précipitations, l'occupation du sol, la végétation, les sols et la distance au réseau de drainage, tous sur une grille commune de 100 m.</p>
+      <p>Un Random Forest a été retenu face à la régression logistique et à XGBoost. SHAP explique chaque prédiction : le couvert végétal est le premier facteur de susceptibilité, ce qui concorde avec l'importance des variables calculée par le modèle lui-même.</p>
+
+      <h2>Quelle est sa fiabilité ?</h2>
+      {{ m.auc_figure() }}
+      <p>Sur un découpage aléatoire, le modèle obtient environ 0,798. Ce chiffre le flatte, car des cellules voisines se retrouvent dans les jeux d'entraînement et de test et se ressemblent. En validation croisée spatiale, où des blocs entiers de terrain sont mis de côté, il descend à environ 0,642. C'est ce second chiffre qu'il faut retenir. GeoAID peut signaler des zones qui méritent un examen plus attentif, mais il ne doit pas fonder une décision sur une parcelle précise.</p>
+
+      <h2>Une erreur de données repérée</h2>
+      <p>Une première version de l'historique radar classait 97,7 % de la zone d'étude comme inondée, parce que les eaux permanentes se mêlaient à la classe « inondé ». Après diagnostic et masquage, la part inondée est tombée à 5,18 %, une valeur physiquement crédible. Cette correction, comme toutes les autres, est décrite dans le <a href="{{ site.projects.geoaid_methods }}" hreflang="en">journal méthodologique</a> (en anglais).</p>
+
+      <h2>Limites</h2>
+      <ul>
+        <li>La susceptibilité n'est pas une prévision. Elle montre où les conditions rendent une inondation plus probable, pas quand elle se produira.</li>
+        <li>Deux des 14 variables, toutes deux des jeux de données de précipitations, ont une résolution plus grossière que la zone d'étude, ce qui limite leur capacité à distinguer un endroit d'un autre.</li>
+        <li>Le modèle est entraîné et testé pour Amuwo-Odofin uniquement. Sa transposition à d'autres LGA n'a pas été testée.</li>
+      </ul>
+
+      {% if preprint_url %}
+      <h2>Prépublication</h2>
+      <p class="cite" lang="en">Oyinloye, O. A. and Mustapha, I. O. ({{ site.preprint.year }}). <a href="{{ preprint_url }}">{{ site.preprint.title }}</a>. {{ site.preprint.server }}. doi:{{ site.preprint.doi }}</p>
+      <p class="small">Article en anglais. Les prépublications n'ont pas été évaluées par des pairs. GeoAID a été réalisé dans le cadre de mon mémoire de Master of Information Technology à la Miva Open University.</p>
+      {% else %}
+      <p class="small">GeoAID a été réalisé dans le cadre de mon mémoire de Master of Information Technology à la Miva Open University.</p>
+      {% endif %}
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Résumé</h2>
+        <dl class="facts">
+          <div><dt>Type</dt><dd>Intérêt général, open source</dd></div>
+          <div><dt>Zone</dt><dd>LGA d'Amuwo-Odofin, Lagos</dd></div>
+          <div><dt>Modèle</dt><dd>Random Forest, expliqué avec SHAP</dd></div>
+          <div><dt>Validation</dt><dd>Découpage aléatoire et validation croisée spatiale</dd></div>
+        </dl>
+        <ul class="chips"><li>Python</li><li>Google Earth Engine</li><li>Sentinel-1 SAR</li><li>SHAP</li><li>Streamlit</li></ul>
+        <p class="case-links stack">
+          <a href="{{ site.projects.geoaid_dashboard }}">{{ t.cta.open_dashboard }}{{ m.icon('out') }}</a>
+          {% if preprint_url %}<a href="{{ preprint_url }}">{{ t.cta.read_preprint }}{{ m.icon('out') }}</a>{% endif %}
+          <a href="{{ site.projects.geoaid_repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
+          <a href="{{ site.projects.geoaid_methods }}" hreflang="en">{{ t.cta.read_methods }}{{ m.icon('arrow') }}</a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Vous évaluez le risque d'inondation d'un site ?</strong> Dites-moi où, et ce que vous prévoyez.</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <nav class="case-next wrap" aria-label="{{ t.nav.more_cases }}">
+    <a href="{{ link(cases['oil-palm']) }}"><span>{{ t.cta.next_case }}</span><strong>{{ palm.palms }} palmiers à huile comptés par imagerie aérienne</strong>{{ m.icon('arrow') }}</a>
+  </nav>
+</article>
+{% endblock %}
