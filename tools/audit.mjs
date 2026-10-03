@@ -9,7 +9,10 @@
 //     pages), JavaScript errors, and every link and image (internal targets must exist;
 //     external links must answer)
 //   - a sample of pages in every language (AUDIT_ALL=1 for all of them): Lighthouse on mobile
-//     and desktop, and full-page screenshots in light and dark
+//     and desktop, and full-page screenshots in light and dark (AUDIT_SKIP_LH=1 skips Lighthouse)
+//
+// Lighthouse's mobile score on a laptop moves with the CPU's speed at that moment (see
+// "benchmarkIndex" in each report); compare pages within one run, and trust CI for trends.
 // Writes reports/audit.md, reports/lighthouse/*.html and reports/screens/*.png.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -80,7 +83,7 @@ const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new'] });
 const results = [];
 
 // ---------- Lighthouse ----------
-for (const p of pages.filter(deep)) {
+for (const p of process.env.AUDIT_SKIP_LH === '1' ? [] : pages.filter(deep)) {
   for (const preset of ['mobile', 'desktop']) {
     const config = preset === 'desktop' ? (await import('lighthouse/core/config/desktop-config.js')).default : undefined;
     const r = await lighthouse(BASE + p, { port: chrome.port, output: 'html', logLevel: 'error' }, config);
@@ -166,6 +169,7 @@ for (const [u0, from] of links) {
   } catch (e) {
     const why = String(e.cause?.message || e.message);
     if (/redirect/i.test(why)) warnings.push(`${u} (on ${from}): redirect loop for bots (e.g. a login cookie check), open it in a browser`);
+    else if (/abort|timeout/i.test(why)) warnings.push(`${u} (on ${from}): no answer within 15 s (Streamlit apps sleep when idle), open it in a browser`);
     else broken.push(`${u} (on ${from}): ${why}`);
   }
 }

@@ -76,7 +76,8 @@
     "palms": "palms",
     "blocks": "blocks",
     "sum_of_blocks": "Sum of block counts",
-    "counted_once": "Each hectare counted once"
+    "counted_once": "Each hectare counted once",
+    "ha": "ha"
   },
   "geoaid": {
     "auc_caption": "How well the model tells flooded from dry locations (ROC-AUC, where 0.5 is a coin toss and 1.0 is perfect)",

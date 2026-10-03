@@ -76,7 +76,8 @@
     "palms": "palmiers",
     "blocks": "blocs",
     "sum_of_blocks": "Somme des comptages par bloc",
-    "counted_once": "Chaque hectare compté une fois"
+    "counted_once": "Chaque hectare compté une fois",
+    "ha": "ha"
   },
   "geoaid": {
     "auc_caption": "Capacité du modèle à distinguer les zones inondées des zones sèches (ROC-AUC : 0,5 équivaut à pile ou face, 1,0 est parfait)",

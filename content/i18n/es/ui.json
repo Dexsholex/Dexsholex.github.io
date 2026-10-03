@@ -76,7 +76,8 @@
     "palms": "palmas",
     "blocks": "bloques",
     "sum_of_blocks": "Suma de los conteos por bloque",
-    "counted_once": "Cada hectárea contada una vez"
+    "counted_once": "Cada hectárea contada una vez",
+    "ha": "ha"
   },
   "geoaid": {
     "auc_caption": "Capacidad del modelo para distinguir lugares inundados de lugares secos (ROC-AUC: 0,5 equivale a lanzar una moneda, 1,0 es perfecto)",

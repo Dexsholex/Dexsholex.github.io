@@ -120,7 +120,10 @@ button { font: inherit; color: inherit; }
 .brand-bg { fill: var(--accent); }
 .brand-fg { fill: var(--accent-ink); stroke: var(--accent-ink); }
 .header-actions { display: flex; align-items: center; gap: .5rem; }
-@media (max-width: 479px) { .header-actions .btn-sm { display: none; } .brand { white-space: normal; } }
+@media (max-width: 479px) {
+  .header-actions .btn-sm { display: none; }
+  .brand { flex: 1 1 0; min-width: 0; white-space: normal; line-height: 1.15; }
+}
 .site-nav {
   order: 3; flex-basis: calc(100% + 2 * var(--gutter));
   margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter);
@@ -143,6 +146,7 @@ button { font: inherit; color: inherit; }
   font: 650 .75rem/1 var(--mono); letter-spacing: .04em; cursor: pointer; list-style: none;
 }
 .lang-menu summary::-webkit-details-marker { display: none; }
+.lang-menu:not([open]) ul { display: none; }
 .lang-menu summary:hover { border-color: var(--muted); }
 .lang-menu summary svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .lang-menu ul {
@@ -979,7 +983,10 @@ html.cv-off .section { content-visibility: visible; } /* set before any jump to 
 [dir="rtl"] .bar-svg, [dir="rtl"] .ramp-legend i { scale: -1 1; }
 [dir="rtl"] .read-progress span { transform-origin: right; }
 /* Arabic letters join, so spacing between them breaks words apart; the monospace face has no Arabic either */
-:root[lang="ar"] { --mono: var(--font); }
+:root[lang="ar"] {
+  --font: "Segoe UI", Tahoma, "Geeza Pro", "Noto Sans Arabic", "Noto Naskh Arabic", system-ui, sans-serif;
+  --mono: var(--font);
+}
 :root[lang="ar"] * { letter-spacing: 0 !important; }
 :root[lang="ar"] body { line-height: 1.75; }
 
