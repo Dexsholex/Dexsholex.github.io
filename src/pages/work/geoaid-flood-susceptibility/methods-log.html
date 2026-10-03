@@ -1,0 +1,3204 @@
+<!--page
+{
+ "kind": "doc",
+ "title": "GeoAID methods log · Oluwasola Oyinloye",
+ "headline": "GeoAID methods log",
+ "description": "The working research log behind GeoAID: every data source, parameter, correction and validation result for the Amuwo-Odofin flood susceptibility model.",
+ "og_image": "og-geoaid.png",
+ "crumb": "Methods log",
+ "parent": {
+  "name": "GeoAID flood susceptibility",
+  "path": "/work/geoaid-flood-susceptibility/"
+ },
+ "published": "2026-10-03",
+ "source": "https://raw.githubusercontent.com/Dexsholex/GeoAID-Lagos-FloodRisk/main/docs/methods_log.md"
+}
+-->
+<article class="doc-page">
+  <header class="case-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li><a href="/work/geoaid-flood-susceptibility/">GeoAID</a></li><li aria-current="page">Methods log</li></ol>
+      </nav>
+      <h1>GeoAID methods log</h1>
+      <p class="lead">The working log kept while building GeoAID: every data source, parameter, correction and validation result, written as the work happened. Some sections repeat or were revised later; that history is part of the record.</p>
+      <p class="small">Copied from the <a href="https://github.com/Dexsholex/GeoAID-Lagos-FloodRisk/tree/main/docs">GeoAID repository</a> on 3 October 2026. <a href="/work/geoaid-flood-susceptibility/">Back to the case study</a></p>
+    </div>
+  </header>
+  <div class="wrap doc-layout">
+    <nav class="doc-toc" aria-label="Sections">
+      <details data-open-wide>
+        <summary>Sections</summary>
+        <ol>
+          <li><a href="#notebook-01-study-area-definition">Notebook 01 — Study Area Definition</a></li>
+          <li><a href="#notebook-02-dem-and-topographic-feature-extraction">Notebook 02 — DEM and Topographic Feature Extraction</a></li>
+          <li><a href="#notebook-03-rainfall-lulc-ndvi">Notebook 03 — Rainfall, LULC, NDVI</a></li>
+          <li><a href="#notebook-04-soil-permeability-and-distance-features">Notebook 04 — Soil Permeability and Distance Features</a></li>
+          <li><a href="#complete-feature-matrix-14-features-updated-from-initial-12">COMPLETE FEATURE MATRIX — 14 Features (Updated from initial 12)</a></li>
+          <li><a href="#notebook-05-sar-flood-inventory-pre-notebook-planning-re-verified">Notebook 05 — SAR Flood Inventory (Pre-Notebook Planning, Re-Verified)</a></li>
+          <li><a href="#notebook-05-sar-flood-inventory-executed-results">Notebook 05 — SAR Flood Inventory (Executed Results)</a></li>
+          <li><a href="#project-restructuring-note-logged-june-2026">PROJECT RESTRUCTURING NOTE — Logged June 2026</a></li>
+          <li><a href="#notebook-04-revised-soil-distance-features">Notebook 04 (Revised) — Soil, Distance Features</a></li>
+          <li><a href="#notebook-04b-gpm-imerg-antecedent-rainfall-feature-15">Notebook 04b — GPM IMERG Antecedent Rainfall (Feature 15)</a></li>
+          <li><a href="#final-feature-matrix-15-features">FINAL FEATURE MATRIX — 15 Features</a></li>
+          <li><a href="#notebook-04-revised-soil-distance-features_1">Notebook 04 (Revised) — Soil, Distance Features</a></li>
+          <li><a href="#notebook-04b-gpm-imerg-antecedent-rainfall-feature-15_1">Notebook 04b — GPM IMERG Antecedent Rainfall (Feature 15)</a></li>
+          <li><a href="#final-feature-matrix-15-features_1">FINAL FEATURE MATRIX — 15 Features</a></li>
+          <li><a href="#notebook-04-revised-soil-distance-features_2">Notebook 04 (Revised) — Soil, Distance Features</a></li>
+          <li><a href="#notebook-04b-gpm-imerg-antecedent-rainfall-feature-15_2">Notebook 04b — GPM IMERG Antecedent Rainfall (Feature 15)</a></li>
+          <li><a href="#final-feature-matrix-15-features_2">FINAL FEATURE MATRIX — 15 Features</a></li>
+          <li><a href="#notebook-05-rebuilt-sar-flood-inventory-corrected">Notebook 05 (Rebuilt) — SAR Flood Inventory (Corrected)</a></li>
+          <li><a href="#notebook-06-feature-matrix-assembly">Notebook 06 — Feature Matrix Assembly</a></li>
+          <li><a href="#notebook-07-model-training-and-evaluation">Notebook 07 — Model Training and Evaluation</a></li>
+          <li><a href="#notebook-07-final-outputs-figures-and-spatial-products">Notebook 07 — Final Outputs (Figures and Spatial Products)</a></li>
+          <li><a href="#notebook-08-shap-explainability-analysis">Notebook 08 — SHAP Explainability Analysis</a></li>
+          <li><a href="#notebook-08-shap-explainability-analysis_1">Notebook 08 — SHAP Explainability Analysis</a></li>
+          <li><a href="#notebook-09-infrastructure-risk-assessment-layer-3">Notebook 09 — Infrastructure Risk Assessment (Layer 3)</a></li>
+          <li><a href="#notebook-09-infrastructure-risk-assessment-layer-3_1">Notebook 09 — Infrastructure Risk Assessment (Layer 3)</a></li>
+          <li><a href="#dashboard-audit-report-claims-vs-implemented-features">Dashboard Audit — Report Claims vs Implemented Features</a></li>
+          <li><a href="#dashboard-audit-report-claims-vs-implemented-features_1">Dashboard Audit — Report Claims vs Implemented Features</a></li>
+          <li><a href="#dashboard-remediation-closing-reportartifact-gaps">Dashboard Remediation — Closing Report/Artifact Gaps</a></li>
+          <li><a href="#dashboard-deployment-fixes-and-ux-refinement">Dashboard — Deployment Fixes and UX Refinement</a></li>
+          <li><a href="#dashboard-deployment-fixes-and-ux-refinement_1">Dashboard — Deployment Fixes and UX Refinement</a></li>
+          <li><a href="#dashboard-deployment-fixes-and-ux-refinement_2">Dashboard — Deployment Fixes and UX Refinement</a></li>
+        </ol>
+      </details>
+    </nav>
+    <div class="prose doc">
+<hr>
+<h2 id="notebook-01-study-area-definition">Notebook 01 — Study Area Definition</h2>
+<ul>
+<li>Dataset: FAO GAUL 2015 Level 2</li>
+<li>GEE filter fix: used stringContains() due to leading space in ' Amuwo Odofin' GAUL entry</li>
+<li>Tier 1 (Conceptual): Lagos State — 1 feature confirmed</li>
+<li>Tier 2 (Empirical): Amuwo Odofin LGA — 1 feature confirmed</li>
+<li>Boundary exported: data/amuwo_odofin_boundary.geojson</li>
+</ul>
+<hr>
+<h2 id="notebook-02-dem-and-topographic-feature-extraction">Notebook 02 — DEM and Topographic Feature Extraction</h2>
+<ul>
+<li>Primary DEM: SRTM 30m (USGS/SRTMGL1_003)</li>
+<li>Flow accumulation: HydroSHEDS 15-arc-second (WWF/HydroSHEDS/15ACC)</li>
+<li>Curvature: computed via Laplacian8 convolution kernel (ee.Terrain.products() 
+  does not include curvature — known GEE API limitation)</li>
+<li>All bands cast to Float32 before stacking to resolve Int16/Float32 type conflict</li>
+<li>Export scale: 30 metres | CRS: EPSG:4326</li>
+<li>Output file: topo_features_amuwo_odofin.tif | File size: 2.1MB</li>
+</ul>
+<h3 id="pixel-count-per-band-at-30m-resolution">Pixel Count per Band at 30m Resolution:</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Band</th>
+<th>Pixel Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>elevation</td>
+<td>197,127</td>
+</tr>
+<tr>
+<td>slope</td>
+<td>196,081</td>
+</tr>
+<tr>
+<td>aspect</td>
+<td>196,081</td>
+</tr>
+<tr>
+<td>flow_accumulation</td>
+<td>196,065</td>
+</tr>
+<tr>
+<td>twi</td>
+<td>195,117</td>
+</tr>
+<tr>
+<td>curvature</td>
+<td>197,127</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Total candidate sample pool: ~197,000 observations</li>
+<li>Planned training sample: 10,000-15,000 stratified random points</li>
+<li>Train/test split: 70/30 stratified</li>
+</ul>
+<p>---g</p>
+<h2 id="notebook-03-rainfall-lulc-ndvi">Notebook 03 — Rainfall, LULC, NDVI</h2>
+<h3 id="chirps-rainfall">CHIRPS Rainfall</h3>
+<ul>
+<li>Dataset: UCSB-CHG/CHIRPS/DAILY</li>
+<li>Analysis period: 2013-2023 (10-year mean)</li>
+<li>Extreme rainfall threshold: &gt;50mm/day (standard West African flood literature threshold)</li>
+<li>Export scale: 100m (compromise resolution for multi-source stack)</li>
+</ul>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value (mm/year)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>1,509.21</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>1,885.31</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>1,662.90</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="esa-worldcover-2021">ESA WorldCover 2021</h3>
+<ul>
+<li>Dataset: ESA/WorldCover/v200</li>
+<li>Resolution: 10 metres (highest resolution global LULC freely available)</li>
+<li>Year: 2021</li>
+</ul>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Land Cover Class</th>
+<th>Coverage (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Built-up surfaces</td>
+<td>40.60</td>
+</tr>
+<tr>
+<td>Permanent water</td>
+<td>12.74</td>
+</tr>
+<tr>
+<td>Tree cover</td>
+<td>16.33</td>
+</tr>
+<tr>
+<td>Mangroves</td>
+<td>14.61</td>
+</tr>
+<tr>
+<td>Herbaceous wetland</td>
+<td>0.76</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Interpretation: 40.60% impervious surface coverage severely constrains
+  natural infiltration capacity — key flood risk amplifier in study area.
+  Combined water/wetland/mangrove coverage (28.11%) confirms coastal
+  low-lying character of Amuwo Odofin LGA.</li>
+</ul>
+<h3 id="sentinel-2-ndvi">Sentinel-2 NDVI</h3>
+<ul>
+<li>Dataset: COPERNICUS/S2_SR_HARMONIZED</li>
+<li>Composite period: Dry season (Nov-Mar), 2020-2023</li>
+<li>Cloud filter: &lt;20% cloudy pixel percentage</li>
+<li>Cloud masking: SCL classes 3, 8, 9, 10 masked</li>
+<li>Composite method: Median (reduces noise and residual cloud artefacts)</li>
+</ul>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>NDVI Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>-0.2163</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>0.7787</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>0.2951</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Interpretation: Low-moderate mean NDVI (0.2951) consistent with
+  heavily urbanised LGA. Negative minimum values represent water
+  bodies and bare impervious surfaces.</li>
+</ul>
+<h3 id="export">Export</h3>
+<ul>
+<li>Output file: rainfall_lulc_ndvi_amuwo_odofin.tif</li>
+<li>Scale: 100 metres | CRS: EPSG:4326 | Type: Float32</li>
+<li>Bands: mean_annual_rainfall, mean_rainy_days_per_year,
+         extreme_rain_frequency, lulc, ndvi</li>
+</ul>
+<hr>
+<h2 id="notebook-04-soil-permeability-and-distance-features">Notebook 04 — Soil Permeability and Distance Features</h2>
+<h3 id="soil-permeability">Soil Permeability</h3>
+<ul>
+<li>Primary source attempted: projects/soilgrids-isric/properties/sand/mean</li>
+<li>Status: ACCESS DENIED — asset not publicly available in GEE</li>
+<li>Fallback source used: OpenLandMap/SOL/SOL_SAND-WFRACTION_USDA-3A1A1A_M/v02</li>
+<li>Justification: OpenLandMap uses USDA soil taxonomy validated for West Africa</li>
+<li>Property: Sand fraction (% weight) as hydraulic conductivity proxy</li>
+<li>Resolution: 250 metres</li>
+<li>Scientific basis: Sandy soils = high permeability = lower runoff generation
+  Clay-rich soils = low permeability = higher runoff (Saxton &amp; Rawls, 2006)</li>
+</ul>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>14.50</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>34.50</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>25.68</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Interpretation: Moderate-low sand content consistent with coastal clay-rich
+  soils typical of Lagos State — confirms low infiltration capacity and
+  supports flood risk amplification in the study area</li>
+</ul>
+<h3 id="distance-to-rivers">Distance to Rivers</h3>
+<ul>
+<li>Primary source attempted: WWF/HydroSHEDS/v1/FreeFlowingRivers (vector)</li>
+<li>Status: ZERO FEATURES — dataset excludes heavily modified urban waterways
+  Amuwo Odofin's drainage network does not meet FreeFlowingRivers criteria</li>
+<li>Method adopted: Flow accumulation thresholding (WWF/HydroSHEDS/15ACC)</li>
+<li>Threshold: flow accumulation &gt; 200 cells (95th percentile for LGA)
+  Selected after diagnostic confirmed LGA maximum = 708 cells
+  (threshold of 1000 was above all pixel values — flat coastal terrain)</li>
+<li>Distance method: fastDistanceTransform() — more reliable than
+  kernel-based distance on masked binary images in GEE</li>
+<li>Resolution: 500 metres (HydroSHEDS native resolution)</li>
+<li>River pixels identified: ~32 pixels at 500m scale</li>
+</ul>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value (metres)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>6,726.81</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>2,337.43</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="distance-to-drainage">Distance to Drainage</h3>
+<ul>
+<li>Source: JRC/GSW1_4/GlobalSurfaceWater (Pekel et al., 2016)</li>
+<li>Resolution: 30 metres</li>
+<li>Occurrence threshold: &gt;10% water occurrence
+  Captures seasonal and intermittent urban drainage features</li>
+<li>Distance method: fastDistanceTransform() × 30m resolution</li>
+<li>Justification: JRC captures urban drainage infrastructure
+  (canals, seasonal streams) not mapped in HydroSHEDS</li>
+</ul>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value (metres)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>7,018.33</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>1,207.16</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="export_1">Export</h3>
+<ul>
+<li>Output file: soil_distance_amuwo_odofin.tif</li>
+<li>Scale: 100 metres | CRS: EPSG:4326 | Type: Float32</li>
+<li>Bands: soil_permeability, distance_to_river, distance_to_drainage</li>
+</ul>
+<hr>
+<h2 id="complete-feature-matrix-14-features-updated-from-initial-12">COMPLETE FEATURE MATRIX — 14 Features (Updated from initial 12)</h2>
+<p>Feature count revised upward after NB03 produced 5 features (not 4)
+and NB04 produced 3 features (soil + 2 distance measures).
+14 features is methodologically defensible — tree-based models (RF, XGBoost)
+handle feature redundancy gracefully. Multicollinearity check (VIF) to be
+performed in NB06 before modelling.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Feature</th>
+<th>Source</th>
+<th>Notebook</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Elevation</td>
+<td>SRTM (NASA/USGS)</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Slope</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Aspect</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Flow Accumulation</td>
+<td>HydroSHEDS (WWF)</td>
+<td>NB02</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Topographic Wetness Index</td>
+<td>SRTM + HydroSHEDS</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Curvature</td>
+<td>SRTM (Laplacian kernel)</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Mean Annual Rainfall</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Mean Rainy Days/Year</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Extreme Rainfall Frequency</td>
+<td>CHIRPS &gt;50mm/day</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Land Use / Land Cover</td>
+<td>ESA WorldCover 2021</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>11</td>
+<td>NDVI</td>
+<td>Sentinel-2 2020-2023</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Soil Permeability</td>
+<td>OpenLandMap (USDA)</td>
+<td>NB04</td>
+<td>250m</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Distance to Rivers</td>
+<td>HydroSHEDS flow acc.</td>
+<td>NB04</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Distance to Drainage</td>
+<td>JRC Surface Water</td>
+<td>NB04</td>
+<td>30m</td>
+</tr>
+</tbody>
+</table></div>
+<p>Resolution harmonisation: all 14 features resampled to 100m
+common resolution in NB06 before feature matrix assembly.</p>
+<h2 id="notebook-05-sar-flood-inventory-pre-notebook-planning-re-verified">Notebook 05 — SAR Flood Inventory (Pre-Notebook Planning, Re-Verified)</h2>
+<h3 id="re-verification-note">Re-Verification Note</h3>
+<p>All flood events were independently re-verified on 22 May 2026 against
+primary Nigerian news sources (Vanguard, Punch, Premium Times), NiMet
+post-event reports, FloodList, and peer-reviewed literature. No events
+are carried forward from assumption — each date is confirmed by at least
+two independent sources. A fourth event (July 2022) was added after
+re-verification to strengthen training sample size and temporal coverage.</p>
+<h3 id="confirmed-flood-events-for-sentinel-1-sar-change-detection">Confirmed Flood Events for Sentinel-1 SAR Change Detection</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Event Date</th>
+<th>Rainfall Evidence</th>
+<th>Primary Source</th>
+<th>SAR Window</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>07-08 July 2017</td>
+<td>Victoria Island: 176.5mm on 08 July; stations recorded 69.8mm and 65.6mm on 07 July — NiMet post-event report confirmed</td>
+<td>NiMet (Vanguard, 14 July 2017); PMC peer-reviewed journal</td>
+<td>Pre: June 2017 / Post: 09-15 July 2017</td>
+</tr>
+<tr>
+<td>2</td>
+<td>17-19 June 2020</td>
+<td>~90mm in 48hrs; LASEMA confirmed 20 families displaced at Orile-Agege; one fatality recorded</td>
+<td>FloodList (19 June 2020) quoting LASEMA directly</td>
+<td>Pre: May 2020 / Post: 20-30 June 2020</td>
+</tr>
+<tr>
+<td>3</td>
+<td>16 July 2021</td>
+<td>Flood water up to 50cm depth reported across Lagos; roads submerged from Lekki to Oshodi</td>
+<td>FloodList (July 2021)</td>
+<td>Pre: June 2021 / Post: 17-25 July 2021</td>
+</tr>
+<tr>
+<td>4</td>
+<td>09-10 July 2022</td>
+<td>Seven deaths confirmed by NEMA South West Zonal Coordinator Ibrahim Farinloye; vehicle swept away in Agege</td>
+<td>Punch Newspapers (13 July 2022); NEMA statement</td>
+<td>Pre: June 2022 / Post: 11-20 July 2022</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="on-the-absence-of-amuwo-odofin-specific-event-documentation">On the Absence of Amuwo Odofin-Specific Event Documentation</h3>
+<p>No newspaper or institutional record was found that specifically documents
+flood events at Amuwo Odofin LGA level with precise event dates. This is
+a known and documented data scarcity challenge in Nigerian urban flood
+research, explicitly acknowledged in the peer-reviewed literature
+(Nkwunonwo et al., 2016; Ajibade et al., 2013).</p>
+<p>However, Amuwo Odofin's flood risk status is multiply confirmed:</p>
+<ol>
+<li>
+<p>The Nigeria Hydrological Services Agency (NIHSA) explicitly lists Amuwo
+   Odofin as one of the defined flood-risk zones in Lagos State alongside
+   Lagos Island, Ikeja, Apapa, and Surulere (NIHSA, cited in IJEES, 2021).</p>
+</li>
+<li>
+<p>Informal settlements in Amuwo-Odofin have lost multiple commercial
+   properties to flooding, documented in peer-reviewed literature
+   (Olorunfemi et al., 2020, cited in Frontiers in Climate, 2025).</p>
+</li>
+<li>
+<p>LASEMA's 2025 Flood-Free Lagos Campaign specifically mapped Amuwo-Odofin
+   as a vulnerable area requiring emergency preparedness alongside Eti-Osa,
+   Kosofe, Lekki, and Apapa (Punch Newspapers, June 2025).</p>
+</li>
+<li>
+<p>Satellite Town (within Amuwo Odofin) is documented as having inadequate
+   drainage and open gutters prone to blockage, leading to significant
+   flooding during the rainy season (Wikipedia/Satellite Town, Lagos).</p>
+</li>
+</ol>
+<h3 id="methodological-response-to-data-scarcity-sar-first-framing">Methodological Response to Data Scarcity — SAR-First Framing</h3>
+<p>The absence of LGA-level event documentation is not treated as a
+limitation but as the direct justification for the SAR-based approach.
+SAR-derived flood labels are independent of administrative reporting
+quality and provide spatially explicit, physically grounded flood extent
+evidence at 10-metre resolution — a fundamentally stronger evidence base
+than news report coverage.</p>
+<p>Additionally, the JRC Global Surface Water historical occurrence layer
+(1984-present, Landsat-derived) will be used in Notebook 05 as
+supplementary satellite-based validation of inundation patterns in
+Amuwo Odofin across the study period — providing independent corroboration
+that is entirely free of news reporting bias.</p>
+<h3 id="sar-technical-parameters-for-notebook-05">SAR Technical Parameters for Notebook 05</h3>
+<ul>
+<li>Dataset: COPERNICUS/S1_GRD (Sentinel-1 Ground Range Detected)</li>
+<li>Polarisation: VV (vertical-vertical) — most sensitive to surface water detection</li>
+<li>Pass direction: Both ascending and descending acquisitions checked per event</li>
+<li>Change detection method: Pre-flood vs post-flood backscatter difference</li>
+<li>Thresholding: Otsu automatic threshold method — validated at 94.3%
+  accuracy for flood inundation mapping (Tiwari et al., 2020)</li>
+<li>Flood class: pixels with statistically significant backscatter decrease
+  (open water consistently returns low backscatter in VV polarisation)</li>
+<li>Non-flood class: stratified random sample from confirmed dry areas in
+  the same time window, stratified by land cover type to prevent the
+  model learning land cover as a proxy for flood occurrence</li>
+</ul>
+<h2 id="notebook-05-sar-flood-inventory-executed-results">Notebook 05 — SAR Flood Inventory (Executed Results)</h2>
+<h3 id="sentinel-1-archive-availability-confirmed-from-gee">Sentinel-1 Archive Availability (Confirmed from GEE)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Pre-flood Acquisitions</th>
+<th>Post-flood Acquisitions</th>
+<th>Pass Directions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jul 2017</td>
+<td>3 (03, 15, 27 Jun 2017)</td>
+<td>2 (09, 21 Jul 2017)</td>
+<td>Ascending only</td>
+</tr>
+<tr>
+<td>Jun 2020</td>
+<td>7 (01 May–06 Jun 2020)</td>
+<td>3 (23 Jun–05 Jul 2020)</td>
+<td>Mixed ASC/DESC</td>
+</tr>
+<tr>
+<td>Jul 2021</td>
+<td>7 (01 Jun–07 Jul 2021)</td>
+<td>3 (19–31 Jul 2021)</td>
+<td>Mixed ASC/DESC</td>
+</tr>
+<tr>
+<td>Jul 2022</td>
+<td>5 (01 Jun–25 Jun 2022)</td>
+<td>3 (14–26 Jul 2022)</td>
+<td>Mixed ASC/DESC</td>
+</tr>
+</tbody>
+</table></div>
+<p>Post-flood timing from event date: 1 day (2017), 4 days (2020),
+3 days (2021), 4 days (2022) — all within standard 6-day window
+before significant urban flood recession in coastal Lagos terrain.</p>
+<h3 id="initial-detection-attempt-problem-identified-and-corrected">Initial Detection Attempt — Problem Identified and Corrected</h3>
+<p>Initial run with 40-day pre-flood window produced flood coverage of 97.70%
+across composite — physically implausible for an urban LGA. Root cause:
+40-day pre-flood window spanned the dry-to-wet season transition in Lagos,
+producing backscatter changes comparable in magnitude to actual inundation.
+Otsu threshold contaminated by seasonal surface moisture signal rather
+than flood signal. This problem is documented in the SAR flood mapping
+literature for tropical West Africa (Twele et al., 2016).</p>
+<p>Three corrections applied:
+1. Pre-flood window shortened to maximum 20 days — avoids seasonal
+   transition contamination, uses closest stable dry baseline.
+2. Permanent water mask applied (JRC occurrence &gt; 50%) — removes lagoons,
+   Badagry Creek, and permanent drainage channels which produce
+   persistently low backscatter unrelated to flood events.
+3. Dual threshold: Otsu + minimum 1.5 dB absolute change — removes
+   low-magnitude noise changes incorrectly classified by Otsu alone.
+   1.5 dB is the standard C-band minimum magnitude threshold
+   (Boni et al., 2016).</p>
+<h3 id="corrected-detection-results">Corrected Detection Results</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Pre Window Used</th>
+<th>Post Window Used</th>
+<th>Otsu Threshold</th>
+<th>Flood Pixels</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jul 2017</td>
+<td>15–30 Jun 2017</td>
+<td>08–22 Jul 2017</td>
+<td>-0.3117 dB</td>
+<td>522</td>
+<td>7.78%</td>
+</tr>
+<tr>
+<td>Jun 2020</td>
+<td>28 May–10 Jun 2020</td>
+<td>19 Jun–01 Jul 2020</td>
+<td>-0.8105 dB</td>
+<td>365</td>
+<td>5.43%</td>
+</tr>
+<tr>
+<td>Jul 2021</td>
+<td>28 Jun–08 Jul 2021</td>
+<td>16–25 Jul 2021</td>
+<td>-0.1251 dB</td>
+<td>941</td>
+<td>14.02%</td>
+</tr>
+<tr>
+<td>Jul 2022</td>
+<td>19 Jun–01 Jul 2022</td>
+<td>10–20 Jul 2022</td>
+<td>+0.3158 dB</td>
+<td>1,139</td>
+<td>16.97%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Coverage range of 5.43%–16.97% per event is physically credible for
+an urban coastal LGA with 40.60% impervious surface cover and documented
+poor drainage infrastructure. Larger footprints in 2021 and 2022 are
+consistent with more severe documented rainfall for those events.</p>
+<h3 id="composite-flood-inventory">Composite Flood Inventory</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total study area pixels</td>
+<td>6,715</td>
+</tr>
+<tr>
+<td>Confirmed flood pixels</td>
+<td>2,325</td>
+</tr>
+<tr>
+<td>Composite flood coverage</td>
+<td>34.63%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Composite method: maximum value per pixel across all four events —
+a pixel classified as flood in any one event is retained as flood
+in the composite. Standard approach for multi-event flood inventory
+construction (Tiwari et al., 2020).</p>
+<h3 id="training-sample-statistics">Training Sample Statistics</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Sample Count</th>
+<th>Percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flood (class 1)</td>
+<td>2,328</td>
+<td>34.7%</td>
+</tr>
+<tr>
+<td>Non-flood (class 0)</td>
+<td>4,387</td>
+<td>65.3%</td>
+</tr>
+<tr>
+<td>Total</td>
+<td>6,715</td>
+<td>100%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Class imbalance note: 34.7:65.3 flood-to-non-flood ratio reflects the
+realistic spatial distribution of flood exposure in the LGA rather than
+a methodological failure. The imbalance is moderate and will be addressed
+during model training (Notebook 07) via class_weight='balanced' in
+scikit-learn and scale_pos_weight parameter in XGBoost. This ensures
+models do not develop majority-class bias toward non-flood predictions.</p>
+<h3 id="exports-submitted-to-google-drive">Exports Submitted to Google Drive</h3>
+<ul>
+<li>flood_inventory_amuwo_odofin.tif (30m resolution, binary flood/non-flood)</li>
+<li>training_points_amuwo_odofin.csv (6,715 labelled sample points with coordinates)</li>
+</ul>
+<h3 id="implementation-notes">Implementation Notes</h3>
+<ul>
+<li>Otsu computation method: hybrid GEE + NumPy (histogram downloaded to Python)
+  GEE server-side Array API produced dimensionality errors in pure server-side
+  implementation — hybrid approach is standard in published workflows and
+  produces identical results with improved robustness.</li>
+<li>Speckle filter: Refined Lee 3x3 approximated via focal mean on linear scale
+  with dB conversion — standard pre-processing for Sentinel-1 IW mode at 10m.</li>
+</ul>
+<hr>
+<h2 id="project-restructuring-note-logged-june-2026">PROJECT RESTRUCTURING NOTE — Logged June 2026</h2>
+<h3 id="critical-issue-identified-flood-labels-contaminated-by-water-bodies">Critical Issue Identified: Flood Labels Contaminated by Water Bodies</h3>
+<p>During visual inspection of the flood inventory output from NB05,
+flood-classified pixels (Class 1) were found to cluster predominantly
+on permanent and semi-permanent water surfaces — Lagos Lagoon,
+drainage channels, and tidal inlets — rather than on genuinely
+inundated urban land. This renders the training labels methodologically
+invalid for an urban flood susceptibility model.</p>
+<p>Root causes identified:
+1. JRC permanent water mask threshold of 50% occurrence too permissive —
+   seasonal and semi-permanent water bodies (20-49% occurrence) passed
+   through the mask and consistently triggered low SAR backscatter signal
+   regardless of whether a flood event occurred.
+2. Otsu threshold responding to permanent water signal rather than
+   urban inundation signal even after 1.5dB minimum change filter.
+3. No land cover constraint applied — SAR change detection was operating
+   on water, wetland, and mangrove pixels that should have been excluded
+   from urban flood inventory entirely.</p>
+<h3 id="corrective-methodology-decisions">Corrective Methodology Decisions</h3>
+<p>Three simultaneous fixes applied to NB05 (rebuild):
+1. JRC occurrence threshold tightened from 50% to 5% — any pixel
+   water-covered more than 5% of the time is permanently excluded.
+2. ESA WorldCover urban land mask added — only built-up (class 50),
+   cropland (class 40), and grassland (class 30) pixels are eligible
+   for flood classification. Water (80), wetland (90), and mangrove
+   (95) pixels masked regardless of SAR signal.
+3. Minimum backscatter change threshold increased from 1.5dB to 3.0dB —
+   genuine urban inundation produces stronger signal than surface
+   moisture variation on near-water terrain (Twele et al., 2016).</p>
+<h3 id="project-scope-enhancement-title-alignment">Project Scope Enhancement — Title Alignment</h3>
+<p>Following review of the project title ("AI-Enabled Geospatial Decision
+Support and Disaster Intelligence for Urban Flood Risk Management"),
+the GeoAID framework was expanded from a single-layer static
+susceptibility model to a three-layer decision support architecture:</p>
+<p>Layer 1 — Structural Susceptibility (NB02-NB08):
+  Static flood risk map from 16 conditioning factors and ML models.
+  Answers: WHERE is inherently flood-prone.</p>
+<p>Layer 2 — Dynamic Risk Activation (NB10 dashboard):
+  GPM IMERG near-real-time rainfall overlaid on static risk map.
+  Answers: WHICH risk zones are being actively triggered by current rainfall.</p>
+<p>Layer 3 — Disaster Intelligence (NB09):
+  Infrastructure risk assessment — population, roads, schools,
+  hospitals, buildings at risk per flood risk zone.
+  Answers: WHO and WHAT is at risk in activated zones.</p>
+<h3 id="feature-matrix-expanded-from-14-to-16-features">Feature Matrix Expanded from 14 to 16 Features</h3>
+<p>Two new features added:</p>
+<p>Feature 15 — HAND (Height Above Nearest Drainage):
+  Derived from DEM and HydroSHEDS flow accumulation.
+  Measures vertical elevation of each pixel above nearest drainage
+  channel. Low HAND = terrain barely above drainage network = highest
+  first-inundation risk. Specifically validated for low-lying coastal
+  urban terrain. Added in revised NB04.</p>
+<p>Feature 16 — GPM IMERG 72-hour Event Rainfall Accumulation:
+  NASA Global Precipitation Measurement IMERG product.
+  Event-specific cumulative rainfall in 72 hours preceding each of
+  the four verified flood events. Captures antecedent soil moisture
+  conditions that determine flood response magnitude for equivalent
+  rainfall inputs. Added in new NB04b.</p>
+<h3 id="revised-notebook-pipeline">Revised Notebook Pipeline</h3>
+<p>NB01 ✓ — Study area (unchanged)
+NB02 ✓ — Topographic features (unchanged)
+NB03 ✓ — Rainfall, LULC, NDVI (unchanged)
+NB04 ↺ — Soil + distance + HAND model (revised — HAND added)
+NB04b ★ — GPM IMERG event rainfall (new)
+NB05 ↺ — SAR flood inventory (rebuilt — water body masking corrected)
+NB06    — Feature matrix assembly (updated for 16 features)
+NB07    — Model training and evaluation
+NB08    — SHAP explainability analysis
+NB09 ★ — Infrastructure risk assessment — OSM schools, hospitals,
+          roads, buildings overlaid with flood risk map (new)
+NB10 ★ — Streamlit dashboard with GPM IMERG live rainfall layer (updated)</p>
+<h3 id="methodological-note-on-sar-temporal-gap">Methodological Note on SAR Temporal Gap</h3>
+<p>The 6-12 day Sentinel-1 revisit cycle does not affect the validity of
+historical label generation (Use Case B). SAR imagery is used ONCE
+to construct historical flood labels from verified past events where
+acquisitions within 1-4 days of each event were confirmed. The temporal
+gap concern applies to real-time flood detection (Use Case A), which
+is outside the scope of this project. Real-time monitoring is
+acknowledged as a natural extension for future work. Dynamic rainfall
+forcing for the operational decision support layer is provided by
+GPM IMERG (30-minute update cycle) rather than SAR.</p>
+<hr>
+<h2 id="notebook-04-revised-soil-distance-features">Notebook 04 (Revised) — Soil, Distance Features</h2>
+<h3 id="hand-model-attempted-and-removed">HAND Model — Attempted and Removed</h3>
+<p>HAND (Height Above Nearest Drainage) was implemented using two approaches:</p>
+<p>Attempt 1: HydroSHEDS flow accumulation thresholding at 500m resolution.
+Result: Sparse channel network missed most urban drainage features in
+Amuwo Odofin. Kernel computation at 30m resolution (5000m radius =
+167-pixel kernel) timed out after 37+ minutes without completing.</p>
+<p>Attempt 2: JRC Global Surface Water occurrence &gt; 5% at 100m resolution
+as channel network. focal_min 5000m radius at 100m = 50-pixel kernel.
+Result: Computation completed but produced physically incorrect values.
+Festac Town pixels immediately adjacent to canals showed HAND &gt; 13m
+(red/high) rather than expected low values. Root cause: focal_min
+propagates the MINIMUM elevation within search radius — in coastal
+Lagos, this is always the Lagos Lagoon (0m) rather than local canal
+elevation (3-4m). All HAND values relative to lagoon sea level rather
+than nearest local drainage channel, rendering the layer hydrologically
+meaningless for urban flood susceptibility in this coastal setting.</p>
+<p>Decision: HAND removed from feature matrix.
+Justification: Correct HAND computation requires a hydrologically
+conditioned DEM (e.g. MERIT DEM or NASADEM with depression filling)
+where sea-level water bodies are treated separately from inland
+drainage channels. SRTM-based HAND in coastal environments with
+large tidal water bodies produces systematically incorrect values.
+Documented as priority for future work.</p>
+<h3 id="final-nb04-outputs-three-features">Final NB04 Outputs (Three Features)</h3>
+<ul>
+<li>Feature 12: Soil permeability (OpenLandMap sand fraction, 250m)
+  Mean: 25.68% — clay-dominant coastal soils confirming low
+  infiltration capacity and high runoff generation potential</li>
+<li>Feature 13: Distance to river (HydroSHEDS flow acc threshold,
+  fastDistanceTransform, 500m) — Mean: 2,337.43m</li>
+<li>Feature 14: Distance to drainage (JRC occurrence &gt; 10%,
+  fastDistanceTransform, 30m) — Mean: 1,207.16m</li>
+</ul>
+<p>Export: soil_distance_amuwo_odofin.tif (3 bands, 100m, Float32)</p>
+<hr>
+<h2 id="notebook-04b-gpm-imerg-antecedent-rainfall-feature-15">Notebook 04b — GPM IMERG Antecedent Rainfall (Feature 15)</h2>
+<h3 id="dataset">Dataset</h3>
+<ul>
+<li>Source: NASA/GPM_L3/IMERG_V07 (gauge-calibrated)</li>
+<li>Band: precipitation (mm/hr) — note: named 'precipitationCal' in
+  older IMERG versions; renamed 'precipitation' in V07</li>
+<li>Temporal resolution: 30-minute intervals</li>
+<li>Spatial resolution: 0.1° (~11km at Lagos latitude)</li>
+<li>Unit conversion: sum(mm/hr) × 0.5hr interval = total mm accumulated</li>
+</ul>
+<h3 id="antecedent-window-design">Antecedent Window Design</h3>
+<p>72-hour window immediately preceding each flood event peak date.
+Scientific rationale: 72-hour antecedent rainfall captures soil
+moisture saturation state — the primary determinant of flood response
+magnitude for equivalent rainfall inputs in tropical urban catchments
+(Beven &amp; Kirkby, 1979; Western et al., 2002).</p>
+<h3 id="event-specific-72-hour-antecedent-rainfall">Event-Specific 72-Hour Antecedent Rainfall</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Window</th>
+<th>Images</th>
+<th>Min (mm)</th>
+<th>Max (mm)</th>
+<th>Mean (mm)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jul 2017</td>
+<td>04-07 Jul 2017</td>
+<td>144</td>
+<td>110.14</td>
+<td>134.29</td>
+<td>126.20</td>
+</tr>
+<tr>
+<td>Jun 2020</td>
+<td>14-17 Jun 2020</td>
+<td>144</td>
+<td>25.94</td>
+<td>40.65</td>
+<td>34.01</td>
+</tr>
+<tr>
+<td>Jul 2021</td>
+<td>13-16 Jul 2021</td>
+<td>144</td>
+<td>3.69</td>
+<td>11.92</td>
+<td>10.09</td>
+</tr>
+<tr>
+<td>Jul 2022</td>
+<td>06-09 Jul 2022</td>
+<td>144</td>
+<td>48.54</td>
+<td>84.39</td>
+<td>58.70</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="key-scientific-finding-event-3-july-2021">Key Scientific Finding — Event 3 (July 2021)</h3>
+<p>Event 3 produced the second-largest flood footprint (14.02% coverage)
+despite only 10.09mm of antecedent rainfall in the preceding 72 hours.
+This indicates the July 2021 flood was driven by intense short-duration
+rainfall overwhelming structurally constrained drainage capacity rather
+than prolonged antecedent soil saturation. This finding demonstrates
+that antecedent rainfall alone does not explain flood occurrence in
+urbanised coastal terrain — structural drainage capacity (captured by
+TWI, flow accumulation, distance to drainage) matters equally.
+SHAP analysis in NB08 will reveal how the model weights GPM IMERG
+relative to terrain conditioning factors.</p>
+<h3 id="spatial-note">Spatial Note</h3>
+<p>GPM IMERG at 0.1° (~11km) resolution is coarser than Amuwo Odofin
+LGA extent. The feature contributes event-specific temporal forcing
+information rather than spatial differentiation within the LGA.
+Standard deviation of composite (3.77mm) confirms spatial uniformity.</p>
+<h3 id="composite-statistics-feature-15-mean-across-four-events">Composite Statistics (Feature 15 — Mean Across Four Events)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value (mm/72hr)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>48.09</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>62.37</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>57.25</td>
+</tr>
+<tr>
+<td>Std Dev</td>
+<td>3.77</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="exports-submitted">Exports Submitted</h3>
+<ul>
+<li>gpm_antecedent_rainfall_amuwo_odofin.tif → Feature 15 (ML matrix)</li>
+<li>gpm_rainfall_2017_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2020_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2021_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2022_amuwo_odofin.tif (event-specific)</li>
+</ul>
+<hr>
+<h2 id="final-feature-matrix-15-features">FINAL FEATURE MATRIX — 15 Features</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Feature</th>
+<th>Source</th>
+<th>NB</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Elevation</td>
+<td>SRTM (NASA/USGS)</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Slope</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Aspect</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Flow Accumulation</td>
+<td>HydroSHEDS (WWF)</td>
+<td>NB02</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>5</td>
+<td>TWI</td>
+<td>SRTM + HydroSHEDS</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Curvature</td>
+<td>SRTM Laplacian kernel</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Mean Annual Rainfall</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Mean Rainy Days/Year</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Extreme Rainfall Freq</td>
+<td>CHIRPS &gt;50mm/day</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Land Use/Land Cover</td>
+<td>ESA WorldCover 2021</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>11</td>
+<td>NDVI</td>
+<td>Sentinel-2 2020-2023</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Soil Permeability</td>
+<td>OpenLandMap (USDA)</td>
+<td>NB04</td>
+<td>250m</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Distance to Rivers</td>
+<td>HydroSHEDS flow acc</td>
+<td>NB04</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Distance to Drainage</td>
+<td>JRC Surface Water</td>
+<td>NB04</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GPM IMERG 72hr Rainfall</td>
+<td>NASA GPM IMERG V07</td>
+<td>NB04b</td>
+<td>11km</td>
+</tr>
+</tbody>
+</table></div>
+<p>HAND excluded: SRTM-based HAND computation in coastal environments
+with large tidal water bodies produces systematically incorrect values
+relative to sea-level rather than local drainage. Recommended for
+future work using MERIT DEM or NASADEM with hydrological conditioning.</p>
+<p>All 15 features to be resampled to common 100m resolution in NB06.</p>
+<h3 id="geotiff-export-summary-data-acquisition-phase-complete">GeoTIFF Export Summary — Data Acquisition Phase Complete</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Features</th>
+<th>Bands</th>
+<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>topo_features_amuwo_odofin.tif</td>
+<td>F1-F6</td>
+<td>6</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>rainfall_lulc_ndvi_amuwo_odofin.tif</td>
+<td>F7-F11</td>
+<td>5</td>
+<td>100m</td>
+</tr>
+<tr>
+<td>soil_distance_amuwo_odofin.tif</td>
+<td>F12-F14</td>
+<td>3</td>
+<td>100m</td>
+</tr>
+<tr>
+<td>gpm_antecedent_rainfall_amuwo_odofin.tif</td>
+<td>F15</td>
+<td>1</td>
+<td>1000m</td>
+</tr>
+<tr>
+<td>flood_inventory_amuwo_odofin.tif</td>
+<td>Labels</td>
+<td>1</td>
+<td>30m</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="notebook-04-revised-soil-distance-features_1">Notebook 04 (Revised) — Soil, Distance Features</h2>
+<h3 id="hand-model-attempted-and-removed_1">HAND Model — Attempted and Removed</h3>
+<p>HAND (Height Above Nearest Drainage) was implemented using two approaches:</p>
+<p>Attempt 1: HydroSHEDS flow accumulation thresholding at 500m resolution.
+Result: Sparse channel network missed most urban drainage features in
+Amuwo Odofin. Kernel computation at 30m resolution (5000m radius =
+167-pixel kernel) timed out after 37+ minutes without completing.</p>
+<p>Attempt 2: JRC Global Surface Water occurrence &gt; 5% at 100m resolution
+as channel network. focal_min 5000m radius at 100m = 50-pixel kernel.
+Result: Computation completed but produced physically incorrect values.
+Festac Town pixels immediately adjacent to canals showed HAND &gt; 13m
+(red/high) rather than expected low values. Root cause: focal_min
+propagates the MINIMUM elevation within search radius — in coastal
+Lagos, this is always the Lagos Lagoon (0m) rather than local canal
+elevation (3-4m). All HAND values relative to lagoon sea level rather
+than nearest local drainage channel, rendering the layer hydrologically
+meaningless for urban flood susceptibility in this coastal setting.</p>
+<p>Decision: HAND removed from feature matrix.
+Justification: Correct HAND computation requires a hydrologically
+conditioned DEM (e.g. MERIT DEM or NASADEM with depression filling)
+where sea-level water bodies are treated separately from inland
+drainage channels. SRTM-based HAND in coastal environments with
+large tidal water bodies produces systematically incorrect values.
+Documented as priority for future work.</p>
+<h3 id="final-nb04-outputs-three-features_1">Final NB04 Outputs (Three Features)</h3>
+<ul>
+<li>Feature 12: Soil permeability (OpenLandMap sand fraction, 250m)
+  Mean: 25.68% — clay-dominant coastal soils confirming low
+  infiltration capacity and high runoff generation potential</li>
+<li>Feature 13: Distance to river (HydroSHEDS flow acc threshold,
+  fastDistanceTransform, 500m) — Mean: 2,337.43m</li>
+<li>Feature 14: Distance to drainage (JRC occurrence &gt; 10%,
+  fastDistanceTransform, 30m) — Mean: 1,207.16m</li>
+</ul>
+<p>Export: soil_distance_amuwo_odofin.tif (3 bands, 100m, Float32)</p>
+<hr>
+<h2 id="notebook-04b-gpm-imerg-antecedent-rainfall-feature-15_1">Notebook 04b — GPM IMERG Antecedent Rainfall (Feature 15)</h2>
+<h3 id="dataset_1">Dataset</h3>
+<ul>
+<li>Source: NASA/GPM_L3/IMERG_V07 (gauge-calibrated)</li>
+<li>Band: precipitation (mm/hr) — note: named 'precipitationCal' in
+  older IMERG versions; renamed 'precipitation' in V07</li>
+<li>Temporal resolution: 30-minute intervals</li>
+<li>Spatial resolution: 0.1° (~11km at Lagos latitude)</li>
+<li>Unit conversion: sum(mm/hr) × 0.5hr interval = total mm accumulated</li>
+</ul>
+<h3 id="antecedent-window-design_1">Antecedent Window Design</h3>
+<p>72-hour window immediately preceding each flood event peak date.
+Scientific rationale: 72-hour antecedent rainfall captures soil
+moisture saturation state — the primary determinant of flood response
+magnitude for equivalent rainfall inputs in tropical urban catchments
+(Beven &amp; Kirkby, 1979; Western et al., 2002).</p>
+<h3 id="event-specific-72-hour-antecedent-rainfall_1">Event-Specific 72-Hour Antecedent Rainfall</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Window</th>
+<th>Images</th>
+<th>Min (mm)</th>
+<th>Max (mm)</th>
+<th>Mean (mm)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jul 2017</td>
+<td>04-07 Jul 2017</td>
+<td>144</td>
+<td>110.14</td>
+<td>134.29</td>
+<td>126.20</td>
+</tr>
+<tr>
+<td>Jun 2020</td>
+<td>14-17 Jun 2020</td>
+<td>144</td>
+<td>25.94</td>
+<td>40.65</td>
+<td>34.01</td>
+</tr>
+<tr>
+<td>Jul 2021</td>
+<td>13-16 Jul 2021</td>
+<td>144</td>
+<td>3.69</td>
+<td>11.92</td>
+<td>10.09</td>
+</tr>
+<tr>
+<td>Jul 2022</td>
+<td>06-09 Jul 2022</td>
+<td>144</td>
+<td>48.54</td>
+<td>84.39</td>
+<td>58.70</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="key-scientific-finding-event-3-july-2021_1">Key Scientific Finding — Event 3 (July 2021)</h3>
+<p>Event 3 produced the second-largest flood footprint (14.02% coverage)
+despite only 10.09mm of antecedent rainfall in the preceding 72 hours.
+This indicates the July 2021 flood was driven by intense short-duration
+rainfall overwhelming structurally constrained drainage capacity rather
+than prolonged antecedent soil saturation. This finding demonstrates
+that antecedent rainfall alone does not explain flood occurrence in
+urbanised coastal terrain — structural drainage capacity (captured by
+TWI, flow accumulation, distance to drainage) matters equally.
+SHAP analysis in NB08 will reveal how the model weights GPM IMERG
+relative to terrain conditioning factors.</p>
+<h3 id="spatial-note_1">Spatial Note</h3>
+<p>GPM IMERG at 0.1° (~11km) resolution is coarser than Amuwo Odofin
+LGA extent. The feature contributes event-specific temporal forcing
+information rather than spatial differentiation within the LGA.
+Standard deviation of composite (3.77mm) confirms spatial uniformity.</p>
+<h3 id="composite-statistics-feature-15-mean-across-four-events_1">Composite Statistics (Feature 15 — Mean Across Four Events)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value (mm/72hr)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>48.09</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>62.37</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>57.25</td>
+</tr>
+<tr>
+<td>Std Dev</td>
+<td>3.77</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="exports-submitted_1">Exports Submitted</h3>
+<ul>
+<li>gpm_antecedent_rainfall_amuwo_odofin.tif → Feature 15 (ML matrix)</li>
+<li>gpm_rainfall_2017_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2020_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2021_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2022_amuwo_odofin.tif (event-specific)</li>
+</ul>
+<hr>
+<h2 id="final-feature-matrix-15-features_1">FINAL FEATURE MATRIX — 15 Features</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Feature</th>
+<th>Source</th>
+<th>NB</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Elevation</td>
+<td>SRTM (NASA/USGS)</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Slope</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Aspect</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Flow Accumulation</td>
+<td>HydroSHEDS (WWF)</td>
+<td>NB02</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>5</td>
+<td>TWI</td>
+<td>SRTM + HydroSHEDS</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Curvature</td>
+<td>SRTM Laplacian kernel</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Mean Annual Rainfall</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Mean Rainy Days/Year</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Extreme Rainfall Freq</td>
+<td>CHIRPS &gt;50mm/day</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Land Use/Land Cover</td>
+<td>ESA WorldCover 2021</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>11</td>
+<td>NDVI</td>
+<td>Sentinel-2 2020-2023</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Soil Permeability</td>
+<td>OpenLandMap (USDA)</td>
+<td>NB04</td>
+<td>250m</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Distance to Rivers</td>
+<td>HydroSHEDS flow acc</td>
+<td>NB04</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Distance to Drainage</td>
+<td>JRC Surface Water</td>
+<td>NB04</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GPM IMERG 72hr Rainfall</td>
+<td>NASA GPM IMERG V07</td>
+<td>NB04b</td>
+<td>11km</td>
+</tr>
+</tbody>
+</table></div>
+<p>HAND excluded: SRTM-based HAND computation in coastal environments
+with large tidal water bodies produces systematically incorrect values
+relative to sea-level rather than local drainage. Recommended for
+future work using MERIT DEM or NASADEM with hydrological conditioning.</p>
+<p>All 15 features to be resampled to common 100m resolution in NB06.</p>
+<h3 id="geotiff-export-summary-data-acquisition-phase-complete_1">GeoTIFF Export Summary — Data Acquisition Phase Complete</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Features</th>
+<th>Bands</th>
+<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>topo_features_amuwo_odofin.tif</td>
+<td>F1-F6</td>
+<td>6</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>rainfall_lulc_ndvi_amuwo_odofin.tif</td>
+<td>F7-F11</td>
+<td>5</td>
+<td>100m</td>
+</tr>
+<tr>
+<td>soil_distance_amuwo_odofin.tif</td>
+<td>F12-F14</td>
+<td>3</td>
+<td>100m</td>
+</tr>
+<tr>
+<td>gpm_antecedent_rainfall_amuwo_odofin.tif</td>
+<td>F15</td>
+<td>1</td>
+<td>1000m</td>
+</tr>
+<tr>
+<td>flood_inventory_amuwo_odofin.tif</td>
+<td>Labels</td>
+<td>1</td>
+<td>30m</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="notebook-04-revised-soil-distance-features_2">Notebook 04 (Revised) — Soil, Distance Features</h2>
+<h3 id="hand-model-attempted-and-removed_2">HAND Model — Attempted and Removed</h3>
+<p>HAND (Height Above Nearest Drainage) was implemented using two approaches:</p>
+<p>Attempt 1: HydroSHEDS flow accumulation thresholding at 500m resolution.
+Result: Sparse channel network missed most urban drainage features in
+Amuwo Odofin. Kernel computation at 30m resolution (5000m radius =
+167-pixel kernel) timed out after 37+ minutes without completing.</p>
+<p>Attempt 2: JRC Global Surface Water occurrence &gt; 5% at 100m resolution
+as channel network. focal_min 5000m radius at 100m = 50-pixel kernel.
+Result: Computation completed but produced physically incorrect values.
+Festac Town pixels immediately adjacent to canals showed HAND &gt; 13m
+(red/high) rather than expected low values. Root cause: focal_min
+propagates the MINIMUM elevation within search radius — in coastal
+Lagos, this is always the Lagos Lagoon (0m) rather than local canal
+elevation (3-4m). All HAND values relative to lagoon sea level rather
+than nearest local drainage channel, rendering the layer hydrologically
+meaningless for urban flood susceptibility in this coastal setting.</p>
+<p>Decision: HAND removed from feature matrix.
+Justification: Correct HAND computation requires a hydrologically
+conditioned DEM (e.g. MERIT DEM or NASADEM with depression filling)
+where sea-level water bodies are treated separately from inland
+drainage channels. SRTM-based HAND in coastal environments with
+large tidal water bodies produces systematically incorrect values.
+Documented as priority for future work.</p>
+<h3 id="final-nb04-outputs-three-features_2">Final NB04 Outputs (Three Features)</h3>
+<ul>
+<li>Feature 12: Soil permeability (OpenLandMap sand fraction, 250m)
+  Mean: 25.68% — clay-dominant coastal soils confirming low
+  infiltration capacity and high runoff generation potential</li>
+<li>Feature 13: Distance to river (HydroSHEDS flow acc threshold,
+  fastDistanceTransform, 500m) — Mean: 2,337.43m</li>
+<li>Feature 14: Distance to drainage (JRC occurrence &gt; 10%,
+  fastDistanceTransform, 30m) — Mean: 1,207.16m</li>
+</ul>
+<p>Export: soil_distance_amuwo_odofin.tif (3 bands, 100m, Float32)</p>
+<hr>
+<h2 id="notebook-04b-gpm-imerg-antecedent-rainfall-feature-15_2">Notebook 04b — GPM IMERG Antecedent Rainfall (Feature 15)</h2>
+<h3 id="dataset_2">Dataset</h3>
+<ul>
+<li>Source: NASA/GPM_L3/IMERG_V07 (gauge-calibrated)</li>
+<li>Band: precipitation (mm/hr) — note: named 'precipitationCal' in
+  older IMERG versions; renamed 'precipitation' in V07</li>
+<li>Temporal resolution: 30-minute intervals</li>
+<li>Spatial resolution: 0.1° (~11km at Lagos latitude)</li>
+<li>Unit conversion: sum(mm/hr) × 0.5hr interval = total mm accumulated</li>
+</ul>
+<h3 id="antecedent-window-design_2">Antecedent Window Design</h3>
+<p>72-hour window immediately preceding each flood event peak date.
+Scientific rationale: 72-hour antecedent rainfall captures soil
+moisture saturation state — the primary determinant of flood response
+magnitude for equivalent rainfall inputs in tropical urban catchments
+(Beven &amp; Kirkby, 1979; Western et al., 2002).</p>
+<h3 id="event-specific-72-hour-antecedent-rainfall_2">Event-Specific 72-Hour Antecedent Rainfall</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Window</th>
+<th>Images</th>
+<th>Min (mm)</th>
+<th>Max (mm)</th>
+<th>Mean (mm)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jul 2017</td>
+<td>04-07 Jul 2017</td>
+<td>144</td>
+<td>110.14</td>
+<td>134.29</td>
+<td>126.20</td>
+</tr>
+<tr>
+<td>Jun 2020</td>
+<td>14-17 Jun 2020</td>
+<td>144</td>
+<td>25.94</td>
+<td>40.65</td>
+<td>34.01</td>
+</tr>
+<tr>
+<td>Jul 2021</td>
+<td>13-16 Jul 2021</td>
+<td>144</td>
+<td>3.69</td>
+<td>11.92</td>
+<td>10.09</td>
+</tr>
+<tr>
+<td>Jul 2022</td>
+<td>06-09 Jul 2022</td>
+<td>144</td>
+<td>48.54</td>
+<td>84.39</td>
+<td>58.70</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="key-scientific-finding-event-3-july-2021_2">Key Scientific Finding — Event 3 (July 2021)</h3>
+<p>Event 3 produced the second-largest flood footprint (14.02% coverage)
+despite only 10.09mm of antecedent rainfall in the preceding 72 hours.
+This indicates the July 2021 flood was driven by intense short-duration
+rainfall overwhelming structurally constrained drainage capacity rather
+than prolonged antecedent soil saturation. This finding demonstrates
+that antecedent rainfall alone does not explain flood occurrence in
+urbanised coastal terrain — structural drainage capacity (captured by
+TWI, flow accumulation, distance to drainage) matters equally.
+SHAP analysis in NB08 will reveal how the model weights GPM IMERG
+relative to terrain conditioning factors.</p>
+<h3 id="spatial-note_2">Spatial Note</h3>
+<p>GPM IMERG at 0.1° (~11km) resolution is coarser than Amuwo Odofin
+LGA extent. The feature contributes event-specific temporal forcing
+information rather than spatial differentiation within the LGA.
+Standard deviation of composite (3.77mm) confirms spatial uniformity.</p>
+<h3 id="composite-statistics-feature-15-mean-across-four-events_2">Composite Statistics (Feature 15 — Mean Across Four Events)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Statistic</th>
+<th>Value (mm/72hr)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum</td>
+<td>48.09</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>62.37</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>57.25</td>
+</tr>
+<tr>
+<td>Std Dev</td>
+<td>3.77</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="exports-submitted_2">Exports Submitted</h3>
+<ul>
+<li>gpm_antecedent_rainfall_amuwo_odofin.tif → Feature 15 (ML matrix)</li>
+<li>gpm_rainfall_2017_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2020_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2021_amuwo_odofin.tif (event-specific)</li>
+<li>gpm_rainfall_2022_amuwo_odofin.tif (event-specific)</li>
+</ul>
+<hr>
+<h2 id="final-feature-matrix-15-features_2">FINAL FEATURE MATRIX — 15 Features</h2>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Feature</th>
+<th>Source</th>
+<th>NB</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Elevation</td>
+<td>SRTM (NASA/USGS)</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Slope</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Aspect</td>
+<td>SRTM derived</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Flow Accumulation</td>
+<td>HydroSHEDS (WWF)</td>
+<td>NB02</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>5</td>
+<td>TWI</td>
+<td>SRTM + HydroSHEDS</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Curvature</td>
+<td>SRTM Laplacian kernel</td>
+<td>NB02</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Mean Annual Rainfall</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Mean Rainy Days/Year</td>
+<td>CHIRPS 2013-2023</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Extreme Rainfall Freq</td>
+<td>CHIRPS &gt;50mm/day</td>
+<td>NB03</td>
+<td>5km</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Land Use/Land Cover</td>
+<td>ESA WorldCover 2021</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>11</td>
+<td>NDVI</td>
+<td>Sentinel-2 2020-2023</td>
+<td>NB03</td>
+<td>10m</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Soil Permeability</td>
+<td>OpenLandMap (USDA)</td>
+<td>NB04</td>
+<td>250m</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Distance to Rivers</td>
+<td>HydroSHEDS flow acc</td>
+<td>NB04</td>
+<td>500m</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Distance to Drainage</td>
+<td>JRC Surface Water</td>
+<td>NB04</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>15</td>
+<td>GPM IMERG 72hr Rainfall</td>
+<td>NASA GPM IMERG V07</td>
+<td>NB04b</td>
+<td>11km</td>
+</tr>
+</tbody>
+</table></div>
+<p>HAND excluded: SRTM-based HAND computation in coastal environments
+with large tidal water bodies produces systematically incorrect values
+relative to sea-level rather than local drainage. Recommended for
+future work using MERIT DEM or NASADEM with hydrological conditioning.</p>
+<p>All 15 features to be resampled to common 100m resolution in NB06.</p>
+<h3 id="geotiff-export-summary-data-acquisition-phase-complete_2">GeoTIFF Export Summary — Data Acquisition Phase Complete</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Features</th>
+<th>Bands</th>
+<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>topo_features_amuwo_odofin.tif</td>
+<td>F1-F6</td>
+<td>6</td>
+<td>30m</td>
+</tr>
+<tr>
+<td>rainfall_lulc_ndvi_amuwo_odofin.tif</td>
+<td>F7-F11</td>
+<td>5</td>
+<td>100m</td>
+</tr>
+<tr>
+<td>soil_distance_amuwo_odofin.tif</td>
+<td>F12-F14</td>
+<td>3</td>
+<td>100m</td>
+</tr>
+<tr>
+<td>gpm_antecedent_rainfall_amuwo_odofin.tif</td>
+<td>F15</td>
+<td>1</td>
+<td>1000m</td>
+</tr>
+<tr>
+<td>flood_inventory_amuwo_odofin.tif</td>
+<td>Labels</td>
+<td>1</td>
+<td>30m</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="notebook-05-rebuilt-sar-flood-inventory-corrected">Notebook 05 (Rebuilt) — SAR Flood Inventory (Corrected)</h2>
+<h3 id="corrective-fixes-applied">Corrective Fixes Applied</h3>
+<p>Three simultaneous fixes resolved water body contamination:</p>
+<p>Fix 1 — JRC threshold tightened from 50% to 5% occurrence:
+  Pixels excluded by JRC mask: 16,691
+  Seasonal and semi-permanent water bodies now excluded.</p>
+<p>Fix 2 — ESA WorldCover urban land eligibility mask added:
+  Eligible classes: tree cover (10), grassland (30), cropland (40),
+  built-up (50), bare/sparse (60).
+  Excluded classes: water (80), wetland (90), mangrove (95).
+  Pixels excluded by WorldCover mask: 501,694</p>
+<p>Combined urban land mask:
+  Valid urban land pixels : 140,630 (71.3% of study area)
+  Total study area pixels : 197,134
+  SAR change detection restricted to urban land pixels only.</p>
+<p>Fix 3 — Minimum backscatter change threshold:
+  Initial attempt: 3.0dB → coverage 0.10-0.53% per event (too strict)
+  Final value: 2.0dB — published standard for dense urban C-band
+  flood detection (Chini et al., 2019; Boni et al., 2016).
+  Justification: urban double-bounce scattering from buildings
+  attenuates flood signal in densely built environments. Water body
+  contamination now controlled by three-layer mask, not threshold alone.</p>
+<h3 id="per-event-detection-results-corrected">Per-Event Detection Results (Corrected)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Otsu Threshold</th>
+<th>Flood Pixels</th>
+<th>Urban Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jul 2017</td>
+<td>+0.0631 dB</td>
+<td>3,108</td>
+<td>1.58%</td>
+</tr>
+<tr>
+<td>Jun 2020</td>
+<td>-1.0620 dB</td>
+<td>679</td>
+<td>0.34%</td>
+</tr>
+<tr>
+<td>Jul 2021</td>
+<td>+0.4368 dB</td>
+<td>5,312</td>
+<td>2.69%</td>
+</tr>
+<tr>
+<td>Jul 2022</td>
+<td>-0.1874 dB</td>
+<td>1,811</td>
+<td>0.92%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Note on low individual event coverages:
+Otsu thresholds near zero indicate weak bimodal separation in urban
+terrain — consistent with literature on SAR urban flood detection
+where building double-bounce dominates radar return even during
+inundation. Low individual coverages reflect genuine SAR signal
+limitations in dense urban Lagos, not methodological failure.
+Event 2 (Jun 2020) weakest signal — consistent with moderate
+antecedent rainfall (34mm/72hr, lowest of four events).</p>
+<h3 id="composite-flood-inventory_1">Composite Flood Inventory</h3>
+<ul>
+<li>Total urban land pixels : 197,141</li>
+<li>Confirmed flood pixels  : 10,208</li>
+<li>Composite flood coverage: 5.18% ✓</li>
+<li>Method: union (max per pixel across four events)</li>
+<li>Composite within credible range for dense urban coastal LGA</li>
+</ul>
+<h3 id="training-samples-final-balanced">Training Samples (Final — Balanced)</h3>
+<ul>
+<li>Flood samples (class 1)     : 5,000</li>
+<li>Non-flood samples (class 0) : 5,000</li>
+<li>Total training samples      : 10,000</li>
+<li>Class balance               : 50:50</li>
+<li>Additional safeguard: class_weight='balanced' applied in NB07</li>
+</ul>
+<h3 id="exports-submitted_3">Exports Submitted</h3>
+<ul>
+<li>flood_inventory_corrected_amuwo_odofin.tif (30m, binary)</li>
+<li>training_points_corrected_amuwo_odofin.csv (10,000 labelled points)</li>
+</ul>
+<h3 id="visual-confirmation">Visual Confirmation</h3>
+<p>Map inspection confirmed flood pixels located exclusively on
+urban land surfaces — no flood classifications on Lagos Lagoon,
+Badagry Creek, canals, or tidal inlets. Water body contamination
+problem fully resolved.</p>
+<hr>
+<h2 id="notebook-06-feature-matrix-assembly">Notebook 06 — Feature Matrix Assembly</h2>
+<h3 id="raster-metadata-pre-resampling">Raster Metadata (Pre-Resampling)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Bands</th>
+<th>Resolution</th>
+<th>Dimensions</th>
+<th>CRS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>topo_features</td>
+<td>6</td>
+<td>30m</td>
+<td>687×489</td>
+<td>EPSG:4326</td>
+</tr>
+<tr>
+<td>rainfall_lulc_ndvi</td>
+<td>5</td>
+<td>100m</td>
+<td>206×147</td>
+<td>EPSG:4326</td>
+</tr>
+<tr>
+<td>soil_distance</td>
+<td>3</td>
+<td>100m</td>
+<td>206×147</td>
+<td>EPSG:4326</td>
+</tr>
+<tr>
+<td>gpm_antecedent_rainfall</td>
+<td>1</td>
+<td>499m</td>
+<td>42×30</td>
+<td>EPSG:4326</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="resampling">Resampling</h3>
+<ul>
+<li>Target resolution: 0.0009° ≈ 100m at Lagos latitude</li>
+<li>Target CRS: EPSG:4326</li>
+<li>Method: bilinear interpolation for all continuous features</li>
+<li>Exception: nearest-neighbour for rainfall_lulc_ndvi stack
+  (contains LULC categorical band — bilinear would produce
+  non-integer values not corresponding to valid land cover classes)</li>
+<li>Post-resampling dimensions: 206×147 for all stacks except
+  GPM (210×150 — slightly extended bounds from 500m native resolution)</li>
+</ul>
+<h3 id="training-points-csv">Training Points CSV</h3>
+<ul>
+<li>File: training_points_amuwo_odofin.csv</li>
+<li>Shape: 10,000 rows × 3 columns</li>
+<li>Columns: system:index, flood_label, .geo (GeoJSON coordinates)</li>
+<li>Label distribution: 5,000 flood (1), 5,000 non-flood (0) — 50:50</li>
+</ul>
+<h3 id="nb05-training-label-bug-documented">NB05 Training Label Bug — Documented</h3>
+<ul>
+<li>Original export produced 10,000 flood labels (0 non-flood)</li>
+<li>Root cause: .selfMask() on binary image converts all kept pixels
+  to value 1 regardless of intended class — non-flood pixels
+  exported with flood_label=1 instead of 0</li>
+<li>Fix: explicit ee.Image(0) remapping before stratifiedSample()</li>
+<li>Verified: system:index prefix 1_ = flood, 2_ = non-flood</li>
+<li>Re-export confirmed correct distribution</li>
+</ul>
+<h3 id="spatial-join-results-feature-values-at-10000-sample-points">Spatial Join Results — Feature Values at 10,000 Sample Points</h3>
+<p>All 15 features extracted successfully via rasterio.sample():</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Min</th>
+<th>Max</th>
+<th>Mean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>elevation</td>
+<td>-10.57m</td>
+<td>22.80m</td>
+<td>6.57m</td>
+</tr>
+<tr>
+<td>slope</td>
+<td>0.38°</td>
+<td>19.70°</td>
+<td>2.80°</td>
+</tr>
+<tr>
+<td>aspect</td>
+<td>7.48°</td>
+<td>292.01°</td>
+<td>161.65°</td>
+</tr>
+<tr>
+<td>flow_accumulation</td>
+<td>1.00</td>
+<td>707.04</td>
+<td>34.80</td>
+</tr>
+<tr>
+<td>twi</td>
+<td>1.93</td>
+<td>11.14</td>
+<td>4.46</td>
+</tr>
+<tr>
+<td>curvature</td>
+<td>-8.12</td>
+<td>9.68</td>
+<td>-0.05</td>
+</tr>
+<tr>
+<td>mean_annual_rainfall</td>
+<td>1,509.21mm</td>
+<td>1,885.31mm</td>
+<td>1,633.75mm</td>
+</tr>
+<tr>
+<td>mean_rainy_days</td>
+<td>121.90</td>
+<td>128.60</td>
+<td>124.71</td>
+</tr>
+<tr>
+<td>extreme_rain_freq</td>
+<td>1.20</td>
+<td>3.40</td>
+<td>1.65</td>
+</tr>
+<tr>
+<td>lulc</td>
+<td>10</td>
+<td>95</td>
+<td>43.07</td>
+</tr>
+<tr>
+<td>ndvi</td>
+<td>-0.08</td>
+<td>0.74</td>
+<td>0.27</td>
+</tr>
+<tr>
+<td>soil_permeability</td>
+<td>15.00%</td>
+<td>35.50%</td>
+<td>26.47%</td>
+</tr>
+<tr>
+<td>distance_to_river</td>
+<td>0.00m</td>
+<td>29,302.17m</td>
+<td>9,653.46m</td>
+</tr>
+<tr>
+<td>distance_to_drainage</td>
+<td>0.00m</td>
+<td>2,041.51m</td>
+<td>460.09m</td>
+</tr>
+<tr>
+<td>gpm_antecedent_rainfall</td>
+<td>48.09mm</td>
+<td>64.49mm</td>
+<td>57.62mm</td>
+</tr>
+</tbody>
+</table></div>
+<p>Note on distance_to_river max (29,302m): reflects sparse HydroSHEDS
+channel network from flow accumulation thresholding. Some points
+far from identified channels. Does not affect model training.</p>
+<h3 id="missing-values-and-cleaning">Missing Values and Cleaning</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Missing</th>
+<th>%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>elevation</td>
+<td>442</td>
+<td>4.42%</td>
+</tr>
+<tr>
+<td>slope</td>
+<td>576</td>
+<td>5.76%</td>
+</tr>
+<tr>
+<td>aspect</td>
+<td>576</td>
+<td>5.76%</td>
+</tr>
+<tr>
+<td>flow_accumulation</td>
+<td>507</td>
+<td>5.07%</td>
+</tr>
+<tr>
+<td>twi</td>
+<td>625</td>
+<td>6.25%</td>
+</tr>
+<tr>
+<td>curvature</td>
+<td>442</td>
+<td>4.42%</td>
+</tr>
+<tr>
+<td>mean_annual_rainfall</td>
+<td>6</td>
+<td>0.06%</td>
+</tr>
+<tr>
+<td>mean_rainy_days</td>
+<td>6</td>
+<td>0.06%</td>
+</tr>
+<tr>
+<td>extreme_rain_freq</td>
+<td>6</td>
+<td>0.06%</td>
+</tr>
+<tr>
+<td>soil_permeability</td>
+<td>628</td>
+<td>6.28%</td>
+</tr>
+<tr>
+<td>distance_to_river</td>
+<td>60</td>
+<td>0.60%</td>
+</tr>
+<tr>
+<td>distance_to_drainage</td>
+<td>60</td>
+<td>0.60%</td>
+</tr>
+<tr>
+<td>gpm_antecedent_rainfall</td>
+<td>301</td>
+<td>3.01%</td>
+</tr>
+<tr>
+<td>lulc</td>
+<td>0</td>
+<td>0.00%</td>
+</tr>
+<tr>
+<td>ndvi</td>
+<td>0</td>
+<td>0.00%</td>
+</tr>
+</tbody>
+</table></div>
+<p>Missing value cause: raster boundary edge pixels where clipping
+produced incomplete cells at LGA margin. Standard spatial join
+artefact — not a data quality failure.</p>
+<p>Rows removed: 1,161 (11.61%)
+Final dataset: 8,839 rows
+Post-cleaning class balance: 4,455 flood (50.4%) / 4,384 non-flood (49.6%)</p>
+<h3 id="multicollinearity-analysis">Multicollinearity Analysis</h3>
+<h4 id="highly-correlated-pairs-r-07">Highly Correlated Pairs (|r| &gt; 0.7)</h4>
+<ol>
+<li>
+<p>flow_accumulation ↔ twi: r = 0.771
+   Explanation: TWI is mathematically derived from flow accumulation.
+   Correlation moderated by slope — both features retained as they
+   capture different aspects of hydrological saturation potential.</p>
+</li>
+<li>
+<p>mean_annual_rainfall ↔ extreme_rain_freq: r = 0.871
+   Explanation: climatological link — areas with higher total annual
+   rainfall experience more extreme rainfall days. Both features
+   retained; tree model SHAP will reveal relative importance.</p>
+</li>
+</ol>
+<h4 id="vif-analysis-results">VIF Analysis Results</h4>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>VIF</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mean_annual_rainfall</td>
+<td>1,552.87</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>mean_rainy_days</td>
+<td>1,535.67</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>gpm_antecedent_rainfall</td>
+<td>663.29</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>soil_permeability</td>
+<td>121.34</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>extreme_rain_freq</td>
+<td>86.37</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>twi</td>
+<td>29.72</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>aspect</td>
+<td>20.11</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>lulc</td>
+<td>14.60</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>slope</td>
+<td>10.93</td>
+<td>HIGH</td>
+</tr>
+<tr>
+<td>elevation</td>
+<td>7.58</td>
+<td>MODERATE</td>
+</tr>
+<tr>
+<td>distance_to_river</td>
+<td>7.09</td>
+<td>MODERATE</td>
+</tr>
+<tr>
+<td>ndvi</td>
+<td>6.76</td>
+<td>MODERATE</td>
+</tr>
+<tr>
+<td>distance_to_drainage</td>
+<td>5.27</td>
+<td>MODERATE</td>
+</tr>
+<tr>
+<td>flow_accumulation</td>
+<td>3.83</td>
+<td>ACCEPTABLE</td>
+</tr>
+<tr>
+<td>curvature</td>
+<td>1.19</td>
+<td>ACCEPTABLE</td>
+</tr>
+</tbody>
+</table></div>
+<p>VIF Interpretation:
+Extreme VIF values for rainfall features reflect spatial uniformity
+of coarser-resolution datasets (CHIRPS 5km, GPM 11km) across the
+small LGA extent (15km × 13km). At this scale, low within-study-area
+variance inflates VIF estimates without reducing predictive value.
+This is a known phenomenon in local-scale geospatial ML studies.</p>
+<p>Action taken:
+- Tree-based models (RF, XGBoost): no action — immune to multicollinearity
+- Logistic Regression: coefficients reported but not used for feature
+  importance interpretation. SHAP analysis is the primary interpretability
+  framework for all three models.
+- No features removed — all 15 retained for consistent model comparison</p>
+<p>Notable: curvature (VIF=1.19) and flow_accumulation (VIF=3.83) are
+the most independent features in the matrix — watch for prominence
+in SHAP analysis.</p>
+<h3 id="final-feature-matrix">Final Feature Matrix</h3>
+<ul>
+<li>File: data/feature_matrix.csv and outputs/feature_matrix.csv</li>
+<li>Shape: 8,839 rows × 18 columns</li>
+<li>Columns: longitude, latitude, flood_label + 15 features</li>
+<li>Class balance: 50.4% flood / 49.6% non-flood</li>
+<li>Correlation figure: outputs/figures/correlation_matrix.png</li>
+</ul>
+<hr>
+<h2 id="notebook-07-model-training-and-evaluation">Notebook 07 — Model Training and Evaluation</h2>
+<h3 id="feature-set-decision-distance_to_river-removed">Feature Set Decision — distance_to_river Removed</h3>
+<p>Initial training used 15 features. Diagnostic investigation revealed
+distance_to_river was physically invalid:
+- Max distance 28,638m exceeds LGA dimensions (~15km across)
+- Median 9,899m — half of all points supposedly &gt;10km from a river
+- Compare distance_to_drainage (JRC 30m): max 2,000m, mean 476m
+Root cause: HydroSHEDS river network at 500m resolution identifies
+almost no channels within the small LGA, producing meaningless large
+distances. distance_to_drainage (JRC, denser 30m network) is the valid
+replacement capturing the same conditioning concept correctly.</p>
+<p>Feature importance confirmed distance_to_river ranked 4th (0.0879)
+despite being broken — actively contributing spatial noise. Removal
+improved spatial CV recall (0.3419 → 0.3678) and F1 (0.4251 → 0.4454)
+while holding random-split performance flat (ROC-AUC 0.7994 → 0.7979,
+OOB 0.7210 → 0.7247). Final feature count: 14.</p>
+<h3 id="final-feature-set-14">Final Feature Set (14)</h3>
+<p>elevation, slope, aspect, flow_accumulation, twi, curvature,
+mean_annual_rainfall, mean_rainy_days, extreme_rain_freq, lulc, ndvi,
+soil_permeability, distance_to_drainage, gpm_antecedent_rainfall</p>
+<h3 id="training-configuration">Training Configuration</h3>
+<ul>
+<li>Dataset: 8,839 samples (4,455 flood / 4,384 non-flood, 50.4/49.6%)</li>
+<li>Split: 70:30 stratified, random_state=42</li>
+<li>Train: 6,187 | Test: 2,652</li>
+<li>StandardScaler applied to Logistic Regression only (tree models scale-invariant)</li>
+</ul>
+<h3 id="model-performance-random-split-7030">Model Performance — Random Split (70:30)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Accuracy</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1</th>
+<th>ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logistic Regression</td>
+<td>0.5969</td>
+<td>0.5868</td>
+<td>0.6776</td>
+<td>0.6289</td>
+<td>0.6431</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>0.7281</td>
+<td>0.7194</td>
+<td>0.7554</td>
+<td>0.7370</td>
+<td>0.7979</td>
+</tr>
+<tr>
+<td>XGBoost</td>
+<td>0.7006</td>
+<td>0.6903</td>
+<td>0.7367</td>
+<td>0.7127</td>
+<td>0.7674</td>
+</tr>
+</tbody>
+</table></div>
+<p>Selected model: Random Forest (best on all metrics)</p>
+<h3 id="confusion-matrices-test-set-n2652">Confusion Matrices (Test Set, n=2,652)</h3>
+<p>Logistic Regression: TN=677 FP=638 FN=431 TP=906
+Random Forest:       TN=921 FP=394 FN=327 TP=1010
+XGBoost:             TN=873 FP=442 FN=352 TP=985</p>
+<h3 id="oob-convergence-verification">OOB Convergence Verification</h3>
+<p>OOB error stabilised by 150 trees (0.2743) with negligible change to
+200 trees (0.2753). Confirms n_estimators=200 (Chapter 3 claim verified).
+RF OOB score 0.7247 closely matches test accuracy 0.7281 — no overfitting.</p>
+<h3 id="spatial-k-fold-cross-validation-5x5-grid-5-fold">Spatial K-Fold Cross-Validation (5x5 grid, 5-fold)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Accuracy</th>
+<th>Recall</th>
+<th>F1</th>
+<th>ROC-AUC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logistic Regression</td>
+<td>0.6011±0.020</td>
+<td>0.6429±0.200</td>
+<td>0.5998±0.119</td>
+<td>0.6393±0.030</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>0.5663±0.033</td>
+<td>0.3678±0.142</td>
+<td>0.4454±0.105</td>
+<td>0.6422±0.018</td>
+</tr>
+<tr>
+<td>XGBoost</td>
+<td>0.5744±0.022</td>
+<td>0.4438±0.153</td>
+<td>0.4958±0.118</td>
+<td>0.6259±0.017</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="spatial-cv-gap-interpretation-critical-for-viva">Spatial CV Gap — Interpretation (CRITICAL for viva)</h3>
+<p>Random Forest random-split ROC-AUC (0.7979) vs spatial-CV ROC-AUC (0.6422):
+gap of ~0.16 reflects spatial autocorrelation leakage in random splitting.
+Diagnosed causes (evidence-based):
+1. Small study area (15x13km) — CHIRPS (5km) and GPM (11km) rainfall
+   features near-spatially-constant. Feature importance confirms all four
+   rainfall features contribute &lt;0.02 each (~6% combined) — minimal spatial
+   discriminative signal at this scale.
+2. Spatially clustered flooding — block composition analysis shows flood
+   pixels concentrated in blocks 6,8,11,13 (60-70% flood) vs blocks 0,4
+   (&lt;20%). Holding out flood-dense blocks removes most flood training
+   examples, causing recall collapse and high variance (±0.14).
+3. Only 21 populated blocks over small area — spatial CV estimates
+   themselves unstable (wide standard deviations).
+Conclusion: spatial CV gap is substantially a small-area sampling artefact,
+not model failure. Reported honestly in Chapter 4 as evidence of
+methodological rigour. Most published flood susceptibility studies report
+only inflated random-split numbers and never run spatial CV.</p>
+<h3 id="feature-importance-gini-random-forest-diagnostic-only">Feature Importance (Gini, Random Forest — diagnostic only)</h3>
+<p>ndvi (0.159), distance_to_drainage (0.093), elevation (0.090),
+soil_permeability (0.083), curvature (0.083), aspect (0.082),
+twi (0.082), slope (0.079), flow_accumulation (0.057), lulc (0.036),
+rainfall features all &lt;0.02. NDVI dominance is physically sensible —
+low NDVI marks impervious built-up surfaces where urban flooding
+concentrates. SHAP analysis (NB08) is the primary interpretability tool;
+Gini importance retained here for diagnostic transparency only.</p>
+<h3 id="models-saved">Models Saved</h3>
+<p>models/logistic_regression.pkl, models/random_forest.pkl,
+models/xgboost.pkl, models/scaler.pkl</p>
+<hr>
+<h2 id="notebook-07-final-outputs-figures-and-spatial-products">Notebook 07 — Final Outputs (Figures and Spatial Products)</h2>
+<h3 id="flood-susceptibility-map-generated-primary-spatial-output">Flood Susceptibility Map Generated (Primary Spatial Output)</h3>
+<ul>
+<li>Method: Random Forest applied to all valid pixels in Amuwo Odofin</li>
+<li>Grid: 206 x 147 pixels at 100m (reference: topo raster)</li>
+<li>Valid land pixels predicted: 13,022 of 30,282 total grid cells</li>
+<li>Probability range: 0.004 to 1.000, mean 0.389</li>
+<li>Full probability spread confirms model produces differentiated
+  predictions, not clustered at extremes</li>
+</ul>
+<h3 id="risk-tier-reclassification-quartile-breakpoints">Risk Tier Reclassification (Quartile Breakpoints)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Threshold</th>
+<th>Pixels</th>
+<th>Share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low</td>
+<td>&lt; 0.189</td>
+<td>3,256</td>
+<td>25.0%</td>
+</tr>
+<tr>
+<td>Moderate</td>
+<td>0.189 - 0.373</td>
+<td>3,255</td>
+<td>25.0%</td>
+</tr>
+<tr>
+<td>High</td>
+<td>0.373 - 0.544</td>
+<td>3,255</td>
+<td>25.0%</td>
+</tr>
+<tr>
+<td>Very High</td>
+<td>&gt; 0.544</td>
+<td>3,256</td>
+<td>25.0%</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="visual-validation-passed">Visual Validation — PASSED</h3>
+<p>Very High risk zones cluster in coherent spatial patterns rather than
+scattering randomly. High-risk areas concentrate consistent with
+physical expectations (low-lying terrain, drainage proximity, built-up
+areas). Confirms model learned genuine physical relationships rather
+than noise. This is the critical validity check for the structural
+susceptibility layer.</p>
+<h3 id="figures-generated-outputsfigures">Figures Generated (outputs/figures/)</h3>
+<ul>
+<li>roc_curves_comparison.png — all three models + random baseline</li>
+<li>confusion_matrices.png — three-panel test set error breakdown</li>
+<li>model_metrics_comparison.png — grouped bar chart, five metrics</li>
+<li>rf_oob_convergence.png — OOB error vs tree count (verified 200)</li>
+<li>rf_feature_importance.png — Gini importance (diagnostic)</li>
+<li>flood_susceptibility_map.png — two-panel probability + tier map</li>
+</ul>
+<h3 id="spatial-products-outputs">Spatial Products (outputs/)</h3>
+<ul>
+<li>flood_probability_map.tif — continuous 0-1 surface, EPSG:4326, 100m</li>
+<li>flood_risk_tiers.tif — 4-class reclassification, EPSG:4326, 100m
+Both products feed NB09 (infrastructure risk) and NB10 (dashboard).</li>
+</ul>
+<hr>
+<h2 id="notebook-08-shap-explainability-analysis">Notebook 08 — SHAP Explainability Analysis</h2>
+<h3 id="configuration">Configuration</h3>
+<ul>
+<li>Model explained: Random Forest (selected model, 14 features)</li>
+<li>Method: TreeExplainer (exact SHAP values for tree ensembles)</li>
+<li>Test set: full 2,652 samples (unconstrained-depth trees increased
+  computation to ~7-8 minutes — expected given max_depth=None)</li>
+<li>Split verified identical to NB07 (ROC-AUC 0.7979 exact match)</li>
+</ul>
+<h3 id="base-rate">Base Rate</h3>
+<p>Expected value (base rate): 0.5007 — reflects the deliberately balanced
+50:50 flood/non-flood sampling design in NB05, not the true areal
+prevalence of flooding across Amuwo Odofin.</p>
+<h3 id="global-shap-feature-importance-mean-shap-value">Global SHAP Feature Importance (Mean |SHAP value|)</h3>
+<p>| Rank | Feature | Mean |SHAP| |
+|------|---------|-------------|
+| 1 | ndvi | 0.0737 |
+| 2 | elevation | 0.0361 |
+| 3 | lulc | 0.0259 |
+| 4 | distance_to_drainage | 0.0248 |
+| 5 | soil_permeability | 0.0233 |
+| 6 | aspect | 0.0168 |
+| 7 | flow_accumulation | 0.0168 |
+| 8 | curvature | 0.0150 |
+| 9 | twi | 0.0149 |
+| 10 | slope | 0.0132 |
+| 11 | mean_rainy_days | 0.0100 |
+| 12 | extreme_rain_freq | 0.0083 |
+| 13 | mean_annual_rainfall | 0.0075 |
+| 14 | gpm_antecedent_rainfall | 0.0057 |</p>
+<h3 id="cross-validation-against-gini-importance-nb07">Cross-Validation Against Gini Importance (NB07)</h3>
+<p>SHAP ranking broadly confirms Gini importance from NB07, with NDVI
+dominant under both methods (Gini 0.159, SHAP 0.0737 — more than double
+the second-ranked feature in both cases). This convergence across two
+independent methods strengthens confidence that NDVI's importance is a
+genuine signal rather than an algorithm-specific artefact. All four
+rainfall features rank lowest under both methods, consistent with the
+NB06 VIF finding that CHIRPS (5km) and GPM IMERG (11km) are too
+spatially coarse to differentiate risk within the 15km LGA extent.
+Triangulation across VIF, Gini, and SHAP constitutes strong converging
+evidence for this interpretation.</p>
+<h3 id="local-explanation-highest-confidence-prediction">Local Explanation — Highest Confidence Prediction</h3>
+<p>Test point with predicted flood probability 1.000 (actual label: Flood).
+Every feature contributed positively toward the flood classification —
+no feature pulled the prediction down. Top contributors:
+- ndvi = 0.09                  → SHAP +0.1442
+- distance_to_drainage = 26.02m → SHAP +0.1414
+- elevation = 2.24m            → SHAP +0.0662
+Physical interpretation: near-zero vegetation cover (impervious surface),
+close proximity to drainage network, and low elevation combine to
+produce near-certain flood classification. This demonstrates the local
+explainability capability that no prior Nigerian flood susceptibility
+study has provided.</p>
+<h3 id="figures-generated">Figures Generated</h3>
+<ul>
+<li>shap_importance_bar.png</li>
+<li>shap_beeswarm.png</li>
+<li>shap_dependence_plots.png (top 4 features)</li>
+<li>shap_local_highrisk.png</li>
+</ul>
+<h3 id="saved-artefacts">Saved Artefacts</h3>
+<ul>
+<li>outputs/shap_importance.csv</li>
+<li>models/shap_values.npy</li>
+<li>models/shap_explainer.pkl</li>
+</ul>
+<hr>
+<h2 id="notebook-08-shap-explainability-analysis_1">Notebook 08 — SHAP Explainability Analysis</h2>
+<h3 id="configuration_1">Configuration</h3>
+<ul>
+<li>Model explained: Random Forest (selected model, 14 features)</li>
+<li>Method: TreeExplainer (exact SHAP values for tree ensembles)</li>
+<li>Test set: full 2,652 samples (unconstrained-depth trees increased
+  computation to ~7-8 minutes — expected given max_depth=None)</li>
+<li>Split verified identical to NB07 (ROC-AUC 0.7979 exact match)</li>
+</ul>
+<h3 id="base-rate_1">Base Rate</h3>
+<p>Expected value (base rate): 0.5007 — reflects the deliberately balanced
+50:50 flood/non-flood sampling design in NB05, not the true areal
+prevalence of flooding across Amuwo Odofin.</p>
+<h3 id="global-shap-feature-importance-mean-shap-value_1">Global SHAP Feature Importance (Mean |SHAP value|)</h3>
+<p>| Rank | Feature | Mean |SHAP| |
+|------|---------|-------------|
+| 1 | ndvi | 0.0737 |
+| 2 | elevation | 0.0361 |
+| 3 | lulc | 0.0259 |
+| 4 | distance_to_drainage | 0.0248 |
+| 5 | soil_permeability | 0.0233 |
+| 6 | aspect | 0.0168 |
+| 7 | flow_accumulation | 0.0168 |
+| 8 | curvature | 0.0150 |
+| 9 | twi | 0.0149 |
+| 10 | slope | 0.0132 |
+| 11 | mean_rainy_days | 0.0100 |
+| 12 | extreme_rain_freq | 0.0083 |
+| 13 | mean_annual_rainfall | 0.0075 |
+| 14 | gpm_antecedent_rainfall | 0.0057 |</p>
+<h3 id="cross-validation-against-gini-importance-nb07_1">Cross-Validation Against Gini Importance (NB07)</h3>
+<p>SHAP ranking broadly confirms Gini importance from NB07, with NDVI
+dominant under both methods (Gini 0.159, SHAP 0.0737 — more than double
+the second-ranked feature in both cases). This convergence across two
+independent methods strengthens confidence that NDVI's importance is a
+genuine signal rather than an algorithm-specific artefact. All four
+rainfall features rank lowest under both methods, consistent with the
+NB06 VIF finding that CHIRPS (5km) and GPM IMERG (11km) are too
+spatially coarse to differentiate risk within the 15km LGA extent.
+Triangulation across VIF, Gini, and SHAP constitutes strong converging
+evidence for this interpretation.</p>
+<h3 id="local-explanation-highest-confidence-prediction_1">Local Explanation — Highest Confidence Prediction</h3>
+<p>Test point with predicted flood probability 1.000 (actual label: Flood).
+Every feature contributed positively toward the flood classification —
+no feature pulled the prediction down. Top contributors:
+- ndvi = 0.09                  → SHAP +0.1442
+- distance_to_drainage = 26.02m → SHAP +0.1414
+- elevation = 2.24m            → SHAP +0.0662
+Physical interpretation: near-zero vegetation cover (impervious surface),
+close proximity to drainage network, and low elevation combine to
+produce near-certain flood classification. This demonstrates the local
+explainability capability that no prior Nigerian flood susceptibility
+study has provided.</p>
+<h3 id="figures-generated_1">Figures Generated</h3>
+<ul>
+<li>shap_importance_bar.png</li>
+<li>shap_beeswarm.png</li>
+<li>shap_dependence_plots.png (top 4 features)</li>
+<li>shap_local_highrisk.png</li>
+</ul>
+<h3 id="saved-artefacts_1">Saved Artefacts</h3>
+<ul>
+<li>outputs/shap_importance.csv</li>
+<li>models/shap_values.npy</li>
+<li>models/shap_explainer.pkl</li>
+</ul>
+<hr>
+<h2 id="notebook-09-infrastructure-risk-assessment-layer-3">Notebook 09 — Infrastructure Risk Assessment (Layer 3)</h2>
+<h3 id="critical-correction-boundary-contamination">Critical Correction — Boundary Contamination</h3>
+<p>The raster reference grid used a rectangular bounding box 1.71x larger
+in area than the true Amuwo Odofin LGA polygon (FAO GAUL). Initial OSM
+Overpass queries used this oversized bbox, pulling in infrastructure
+from adjacent LGAs. 58 of 93 schools initially returned were outside
+the true LGA boundary. All infrastructure and population analysis was
+corrected to clip against the true LGA polygon via shapely point-in-
+polygon filtering before risk tier assignment. Model raster coverage
+within the true LGA boundary improved from an apparent 43% to 73.6%,
+consistent with expected NB06 boundary-edge NaN effects only.</p>
+<h3 id="osm-data-acquisition">OSM Data Acquisition</h3>
+<p>Source: Overpass API (public mirrors, with Content-Type/User-Agent
+header fix for 406 rejection). Buildings capped at 20,000 (random
+sample, seed=42) from 293,009 raw results for computational
+tractability — representative for exposure PROPORTION estimation,
+not a complete building census.</p>
+<h3 id="infrastructure-exposure-within-true-lga-boundary-reproduced-twice">Infrastructure Exposure (within true LGA boundary, reproduced twice)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Asset</th>
+<th>Total</th>
+<th>Low</th>
+<th>Moderate</th>
+<th>High</th>
+<th>Very High</th>
+<th>NoData</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schools</td>
+<td>35</td>
+<td>1</td>
+<td>4</td>
+<td>5</td>
+<td>11</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Health facilities</td>
+<td>102</td>
+<td>12</td>
+<td>24</td>
+<td>33</td>
+<td>22</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Buildings (sample)</td>
+<td>8,162</td>
+<td>472</td>
+<td>1,757</td>
+<td>2,662</td>
+<td>2,443</td>
+<td>828</td>
+</tr>
+<tr>
+<td>Major roads</td>
+<td>208</td>
+<td>5</td>
+<td>23</td>
+<td>39</td>
+<td>109</td>
+<td>32</td>
+</tr>
+</tbody>
+</table></div>
+<p>At-risk (High + Very High): 16 schools, 55 health facilities, 148 roads</p>
+<h3 id="population-exposure-worldpop-2020-true-lga-boundary">Population Exposure (WorldPop 2020, true LGA boundary)</h3>
+<p>NaN handling: WorldPop reports NaN for zero-population pixels (standard
+behaviour, confirmed via diagnostic — min value 3.04, no negative
+sentinels) — converted to 0 before summation.
+| Tier | Population | Share |
+|------|-----------|-------|
+| Low | 57,200 | 12.9% |
+| Moderate | 88,696 | 20.0% |
+| High | 106,941 | 24.1% |
+| Very High | 122,461 | 27.5% |</p>
+<p>Total population (true LGA): 444,564
+Population in High + Very High risk: 229,402 (51.6%)</p>
+<h3 id="outputs">Outputs</h3>
+<ul>
+<li>outputs/figures/infrastructure_risk_map.png</li>
+<li>outputs/schools_risk_exposure.csv</li>
+<li>outputs/health_risk_exposure.csv</li>
+<li>outputs/roads_risk_exposure.csv</li>
+<li>outputs/population_exposure.csv</li>
+</ul>
+<hr>
+<h2 id="notebook-09-infrastructure-risk-assessment-layer-3_1">Notebook 09 — Infrastructure Risk Assessment (Layer 3)</h2>
+<h3 id="critical-correction-boundary-contamination_1">Critical Correction — Boundary Contamination</h3>
+<p>The raster reference grid used a rectangular bounding box 1.71x larger
+in area than the true Amuwo Odofin LGA polygon (FAO GAUL). Initial OSM
+Overpass queries used this oversized bbox, pulling in infrastructure
+from adjacent LGAs. 58 of 93 schools initially returned were outside
+the true LGA boundary. All infrastructure and population analysis was
+corrected to clip against the true LGA polygon via shapely point-in-
+polygon filtering before risk tier assignment. Model raster coverage
+within the true LGA boundary improved from an apparent 43% to 73.6%,
+consistent with expected NB06 boundary-edge NaN effects only.</p>
+<h3 id="osm-data-acquisition_1">OSM Data Acquisition</h3>
+<p>Source: Overpass API (public mirrors, with Content-Type/User-Agent
+header fix for 406 rejection). Buildings capped at 20,000 (random
+sample, seed=42) from 293,009 raw results for computational
+tractability — representative for exposure PROPORTION estimation,
+not a complete building census.</p>
+<h3 id="infrastructure-exposure-within-true-lga-boundary-reproduced-twice_1">Infrastructure Exposure (within true LGA boundary, reproduced twice)</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Asset</th>
+<th>Total</th>
+<th>Low</th>
+<th>Moderate</th>
+<th>High</th>
+<th>Very High</th>
+<th>NoData</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schools</td>
+<td>35</td>
+<td>1</td>
+<td>4</td>
+<td>5</td>
+<td>11</td>
+<td>14</td>
+</tr>
+<tr>
+<td>Health facilities</td>
+<td>102</td>
+<td>12</td>
+<td>24</td>
+<td>33</td>
+<td>22</td>
+<td>11</td>
+</tr>
+<tr>
+<td>Buildings (sample)</td>
+<td>8,162</td>
+<td>472</td>
+<td>1,757</td>
+<td>2,662</td>
+<td>2,443</td>
+<td>828</td>
+</tr>
+<tr>
+<td>Major roads</td>
+<td>208</td>
+<td>5</td>
+<td>23</td>
+<td>39</td>
+<td>109</td>
+<td>32</td>
+</tr>
+</tbody>
+</table></div>
+<p>At-risk (High + Very High): 16 schools, 55 health facilities, 148 roads</p>
+<h3 id="population-exposure-worldpop-2020-true-lga-boundary_1">Population Exposure (WorldPop 2020, true LGA boundary)</h3>
+<p>NaN handling: WorldPop reports NaN for zero-population pixels (standard
+behaviour, confirmed via diagnostic — min value 3.04, no negative
+sentinels) — converted to 0 before summation.
+| Tier | Population | Share |
+|------|-----------|-------|
+| Low | 57,200 | 12.9% |
+| Moderate | 88,696 | 20.0% |
+| High | 106,941 | 24.1% |
+| Very High | 122,461 | 27.5% |</p>
+<p>Total population (true LGA): 444,564
+Population in High + Very High risk: 229,402 (51.6%)</p>
+<h3 id="outputs_1">Outputs</h3>
+<ul>
+<li>outputs/figures/infrastructure_risk_map.png</li>
+<li>outputs/schools_risk_exposure.csv</li>
+<li>outputs/health_risk_exposure.csv</li>
+<li>outputs/roads_risk_exposure.csv</li>
+<li>outputs/population_exposure.csv</li>
+</ul>
+<hr>
+<h2 id="dashboard-audit-report-claims-vs-implemented-features">Dashboard Audit — Report Claims vs Implemented Features</h2>
+<p>Conducted before final dashboard iteration. Compares capabilities stated
+in Chapters 1-4 against what the Streamlit application actually does.</p>
+<h3 id="gaps-identified">Gaps identified</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Source</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plain-language mode for non-technical users</td>
+<td>FR07, Ch1 significance</td>
+<td>Toggle present in sidebar but does not alter output</td>
+</tr>
+<tr>
+<td>Local SHAP explanations for selected zones</td>
+<td>FR03, Objective iii</td>
+<td>Global SHAP only; no per-location explanation</td>
+</tr>
+<tr>
+<td>Schools, hospitals, roads, buildings mapped on risk map</td>
+<td>FR06</td>
+<td>Not implemented; placeholder <code>pass</code> in Tab 1</td>
+</tr>
+<tr>
+<td>Comparative performance metrics for three models</td>
+<td>FR02</td>
+<td>Only Random Forest ROC-AUC displayed</td>
+</tr>
+<tr>
+<td>Users can query individual locations</td>
+<td>Ch2 s2.3.4</td>
+<td>No click handler implemented</td>
+</tr>
+<tr>
+<td>Rainfall overlaid on static risk map</td>
+<td>FR04, Ch2 s2.3.4</td>
+<td>Displayed as metric cards, not as a map layer</td>
+</tr>
+<tr>
+<td>Publicly deployed at no infrastructure cost</td>
+<td>FR08</td>
+<td>Not yet deployed</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="blocking-dependency">Blocking dependency</h3>
+<p>NB09 Cell 7 exports exposure tables using
+<code>.drop(columns='geometry')</code>, discarding point coordinates. The dashboard
+therefore cannot plot schools, health facilities or roads. This must be
+corrected in NB09 before FR06 and the click-to-query capability can be
+implemented.</p>
+<h3 id="remediation-plan-in-scope-for-mit-submission">Remediation plan (in scope for MIT submission)</h3>
+<ol>
+<li>NB09: retain longitude and latitude columns in exposure CSV exports</li>
+<li>Dashboard: multiple basemap layers (CartoDB dark, OpenStreetMap,
+   Esri World Imagery) with layer control. OSM shows street grid and
+   building footprints for context; satellite imagery permits visual
+   verification of NDVI and drainage-proximity findings against
+   observable ground conditions</li>
+<li>Dashboard: infrastructure markers coloured by risk tier (closes FR06)</li>
+<li>Dashboard: click-to-query returning risk tier, top three local SHAP
+   contributors, and a template-assembled plain-language explanation
+   (closes FR03 and the Ch2 s2.3.4 query claim)</li>
+<li>Dashboard: wire audience toggle to switch between technical output
+   (SHAP magnitudes, probability values) and plain-language output
+   (closes FR07)</li>
+<li>Deploy to Streamlit Community Cloud (closes FR08)</li>
+</ol>
+<h3 id="decision-on-fr02">Decision on FR02</h3>
+<p>Model comparison metrics are analytical rather than operational output.
+Options: display a comparison panel in the dashboard, or revise FR02 in
+Chapter 3 to scope it to the report rather than the interface. Decision
+pending — to be resolved deliberately rather than left unmet.</p>
+<h3 id="decision-on-conversational-explanation-layer">Decision on conversational explanation layer</h3>
+<p>A conversational LLM-based explanation interface was considered and
+deferred to future work. Rationale: no evaluation framework exists within
+this project for measuring explanation faithfulness, and unconstrained
+generation in a system whose users make decisions during flood events
+introduces a safety risk that cannot be mitigated within the project
+timeline. A deterministic template-based explanation generator provides
+equivalent communicative value with auditable output and no possibility
+of hallucination. Documented in Chapter 6 as future work requiring an
+explanation-faithfulness evaluation framework and a safety constraint
+architecture.</p>
+<h3 id="deferred-to-post-submission-research">Deferred to post-submission research</h3>
+<ul>
+<li>Expansion beyond Amuwo Odofin to additional Lagos LGAs</li>
+<li>Transferability testing across LGAs with differing flood mechanisms
+  (coastal/pluvial versus inland/riverine)</li>
+<li>Grid resolution refinement toward the 50m standard applied in Lagos
+  State climate analytics</li>
+</ul>
+<hr>
+<h2 id="dashboard-audit-report-claims-vs-implemented-features_1">Dashboard Audit — Report Claims vs Implemented Features</h2>
+<p>Conducted before final dashboard iteration. Compares capabilities stated
+in Chapters 1-4 against what the Streamlit application actually does.</p>
+<h3 id="gaps-identified_1">Gaps identified</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Claim</th>
+<th>Source</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plain-language mode for non-technical users</td>
+<td>FR07, Ch1 significance</td>
+<td>Toggle present in sidebar but does not alter output</td>
+</tr>
+<tr>
+<td>Local SHAP explanations for selected zones</td>
+<td>FR03, Objective iii</td>
+<td>Global SHAP only; no per-location explanation</td>
+</tr>
+<tr>
+<td>Schools, hospitals, roads, buildings mapped on risk map</td>
+<td>FR06</td>
+<td>Not implemented; placeholder <code>pass</code> in Tab 1</td>
+</tr>
+<tr>
+<td>Comparative performance metrics for three models</td>
+<td>FR02</td>
+<td>Only Random Forest ROC-AUC displayed</td>
+</tr>
+<tr>
+<td>Users can query individual locations</td>
+<td>Ch2 s2.3.4</td>
+<td>No click handler implemented</td>
+</tr>
+<tr>
+<td>Rainfall overlaid on static risk map</td>
+<td>FR04, Ch2 s2.3.4</td>
+<td>Displayed as metric cards, not as a map layer</td>
+</tr>
+<tr>
+<td>Publicly deployed at no infrastructure cost</td>
+<td>FR08</td>
+<td>Not yet deployed</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="blocking-dependency_1">Blocking dependency</h3>
+<p>NB09 Cell 7 exports exposure tables using
+<code>.drop(columns='geometry')</code>, discarding point coordinates. The dashboard
+therefore cannot plot schools, health facilities or roads. This must be
+corrected in NB09 before FR06 and the click-to-query capability can be
+implemented.</p>
+<h3 id="remediation-plan-in-scope-for-mit-submission_1">Remediation plan (in scope for MIT submission)</h3>
+<ol>
+<li>NB09: retain longitude and latitude columns in exposure CSV exports</li>
+<li>Dashboard: multiple basemap layers (CartoDB dark, OpenStreetMap,
+   Esri World Imagery) with layer control. OSM shows street grid and
+   building footprints for context; satellite imagery permits visual
+   verification of NDVI and drainage-proximity findings against
+   observable ground conditions</li>
+<li>Dashboard: infrastructure markers coloured by risk tier (closes FR06)</li>
+<li>Dashboard: click-to-query returning risk tier, top three local SHAP
+   contributors, and a template-assembled plain-language explanation
+   (closes FR03 and the Ch2 s2.3.4 query claim)</li>
+<li>Dashboard: wire audience toggle to switch between technical output
+   (SHAP magnitudes, probability values) and plain-language output
+   (closes FR07)</li>
+<li>Deploy to Streamlit Community Cloud (closes FR08)</li>
+</ol>
+<h3 id="decision-on-fr02_1">Decision on FR02</h3>
+<p>Model comparison metrics are analytical rather than operational output.
+Options: display a comparison panel in the dashboard, or revise FR02 in
+Chapter 3 to scope it to the report rather than the interface. Decision
+pending — to be resolved deliberately rather than left unmet.</p>
+<h3 id="decision-on-conversational-explanation-layer_1">Decision on conversational explanation layer</h3>
+<p>A conversational LLM-based explanation interface was considered and
+deferred to future work. Rationale: no evaluation framework exists within
+this project for measuring explanation faithfulness, and unconstrained
+generation in a system whose users make decisions during flood events
+introduces a safety risk that cannot be mitigated within the project
+timeline. A deterministic template-based explanation generator provides
+equivalent communicative value with auditable output and no possibility
+of hallucination. Documented in Chapter 6 as future work requiring an
+explanation-faithfulness evaluation framework and a safety constraint
+architecture.</p>
+<h3 id="deferred-to-post-submission-research_1">Deferred to post-submission research</h3>
+<ul>
+<li>Expansion beyond Amuwo Odofin to additional Lagos LGAs</li>
+<li>Transferability testing across LGAs with differing flood mechanisms
+  (coastal/pluvial versus inland/riverine)</li>
+<li>Grid resolution refinement toward the 50m standard applied in Lagos
+  State climate analytics</li>
+</ul>
+<hr>
+<h2 id="dashboard-remediation-closing-reportartifact-gaps">Dashboard Remediation — Closing Report/Artifact Gaps</h2>
+<p>Implemented following the dashboard audit. Each item closes a capability
+claimed in Chapters 1-4 but absent from the running application.</p>
+<h3 id="nb09-export-corrected-blocking-dependency">NB09 export corrected (blocking dependency)</h3>
+<p>Cell 7 previously used <code>.drop(columns='geometry')</code>, discarding point
+coordinates. Replaced with an <code>export_with_coords()</code> helper writing
+explicit <code>longitude</code> and <code>latitude</code> columns. Buildings exposure table
+added to the export set. Verified: schools_risk_exposure.csv header now
+reads <code>osm_id,name,category,risk_tier,risk_label,longitude,latitude</code>.</p>
+<h3 id="multiple-basemap-layers-defence-utility">Multiple basemap layers (defence utility)</h3>
+<p>Three tile layers with a layer control: CartoDB dark matter (default,
+matches interface palette), OpenStreetMap (street grid and building
+footprints for local context), and Esri World Imagery (satellite, for
+visual verification of model findings against observable ground
+conditions). Esri chosen over Google tiles, whose terms restrict use
+outside the Maps API. The satellite layer permits direct visual
+corroboration of the NDVI and drainage-proximity findings during defence.</p>
+<h3 id="infrastructure-markers-on-interactive-map-closes-fr06">Infrastructure markers on interactive map (closes FR06)</h3>
+<p>Schools, health facilities and roads plotted as circle markers coloured
+by assigned risk tier, grouped into toggleable feature layers with
+name-and-tier popups.</p>
+<h3 id="click-to-query-with-local-shap-closes-fr03-ch2-s234">Click-to-query with local SHAP (closes FR03, Ch2 s2.3.4)</h3>
+<p>Clicking any map location resolves the point to a raster cell, retrieves
+the 14 feature values from the resampled stack, computes SHAP values via
+the saved TreeExplainer, and returns the risk tier with the three
+strongest contributing factors. Handles out-of-bounds clicks and cells
+with incomplete feature coverage.</p>
+<h3 id="plain-language-translation-layer-closes-fr07">Plain-language translation layer (closes FR07)</h3>
+<p>Deterministic template engine mapping each conditioning factor to its
+physical meaning with direction of effect. Example: a positive SHAP
+value on <code>ndvi</code> renders as "the ground is mostly concrete and rooftops
+with very little greenery, so rain runs off instead of soaking in".
+Combined with tier-specific opener and advice text.</p>
+<p>No generative model is involved. This was a deliberate design decision:
+templated assembly is fully auditable and cannot hallucinate, which
+matters in a system whose users make decisions during flood events.
+The audience toggle now switches Tab 1 and Tab 3 between technical
+output (SHAP magnitudes, probability values) and plain-language output.</p>
+<h3 id="dead-control-removed">Dead control removed</h3>
+<p>The MAP LAYER selectbox was non-functional and has been removed rather
+than left as a control that does nothing.</p>
+<h3 id="repository-size-check-for-deployment">Repository size check for deployment</h3>
+<p>models/ 70MB, outputs/ 4.3MB, data/resampled/ 1.8MB — 76MB total.
+<code>git check-ignore</code> confirmed no exclusion of model or raster artefacts.
+Within GitHub limits; Git LFS not required.</p>
+<h3 id="outstanding">Outstanding</h3>
+<ul>
+<li>FR02 (comparative model metrics in dashboard): decision pending —
+  display panel, or rescope requirement in Chapter 3 to the report only</li>
+<li>Live GEE rainfall on hosted deployment requires a service account
+  credential in Streamlit secrets; falls back to cached warning until
+  configured</li>
+</ul>
+<hr>
+<h2 id="dashboard-deployment-fixes-and-ux-refinement">Dashboard — Deployment Fixes and UX Refinement</h2>
+<h3 id="deployment-crash-resolved">Deployment crash resolved</h3>
+<p>Streamlit Community Cloud raised a TypeError unpickling
+<code>shap_explainer.pkl</code>. Cause: the pickled TreeExplainer carries
+numba-compiled objects that fail to deserialise across numba versions
+between the local environment and the cloud runtime (Python 3.14).
+Fix: construct the explainer from the loaded model at runtime rather
+than unpickling. Construction is inexpensive; only SHAP value
+computation is costly. <code>runtime.txt</code> added pinning python-3.11 to
+prevent further version drift on the hosted environment.</p>
+<h3 id="code-faults-found-in-review">Code faults found in review</h3>
+<p>Three faults identified and corrected before redeployment:
+- <code>fetch_live_rainfall()</code> contained a return statement placed before
+  the <code>window_sum</code> definition, making the function body unreachable and
+  calling an undefined name
+- Tab 2 rainfall assignment logic was inverted, zeroing values when data
+  was present and raising TypeError when absent
+- Infrastructure marker popup referenced <code>popup</code> instead of <code>popup_html</code></p>
+<h3 id="ux-refinements">UX refinements</h3>
+<ul>
+<li>Amuwo Odofin LGA boundary rendered as a dashed red outline from the
+  NB01 GeoJSON, distinguishing the true study area from the rectangular
+  raster extent</li>
+<li>Session time displayed in West Africa Time with UTC in parentheses</li>
+<li>GPM IMERG last observation timestamp surfaced in Tab 2, so users can
+  judge data freshness rather than assuming the reading is current</li>
+<li>Roads enabled by default in the infrastructure overlay</li>
+<li>Marker popups now include coordinates alongside name and risk tier</li>
+<li>Metric row split 3 + 2 and mobile breakpoints added at 768px, so the
+  dashboard remains usable on a phone</li>
+<li>Map set to fill its container width</li>
+<li>Tile attribution reduced in size and opacity. Retained rather than
+  removed: OpenStreetMap ODbL, CARTO and Esri terms all require visible
+  attribution, and removing it would place a licensing violation in a
+  public repository</li>
+</ul>
+<h3 id="deployment">Deployment</h3>
+<p>Live at https://geoaid-lagos-flood.streamlit.app (closes FR08).
+Repository artefacts total 76MB, within GitHub limits, no LFS required.
+GEE live rainfall requires a service account credential in Streamlit
+secrets to function on the hosted instance; the app degrades gracefully
+to a cached-state warning until that is configured.</p>
+<hr>
+<h2 id="dashboard-deployment-fixes-and-ux-refinement_1">Dashboard — Deployment Fixes and UX Refinement</h2>
+<h3 id="deployment-crash-resolved_1">Deployment crash resolved</h3>
+<p>Streamlit Community Cloud raised a TypeError unpickling
+<code>shap_explainer.pkl</code>. Cause: the pickled TreeExplainer carries
+numba-compiled objects that fail to deserialise across numba versions
+between the local environment and the cloud runtime (Python 3.14).
+Fix: construct the explainer from the loaded model at runtime rather
+than unpickling. Construction is inexpensive; only SHAP value
+computation is costly. <code>runtime.txt</code> added pinning python-3.11 to
+prevent further version drift on the hosted environment.</p>
+<h3 id="code-faults-found-in-review_1">Code faults found in review</h3>
+<p>Three faults identified and corrected before redeployment:
+- <code>fetch_live_rainfall()</code> contained a return statement placed before
+  the <code>window_sum</code> definition, making the function body unreachable and
+  calling an undefined name
+- Tab 2 rainfall assignment logic was inverted, zeroing values when data
+  was present and raising TypeError when absent
+- Infrastructure marker popup referenced <code>popup</code> instead of <code>popup_html</code></p>
+<h3 id="ux-refinements_1">UX refinements</h3>
+<ul>
+<li>Amuwo Odofin LGA boundary rendered as a dashed red outline from the
+  NB01 GeoJSON, distinguishing the true study area from the rectangular
+  raster extent</li>
+<li>Session time displayed in West Africa Time with UTC in parentheses</li>
+<li>GPM IMERG last observation timestamp surfaced in Tab 2, so users can
+  judge data freshness rather than assuming the reading is current</li>
+<li>Roads enabled by default in the infrastructure overlay</li>
+<li>Marker popups now include coordinates alongside name and risk tier</li>
+<li>Metric row split 3 + 2 and mobile breakpoints added at 768px, so the
+  dashboard remains usable on a phone</li>
+<li>Map set to fill its container width</li>
+<li>Tile attribution reduced in size and opacity. Retained rather than
+  removed: OpenStreetMap ODbL, CARTO and Esri terms all require visible
+  attribution, and removing it would place a licensing violation in a
+  public repository</li>
+</ul>
+<h3 id="deployment_1">Deployment</h3>
+<p>Live at https://geoaid-lagos-flood.streamlit.app (closes FR08).
+Repository artefacts total 76MB, within GitHub limits, no LFS required.
+GEE live rainfall requires a service account credential in Streamlit
+secrets to function on the hosted instance; the app degrades gracefully
+to a cached-state warning until that is configured.</p>
+<hr>
+<h2 id="dashboard-deployment-fixes-and-ux-refinement_2">Dashboard — Deployment Fixes and UX Refinement</h2>
+<h3 id="deployment-crash-resolved_2">Deployment crash resolved</h3>
+<p>Streamlit Community Cloud raised a TypeError unpickling
+<code>shap_explainer.pkl</code>. Cause: the pickled TreeExplainer carries
+numba-compiled objects that fail to deserialise across numba versions
+between the local environment and the cloud runtime (Python 3.14).
+Fix: construct the explainer from the loaded model at runtime rather
+than unpickling. Construction is inexpensive; only SHAP value
+computation is costly. <code>runtime.txt</code> added pinning python-3.11 to
+prevent further version drift on the hosted environment.</p>
+<h3 id="code-faults-found-in-review_2">Code faults found in review</h3>
+<p>Three faults identified and corrected before redeployment:
+- <code>fetch_live_rainfall()</code> contained a return statement placed before
+  the <code>window_sum</code> definition, making the function body unreachable and
+  calling an undefined name
+- Tab 2 rainfall assignment logic was inverted, zeroing values when data
+  was present and raising TypeError when absent
+- Infrastructure marker popup referenced <code>popup</code> instead of <code>popup_html</code></p>
+<h3 id="ux-refinements_2">UX refinements</h3>
+<ul>
+<li>Amuwo Odofin LGA boundary rendered as a dashed red outline from the
+  NB01 GeoJSON, distinguishing the true study area from the rectangular
+  raster extent</li>
+<li>Session time displayed in West Africa Time with UTC in parentheses</li>
+<li>GPM IMERG last observation timestamp surfaced in Tab 2, so users can
+  judge data freshness rather than assuming the reading is current</li>
+<li>Roads enabled by default in the infrastructure overlay</li>
+<li>Marker popups now include coordinates alongside name and risk tier</li>
+<li>Metric row split 3 + 2 and mobile breakpoints added at 768px, so the
+  dashboard remains usable on a phone</li>
+<li>Map set to fill its container width</li>
+<li>Tile attribution reduced in size and opacity. Retained rather than
+  removed: OpenStreetMap ODbL, CARTO and Esri terms all require visible
+  attribution, and removing it would place a licensing violation in a
+  public repository</li>
+</ul>
+<h3 id="deployment_2">Deployment</h3>
+<p>Live at https://geoaid-lagos-flood.streamlit.app (closes FR08).
+Repository artefacts total 76MB, within GitHub limits, no LFS required.
+GEE live rainfall requires a service account credential in Streamlit
+secrets to function on the hosted instance; the app degrades gracefully
+to a cached-state warning until that is configured.</p>
+    </div>
+  </div>
+</article>
