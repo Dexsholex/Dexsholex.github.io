@@ -1,0 +1,60 @@
+<!--page
+{"kind": "hub",
+ "title": "GIS and Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye",
+ "description": "GIS, drone mapping, remote sensing, geospatial AI, flood risk, web GIS, spatial databases and training. On site in Nigeria, remote across Africa and worldwide."}
+-->
+<article>
+  <header class="case-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li aria-current="page">Services</li></ol>
+      </nav>
+      <p class="eyebrow">Services</p>
+      <h1>GIS and geospatial services</h1>
+      <p class="lead">I fly the drone, process the imagery, build the model, put it on a web map and tell you how accurate it is. One person across the whole chain means fewer handovers and nothing lost between them.</p>
+      <div class="hero-actions">
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+        <a class="btn btn-ghost" href="/#work">See the case studies<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="all-title">
+    <div class="wrap">
+      <header class="section-head">
+        <h2 id="all-title">Eight service areas</h2>
+        <p>Pick your sector to see where I can help.</p>
+      </header>
+      {{ sector_filter }}
+      <ul class="services" data-sector-list>
+{{ capabilities }}
+      </ul>
+      <p class="services-also">{{ services_also }}</p>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="sectors-title">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">Sectors</p>
+        <h2 id="sectors-title">Who I work with</h2>
+        <p class="small">If your organisation makes decisions about land, water, people or assets in a place, there is usually a geospatial question in it.</p>
+      </div>
+      <ul class="sector-list">{{ sectors_list }}</ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="where-title-2">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">Where</p>
+        <h2 id="where-title-2">Nigeria, Africa and beyond</h2>
+      </div>
+      <div class="prose">
+        <p>In Nigeria I work on site: drone surveys, GNSS ground control and field checks, through to analysis and delivery.</p>
+        <p>Across Africa and further afield I work remotely. Open satellite data covers the whole continent, so most projects can start without a site visit, and where drone imagery is needed I can process what a local team collects.</p>
+        <p>Lagos time (UTC+1) overlaps most of the European working day and the morning in the Americas.</p>
+      </div>
+    </div>
+  </section>
+</article>

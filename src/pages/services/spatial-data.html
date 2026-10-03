@@ -1,0 +1,93 @@
+<!--page
+{
+ "kind": "service",
+ "service": "spatial-data",
+ "title": "Spatial Databases and Geospatial Data Engineering · Oluwasola Oyinloye",
+ "description": "PostGIS databases and repeatable Python and Google Earth Engine pipelines that keep spatial data clean, current and easy to query.",
+ "headline": "Spatial databases and data engineering",
+ "crumb": "Spatial data engineering",
+ "faq": [
+  {
+   "q": "Do we need to pay for software licences?",
+   "a": "No. PostGIS, Python and QGIS are free and open source."
+  },
+  {
+   "q": "Will it work with the tools we already use?",
+   "a": "PostGIS connects to QGIS, ArcGIS, Power BI and most analysis tools, so your team can keep using what they know."
+  }
+ ]
+}
+-->
+<article class="service-page">
+  <header class="case-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li aria-current="page">Spatial data engineering</li></ol>
+      </nav>
+      <p class="eyebrow">Service</p>
+      <h1>Spatial databases and data engineering</h1>
+      <p class="lead">When the same spatial data is copied between laptops, versions drift and nobody trusts the numbers. I set up one source of truth and the pipelines that keep it current.</p>
+      <div class="hero-actions">
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+        <a class="btn btn-ghost" href="/services/">All services<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>What you get</h2>
+      <ul>
+        <li>A PostGIS database designed around the questions your team asks.</li>
+        <li>Pipelines in Python or Google Earth Engine that pull, clean and update data on a schedule.</li>
+        <li>Quality checks that catch duplicates, broken geometries and missing values.</li>
+        <li>Documentation clear enough for the next analyst to run everything.</li>
+      </ul>
+
+      <h2>Who it's for</h2>
+      <p>Organisations whose spatial data has outgrown a folder of files: field programmes, multi-site operations and research groups.</p>
+
+      <h2>How it works</h2>
+      <ol class="pipeline" aria-label="Steps">
+        <li><b>Review</b><span>What data you have and how it is used</span></li>
+        <li><b>Design</b><span>Tables, keys and update rules</span></li>
+        <li><b>Build</b><span>Database and migration</span></li>
+        <li><b>Automate</b><span>Scheduled pipelines and checks</span></li>
+        <li><b>Hand over</b><span>Documentation and training</span></li>
+      </ol>
+
+      <h2>Questions clients ask</h2>
+      <div class="faqs">
+{{ service_faq }}
+      </div>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>At a glance</h2>
+        <dl class="facts">
+          <div><dt>Where</dt><dd>Anywhere, done remotely</dd></div>
+          <div><dt>Time zone</dt><dd>{{ timezone }}</dd></div>
+          <div><dt>You keep</dt><dd>The results, the code and the documentation</dd></div>
+        </dl>
+        <ul class="chips"><li>PostGIS</li><li>SQL</li><li>Python</li><li>GeoPandas</li><li>Google Earth Engine</li><li>Shapely</li></ul>
+        <h2>Related work</h2>
+        <p class="case-links stack">
+          <a href="/work/oil-palm-tree-counting/">Case study: counting 718,751 oil palms from aerial imagery<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+          <a href="/#access-map">Lagos Access Map: health facilities in OpenStreetMap<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Not sure this is the right service?</strong> Describe the problem. If I can't help, I'll say so.</p>
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+      </div>
+    </aside>
+  </div>
+
+  <section class="wrap more-services" aria-labelledby="more-title">
+    <h2 id="more-title">Other services</h2>
+    <ul class="services">
+{{ other_services }}
+    </ul>
+  </section>
+</article>

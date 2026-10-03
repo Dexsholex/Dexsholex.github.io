@@ -1,0 +1,70 @@
+{
+  "sectors": {
+    "agriculture": "Agriculture and plantations",
+    "finance": "Agric lending and finance",
+    "construction": "Real estate, construction and infrastructure",
+    "government": "Government and urban planning",
+    "development": "NGOs, health and development",
+    "environment": "Environment, climate and insurance",
+    "mining": "Mining, quarrying and energy"
+  },
+  "services": [
+    {
+      "slug": "geospatial-ai",
+      "title": "Geospatial AI and machine learning",
+      "short": "Deep-learning models that find and count objects in imagery, and predictive models tested on ground they have not seen.",
+      "icon": "detect",
+      "sectors": ["agriculture", "finance", "construction", "government", "environment"]
+    },
+    {
+      "slug": "drone-mapping",
+      "title": "Drone mapping and photogrammetry",
+      "short": "I plan and fly the survey, then turn the imagery into orthomosaics, surface and terrain models, and counts.",
+      "icon": "drone",
+      "sectors": ["agriculture", "construction", "mining", "environment", "government"]
+    },
+    {
+      "slug": "remote-sensing",
+      "title": "Satellite remote sensing",
+      "short": "Land cover, vegetation, water and change over time, read from optical and radar satellite imagery, anywhere.",
+      "icon": "orbit",
+      "sectors": ["agriculture", "finance", "environment", "government", "development", "mining"]
+    },
+    {
+      "slug": "gis-analysis",
+      "title": "GIS mapping and spatial analysis",
+      "short": "Site selection, access and proximity analysis, map production and clean, well-structured spatial data.",
+      "icon": "layers",
+      "sectors": ["construction", "government", "development", "environment", "finance"]
+    },
+    {
+      "slug": "flood-climate-risk",
+      "title": "Flood, climate and environmental risk",
+      "short": "Where flooding is more likely, which people, roads and facilities sit in the way, and how land cover is changing.",
+      "icon": "wave",
+      "sectors": ["construction", "government", "development", "environment", "finance"]
+    },
+    {
+      "slug": "web-gis",
+      "title": "Web GIS development and dashboards",
+      "short": "Interactive web maps, Streamlit apps and Power BI dashboards that work on any device.",
+      "icon": "webmap",
+      "sectors": ["government", "development", "environment", "agriculture", "construction"]
+    },
+    {
+      "slug": "spatial-data",
+      "title": "Spatial databases and data engineering",
+      "short": "PostGIS databases and repeatable Python and Earth Engine pipelines that keep spatial data current.",
+      "icon": "chart",
+      "sectors": ["government", "development", "finance", "construction", "agriculture"]
+    },
+    {
+      "slug": "training",
+      "title": "Training and capacity building",
+      "short": "Hands-on Python, GIS and remote sensing training for teams, from small workshops to a 1,500-person seminar.",
+      "icon": "people",
+      "sectors": ["government", "development", "agriculture", "environment"]
+    }
+  ],
+  "also": "Also: cartography and map production for reports, digitising and data cleaning, geocoding, OpenStreetMap mapping, site suitability studies and GNSS ground control. If your question involves a place, ask."
+}

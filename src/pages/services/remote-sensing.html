@@ -1,0 +1,97 @@
+<!--page
+{
+ "kind": "service",
+ "service": "remote-sensing",
+ "title": "Satellite Remote Sensing Services in Nigeria and Africa · Oluwasola Oyinloye",
+ "description": "Land cover, vegetation, crop, water and change mapping from Sentinel and other satellite imagery, for any area in Nigeria, Africa or beyond, done remotely.",
+ "headline": "Satellite remote sensing",
+ "crumb": "Satellite remote sensing",
+ "faq": [
+  {
+   "q": "Can you work on sites outside Nigeria?",
+   "a": "Yes. This work is done remotely, so the site can be anywhere satellite data covers."
+  },
+  {
+   "q": "What level of detail can I expect?",
+   "a": "Free Sentinel-2 imagery has 10 m pixels and Sentinel-1 radar is similar. For smaller objects, high-resolution commercial imagery or a drone survey is the better choice, and I'll say so when we scope the work."
+  },
+  {
+   "q": "How do you check accuracy?",
+   "a": "Against reference points from field data, high-resolution imagery or your own records. I report the result for each class."
+  }
+ ]
+}
+-->
+<article class="service-page">
+  <header class="case-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li aria-current="page">Satellite remote sensing</li></ol>
+      </nav>
+      <p class="eyebrow">Service</p>
+      <h1>Satellite remote sensing</h1>
+      <p class="lead">Satellite imagery covers every site on earth, again and again, and much of it is free. I turn it into maps and numbers: what is on the land, how it is changing, and where water and vegetation are.</p>
+      <div class="hero-actions">
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+        <a class="btn btn-ghost" href="/services/">All services<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>What you get</h2>
+      <ul>
+        <li>Land use and land cover maps, with the accuracy of each class stated.</li>
+        <li>Change detection between dates: new buildings, cleared vegetation, expanded farms.</li>
+        <li>Vegetation and crop condition through a season, from indices such as NDVI.</li>
+        <li>Flood and water mapping from Sentinel-1 radar, which sees through cloud.</li>
+        <li>Farm and plot checks for lenders: whether a farm exists, how large it is and whether it is planted.</li>
+      </ul>
+
+      <h2>Who it's for</h2>
+      <p>Agric lenders and insurers, NGOs monitoring programmes, government agencies, researchers, and companies that need to watch many sites without visiting them.</p>
+
+      <h2>How it works</h2>
+      <ol class="pipeline" aria-label="Steps">
+        <li><b>Question</b><span>Area, dates and what you need to know</span></li>
+        <li><b>Imagery</b><span>Sentinel-2 optical, Sentinel-1 radar or finer data</span></li>
+        <li><b>Process</b><span>Google Earth Engine or Python</span></li>
+        <li><b>Validate</b><span>Checked against reference data</span></li>
+        <li><b>Deliver</b><span>Maps, statistics and the code</span></li>
+      </ol>
+
+      <h2>Questions clients ask</h2>
+      <div class="faqs">
+{{ service_faq }}
+      </div>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>At a glance</h2>
+        <dl class="facts">
+          <div><dt>Where</dt><dd>Anywhere, done remotely</dd></div>
+          <div><dt>Time zone</dt><dd>{{ timezone }}</dd></div>
+          <div><dt>You keep</dt><dd>The results, the code and the documentation</dd></div>
+        </dl>
+        <ul class="chips"><li>Google Earth Engine</li><li>geemap</li><li>Sentinel-1 SAR</li><li>Sentinel-2</li><li>SRTM</li><li>ESA WorldCover</li><li>Python</li></ul>
+        <h2>Related work</h2>
+        <p class="case-links stack">
+          <a href="/work/geoaid-flood-susceptibility/">Case study: GeoAID flood susceptibility, Amuwo-Odofin<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Not sure this is the right service?</strong> Describe the problem. If I can't help, I'll say so.</p>
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+      </div>
+    </aside>
+  </div>
+
+  <section class="wrap more-services" aria-labelledby="more-title">
+    <h2 id="more-title">Other services</h2>
+    <ul class="services">
+{{ other_services }}
+    </ul>
+  </section>
+</article>

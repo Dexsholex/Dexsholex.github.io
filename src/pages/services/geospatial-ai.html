@@ -1,0 +1,98 @@
+<!--page
+{
+ "kind": "service",
+ "service": "geospatial-ai",
+ "title": "Geospatial AI and Machine Learning Services · Oluwasola Oyinloye",
+ "description": "Object detection, counting and classification in drone and satellite imagery, plus predictive spatial models tested on ground they have not seen.",
+ "headline": "Geospatial AI and machine learning",
+ "crumb": "Geospatial AI",
+ "faq": [
+  {
+   "q": "How much labelled data do you need?",
+   "a": "Often less than people expect. The oil palm detector was trained on a small hand-annotated set and improved in rounds as new failure patterns showed up."
+  },
+  {
+   "q": "Why test on held-out areas?",
+   "a": "Neighbouring pixels look alike, so random splits flatter a model. GeoAID scored about 0.798 on a random split and about 0.642 under spatial cross-validation. The second number is the one to plan with."
+  },
+  {
+   "q": "Do I get the model?",
+   "a": "Yes. You get the trained model, the code and documentation, so your team can run it again."
+  }
+ ]
+}
+-->
+<article class="service-page">
+  <header class="case-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol><li><a href="/">Home</a></li><li><a href="/services/">Services</a></li><li aria-current="page">Geospatial AI</li></ol>
+      </nav>
+      <p class="eyebrow">Service</p>
+      <h1>Geospatial AI and machine learning</h1>
+      <p class="lead">Models that read imagery at a scale no team could manage by hand, and predictive models that tell you how far to trust them. The oil palm project counted 718,751 palms this way.</p>
+      <div class="hero-actions">
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+        <a class="btn btn-ghost" href="/services/">All services<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>What you get</h2>
+      <ul>
+        <li>Object detection and counting: trees, buildings or other features in drone, aerial or satellite imagery.</li>
+        <li>Classification of land cover, crops or other classes you care about.</li>
+        <li>Predictive maps, such as flood susceptibility, built from many spatial factors.</li>
+        <li>Explanations of each prediction with SHAP, so you can see what drives a result.</li>
+        <li>An honest error rate, from tests on areas the model did not train on rather than on random samples.</li>
+      </ul>
+
+      <h2>Who it's for</h2>
+      <p>Plantation and farm operators, lenders and insurers, planners and researchers: anyone with more imagery or more ground than people can review by hand.</p>
+
+      <h2>How it works</h2>
+      <ol class="pipeline" aria-label="Steps">
+        <li><b>Frame</b><span>The question and the decision it supports</span></li>
+        <li><b>Label</b><span>A sample annotated by hand, or existing data</span></li>
+        <li><b>Train</b><span>Compare models on the same test set</span></li>
+        <li><b>Validate</b><span>Test on held-out areas</span></li>
+        <li><b>Deploy</b><span>Run at scale and hand over the code</span></li>
+      </ol>
+
+      <h2>Questions clients ask</h2>
+      <div class="faqs">
+{{ service_faq }}
+      </div>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>At a glance</h2>
+        <dl class="facts">
+          <div><dt>Where</dt><dd>Anywhere, done remotely</dd></div>
+          <div><dt>Time zone</dt><dd>{{ timezone }}</dd></div>
+          <div><dt>You keep</dt><dd>The results, the code and the documentation</dd></div>
+        </dl>
+        <ul class="chips"><li>PyTorch</li><li>Ultralytics YOLOv8</li><li>scikit-learn</li><li>XGBoost</li><li>SHAP</li><li>OpenCV</li></ul>
+        <h2>Related work</h2>
+        <p class="case-links stack">
+          <a href="/work/oil-palm-tree-counting/">Case study: counting 718,751 oil palms from aerial imagery<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+          <a href="/work/geoaid-flood-susceptibility/">Case study: GeoAID flood susceptibility, Amuwo-Odofin<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Not sure this is the right service?</strong> Describe the problem. If I can't help, I'll say so.</p>
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+      </div>
+    </aside>
+  </div>
+
+  <section class="wrap more-services" aria-labelledby="more-title">
+    <h2 id="more-title">Other services</h2>
+    <ul class="services">
+{{ other_services }}
+    </ul>
+  </section>
+</article>

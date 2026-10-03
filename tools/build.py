@@ -87,6 +87,94 @@ def phone_display(number):
     return "+" + d
 
 
+def service_cards(services, exclude=None):
+    items = []
+    for c in services["services"]:
+        if c["slug"] == exclude:
+            continue
+        items.append(
+            f'<li data-reveal data-sectors="{" ".join(c["sectors"])}"><a class="service-link" href="/services/{c["slug"]}/">'
+            f'<span class="icon">{icon(esc(c["icon"]))}</span><h3>{esc(c["title"])}</h3><p>{esc(c["short"])}</p>'
+            f'<span class="service-more">How it works{icon("arrow")}</span></a></li>')
+    return "\n".join(items)
+
+
+def service_fragments(services):
+    chips = ['<button type="button" aria-pressed="true" data-sector="all">All sectors</button>']
+    chips += [f'<button type="button" aria-pressed="false" data-sector="{k}">{esc(v)}</button>'
+              for k, v in services["sectors"].items()]
+    return {
+        "capabilities": service_cards(services),
+        "sector_filter": ('<div class="sector-filter" role="group" aria-label="Show services for a sector" '
+                          f'data-sector-filter hidden>{"".join(chips)}</div>'
+                          '<p class="visually-hidden" aria-live="polite" data-sector-status></p>'),
+        "sectors_list": "".join(f"<li>{esc(v)}</li>" for v in services["sectors"].values()),
+        "services_also": esc(services["also"]),
+        "footer_services": "\n".join(f'        <li><a href="/services/{c["slug"]}/">{esc(c["title"])}</a></li>'
+                                     for c in services["services"]),
+        "brief_builder": brief_html(services),
+        "cap_services": "\n".join(f'        <li><strong>{esc(c["title"])}.</strong> {esc(c["short"])}</li>'
+                                  for c in services["services"]),
+    }
+
+
+def testimonials_html(items, gaps):
+    if not items:
+        m = gaps.mark("client testimonial (anonymised, with the client's permission)")
+        if not m:
+            return ""
+        return ('<section class="section testimonials" aria-labelledby="t-title"><div class="wrap">'
+                '<header class="section-head"><p class="eyebrow">Clients</p><h2 id="t-title">What clients say</h2></header>'
+                f'<p>{m}</p></div></section>')
+    quotes = []
+    for t in items:
+        link = f' · <a href="{esc(t["link"])}">{esc(t.get("link_label", "Case study"))}</a>' if t.get("link") else ""
+        quotes.append(f'<li data-reveal><figure><blockquote><p>{esc(t["quote"])}</p></blockquote>'
+                      f'<figcaption><strong>{esc(t["role"])}</strong><span>{esc(t["org"])}{link}</span></figcaption>'
+                      '</figure></li>')
+    return ('<section class="section testimonials" aria-labelledby="t-title"><div class="wrap">'
+            '<header class="section-head"><p class="eyebrow">Clients</p><h2 id="t-title">What clients say</h2></header>'
+            f'<ul class="quotes">{"".join(quotes)}</ul></div></section>')
+
+
+def brief_html(services):
+    """Request builder. It only composes an email in the visitor's own mail app; the site sends and stores nothing."""
+    svc = "".join(f'<label class="pick"><input type="checkbox" name="service" value="{esc(c["title"])}">'
+                  f'<span>{esc(c["title"])}</span></label>' for c in services["services"])
+    svc += '<label class="pick"><input type="checkbox" name="service" value="Something else"><span>Something else</span></label>'
+
+    def radios(name, options):
+        return "".join(f'<label class="pick"><input type="radio" name="{name}" value="{esc(o)}"><span>{esc(o)}</span></label>'
+                       for o in options)
+
+    def checks(name, options):
+        return "".join(f'<label class="pick"><input type="checkbox" name="{name}" value="{esc(o)}"><span>{esc(o)}</span></label>'
+                       for o in options)
+
+    return f"""<form class="brief" data-brief data-email="__EMAIL__" hidden aria-labelledby="brief-title">
+      <div class="brief-head">
+        <h3 id="brief-title">Prefer to write it down first?</h3>
+        <p>Tick what applies and your email app opens with a short brief, ready to send. Nothing is sent or stored by this site.</p>
+      </div>
+      <fieldset><legend>What do you need?</legend><div class="picks">{svc}</div></fieldset>
+      <fieldset><legend>Where is the site?</legend><div class="picks">{radios("where", ["Nigeria", "Elsewhere in Africa", "Outside Africa"])}</div>
+        <label class="brief-text">Place (optional)<input type="text" name="place" autocomplete="off" placeholder="City, state or country"></label></fieldset>
+      <fieldset><legend>When?</legend><div class="picks">{radios("when", ["As soon as possible", "Within 3 months", "Just exploring"])}</div></fieldset>
+      <fieldset><legend>Data you already have</legend><div class="picks">{checks("data", ["Drone or aerial imagery", "Satellite imagery", "GIS files or maps", "Spreadsheets with locations", "Nothing yet"])}</div></fieldset>
+      <label class="brief-text">What do you need to decide? (optional)<textarea name="decide" rows="3" placeholder="One or two sentences"></textarea></label>
+      <div class="brief-actions">
+        <button class="btn" type="submit">{icon("mail")}Open in my email app</button>
+        <button class="btn btn-ghost" type="button" data-brief-copy>{icon("copy")}Copy the brief</button>
+        <span class="brief-status" aria-live="polite"></span>
+      </div>
+    </form>"""
+
+
+def faq_html(faq):
+    return "\n".join(f'<details class="faq"><summary>{esc(item["q"])}</summary><p>{esc(item["a"])}</p></details>'
+                     for item in faq)
+
+
 def gallery_item(manifest, name, alt, caption, shape="wide"):
     full = manifest[name][-1]["src"]
     sizes = "(min-width: 1024px) 380px, (min-width: 600px) 46vw, 92vw"
@@ -146,7 +234,15 @@ def fragments(site, caps, osm, manifest, gaps, products):
     body = site["call_body"].replace("\n", "\r\n")
     book = f"mailto:{site['email']}?subject={urllib.parse.quote(site['call_subject'])}&body={urllib.parse.quote(body)}"
     f["call_url"] = esc(site.get("booking_url") or book)
+    f["email_book_url"] = esc(book)
     f["mailto_url"] = esc(f"mailto:{site['email']}")
+    # With a booking link (Cal.com, Calendly) the main button picks a time and email becomes the alternative
+    if site.get("booking_url"):
+        f["contact_actions"] = (f'<a class="btn" href="{esc(site["booking_url"])}">{icon("chat")}Pick a time</a>'
+                                f'<a class="btn btn-ghost" href="{f["email_book_url"]}">{icon("mail")}Email me</a>'
+                                + f["whatsapp_button"])
+    else:
+        f["contact_actions"] = f'<a class="btn" href="{f["email_book_url"]}">{icon("mail")}Book by email</a>' + f["whatsapp_button"]
     f["roles_line"] = esc(" · ".join(site["roles"]))
     f["roles_br"] = "<br>".join(esc(r) for r in site["roles"])
     f["roles_sentence"] = esc(" and ".join(r[0].lower() + r[1:] for r in site["roles"]))
@@ -231,12 +327,10 @@ def fragments(site, caps, osm, manifest, gaps, products):
                                       "tagged in OpenStreetMap; most dots sit in the western and central LGAs.",
                                       "(min-width: 1100px) 1100px, 96vw", cls="map-preview")
 
-    # Services and tools
-    items = []
-    for c in caps:
-        items.append(f'<li data-reveal><span class="icon">{icon(esc(c["icon"]))}</span>'
-                     f'<h3>{esc(c["title"])}</h3><p>{esc(c["text"])}</p></li>')
-    f["capabilities"] = "\n".join(items)
+    # Tools
+    f["cap_tools"] = " ".join(f"<b>{esc(g)}:</b> {esc(', '.join(items))}." for g, items in site["tools"].items())
+    f["site_host"] = esc(site["base_url"].split("//", 1)[-1].rstrip("/"))
+    f["today_month"] = dt.date.today().strftime("%B %Y")
     f["tools"] = "\n".join(
         f'<div class="tool-group"><h4>{esc(group)}</h4><ul class="chips">'
         + "".join(f"<li>{esc(t)}</li>" for t in items) + "</ul></div>"
@@ -274,6 +368,7 @@ def osm_table(osm):
 
 # ---------- structured data ----------
 def person_and_service(site, caps, manifest):
+    """Person and ProfessionalService nodes shared by every page's structured data."""
     base = site["base_url"]
     same_as = [u for u in site["links"].values() if u]
     address = {"@type": "PostalAddress", "addressLocality": site["locality"], "addressCountry": site["country_code"]}
@@ -304,6 +399,11 @@ def person_and_service(site, caps, manifest):
                        {"@type": "Place", "name": "Worldwide"}],
         "availableLanguage": "en", "founder": {"@id": base + "#person"},
         "knowsAbout": skills, "sameAs": same_as,
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog", "name": "GIS and geospatial services",
+            "itemListElement": [{"@type": "Offer", "itemOffered": {
+                "@type": "Service", "name": c["title"], "description": c["short"],
+                "url": base + "services/" + c["slug"] + "/"}} for c in caps]},
     }
     if site.get("whatsapp"):
         service["telephone"] = person["telephone"]
@@ -334,6 +434,29 @@ def jsonld(page, site, caps, manifest):
                 {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
                 {"@type": "ListItem", "position": 2, "name": "Case studies", "item": base + "#work"},
                 {"@type": "ListItem", "position": 3, "name": page["crumb"], "item": url}]}]
+    elif page["kind"] == "service":
+        area = [{"@type": "Country", "name": "Nigeria"}, {"@type": "Continent", "name": "Africa"},
+                {"@type": "Place", "name": "Worldwide"}]
+        graph = [person, service, website, {
+            "@type": "Service", "@id": url + "#service", "url": url, "name": page["headline"],
+            "serviceType": page["headline"], "description": page["description"],
+            "provider": {"@id": base + "#service"}, "areaServed": area, "availableLanguage": "en"},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
+                {"@type": "ListItem", "position": 2, "name": "Services", "item": base + "services/"},
+                {"@type": "ListItem", "position": 3, "name": page["crumb"], "item": url}]}]
+        if page.get("faq"):
+            graph.append({"@type": "FAQPage", "@id": url + "#faq", "mainEntity": [
+                {"@type": "Question", "name": item["q"], "acceptedAnswer": {"@type": "Answer", "text": item["a"]}}
+                for item in page["faq"]]})
+    elif page["kind"] == "hub":
+        graph = [person, service, website, {
+            "@type": "CollectionPage", "@id": url + "#webpage", "url": url, "name": page["title"],
+            "description": page["description"], "isPartOf": {"@id": base + "#website"},
+            "about": {"@id": base + "#service"}, "inLanguage": "en"},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": base},
+                {"@type": "ListItem", "position": 2, "name": "Services", "item": url}]}]
     elif page["kind"] == "doc":
         parent = page["parent"]
         graph = [person, website, {
@@ -421,10 +544,12 @@ def main():
     args = ap.parse_args()
 
     site = json.loads((CONTENT / "site.json").read_text(encoding="utf-8"))
-    caps = json.loads((CONTENT / "capabilities.json").read_text(encoding="utf-8"))
+    services = json.loads((CONTENT / "services.json").read_text(encoding="utf-8"))
+    caps = services["services"]
     osm = json.loads((STATIC / "data" / "lagos-health-osm.json").read_text(encoding="utf-8"))
     manifest = json.loads((STATIC / "img" / "manifest.json").read_text(encoding="utf-8"))
     products = json.loads((CONTENT / "products.json").read_text(encoding="utf-8"))
+    testimonials = json.loads((CONTENT / "testimonials.json").read_text(encoding="utf-8"))
     if not site["base_url"].endswith("/"):
         sys.exit("build: base_url must end with '/'")
 
@@ -455,6 +580,10 @@ def main():
         "js_version": hashlib.sha1(js.encode()).hexdigest()[:8],
     }
     shared.update(fragments(site, caps, osm, manifest, gaps, products))
+    shared.update(service_fragments(services))
+    shared["testimonials"] = testimonials_html(testimonials, gaps)
+    shared["brief_builder"] = shared["brief_builder"].replace("__EMAIL__", esc(site["email"]))
+    shared["email"] = esc(site["email"])
     partials = {p.stem: p.read_text(encoding="utf-8") for p in (SRC / "partials").glob("*.html")}
 
     pages = load_pages()
@@ -480,10 +609,14 @@ def main():
             "nav_prefix": "" if page["kind"] == "home" else "/",
             "jsonld": jsonld(page, site, caps, manifest),
         })
+        if page["kind"] == "service":
+            values["service_faq"] = faq_html(page.get("faq", []))
+            values["other_services"] = service_cards(services, exclude=page["service"])
         values["content"] = render(page["body"], values, page["src"].name)
         for name in ("header", "footer"):
             values[name] = render(partials[name], values, f"partials/{name}.html")
-        out = render(partials["layout"], values, "partials/layout.html")
+        layout = page.get("layout", "layout")
+        out = render(partials[layout], values, f"partials/{layout}.html")
         target = DIST / page["out"]
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(out, encoding="utf-8", newline="\n")
