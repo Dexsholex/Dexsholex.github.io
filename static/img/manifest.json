@@ -57,6 +57,96 @@
    "src": "/img/avatar-128.webp"
   }
  ],
+ "palm-drone-pad": [
+  {
+   "w": 480,
+   "h": 270,
+   "src": "/img/palm-drone-pad-480.webp"
+  },
+  {
+   "w": 800,
+   "h": 450,
+   "src": "/img/palm-drone-pad-800.webp"
+  },
+  {
+   "w": 1200,
+   "h": 675,
+   "src": "/img/palm-drone-pad-1200.webp"
+  },
+  {
+   "w": 1600,
+   "h": 900,
+   "src": "/img/palm-drone-pad-1600.webp"
+  }
+ ],
+ "palm-estate-road": [
+  {
+   "w": 480,
+   "h": 270,
+   "src": "/img/palm-estate-road-480.webp"
+  },
+  {
+   "w": 800,
+   "h": 450,
+   "src": "/img/palm-estate-road-800.webp"
+  },
+  {
+   "w": 1200,
+   "h": 675,
+   "src": "/img/palm-estate-road-1200.webp"
+  }
+ ],
+ "palm-gnss": [
+  {
+   "w": 480,
+   "h": 270,
+   "src": "/img/palm-gnss-480.webp"
+  },
+  {
+   "w": 800,
+   "h": 450,
+   "src": "/img/palm-gnss-800.webp"
+  },
+  {
+   "w": 1200,
+   "h": 675,
+   "src": "/img/palm-gnss-1200.webp"
+  }
+ ],
+ "palm-crown": [
+  {
+   "w": 480,
+   "h": 270,
+   "src": "/img/palm-crown-480.webp"
+  },
+  {
+   "w": 800,
+   "h": 450,
+   "src": "/img/palm-crown-800.webp"
+  },
+  {
+   "w": 1200,
+   "h": 675,
+   "src": "/img/palm-crown-1200.webp"
+  }
+ ],
+ "palm-pilot": [
+  {
+   "w": 360,
+   "h": 589,
+   "src": "/img/palm-pilot-360.webp"
+  },
+  {
+   "w": 540,
+   "h": 883,
+   "src": "/img/palm-pilot-540.webp"
+  },
+  {
+   "w": 900,
+   "h": 1472,
+   "src": "/img/palm-pilot-900.webp"
+  }
+ ],
  "geoaid-flood": [
   {
    "w": 480,

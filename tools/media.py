@@ -31,6 +31,12 @@ PHOTOS = {
     "about": ("photos/about.jpg", (0, 0.04, 1, 0.873), (360, 540, 720)),
     "contact": ("photos/contact.jpg", (0.253, 0.204, 0.753, 0.537), (96, 192)),
     "avatar": ("photos/portrait.jpg", (0.221, 0.130, 0.749, 0.481), (64, 128)),
+    # Field photos (stripped masters from tools/import_media.py)
+    "palm-drone-pad": ("field/palm-drone-pad.jpg", (0, 0, 1, 1), (480, 800, 1200, 1600)),
+    "palm-estate-road": ("field/palm-estate-road.jpg", (0, 0, 1, 1), (480, 800, 1200)),
+    "palm-gnss": ("field/palm-gnss.jpg", (0, 0, 1, 1), (480, 800, 1200)),
+    "palm-crown": ("field/palm-crown.jpg", (0, 0, 1, 1), (480, 800, 1200)),
+    "palm-pilot": ("field/palm-pilot.jpg", (0, 0.04, 1, 0.96), (360, 540, 900)),
 }
 # Single-hue sequential ramp (blue), dark for low values so they recede into the panel
 FLOOD_RAMP = ["#104281", "#1c5cab", "#2a78d6", "#5598e7", "#86b6ef", "#cde2fb"]
