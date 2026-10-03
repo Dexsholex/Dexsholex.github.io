@@ -342,7 +342,7 @@ html.cv-off .section { content-visibility: visible; } /* set before any jump to 
 }
 .ramp-legend i {
   width: 72px; height: 8px; border-radius: 4px;
-  background: linear-gradient(90deg, #104281, #1c5cab, #2a78d6, #5598e7, #86b6ef, #cde2fb);
+  background: linear-gradient(90deg, #fee5d9, #fcbba1, #fc9272, #fb6a4a, #de2d26, #a50f15);
 }
 .ramp-legend.is-inline { position: static; margin-right: .5rem; vertical-align: middle; }
 
@@ -645,6 +645,7 @@ html.cv-off .section { content-visibility: visible; } /* set before any jump to 
 
 .case-map { margin-top: clamp(2rem, 5vw, 3rem); }
 .zoomable { position: relative; display: block; overflow: hidden; border-radius: var(--radius); background: var(--panel); }
+.case-map .zoomable, .case-media-map { background: #faf8f3; } /* the flood map is drawn on paper */
 .zoomable img { width: 100%; max-height: 560px; object-fit: contain; }
 .zoom-hint {
   position: absolute; right: 12px; top: 12px; display: inline-flex; align-items: center; gap: .35rem;

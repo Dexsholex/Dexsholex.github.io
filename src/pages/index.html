@@ -9,7 +9,7 @@
       <h1 id="hero-title">{{ flagship }}</h1>
       <p class="lead">I do GIS, remote sensing, drone mapping and geospatial AI work for plantation operators, agric lenders, developers, governments and NGOs, in Nigeria and abroad. I turn imagery and location data into answers, and I tell you how far to trust each one.</p>
       <div class="hero-actions">
-        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
+        <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-calendar"/></svg>Book a call</a>
         {{ whatsapp_button }}
         <a class="btn btn-ghost" href="/services/">Explore services<svg aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
       </div>
@@ -27,7 +27,7 @@
   <div class="wrap">
     <ul class="stats">
       <li><span class="stat-value" data-count>{{ palm_palms }}</span><span class="stat-label">oil palms mapped across {{ palm_hectares }} ha for one plantation</span></li>
-      <li><span class="stat-value" data-count>1,500</span><span class="stat-label">people taught in a Python-for-geospatial seminar</span></li>
+      <li><span class="stat-value" data-count>1,500</span><span class="stat-label">people taught in Python-for-geospatial seminars</span></li>
       <li><span class="stat-value">2</span><span class="stat-label">{{ publications_label }}</span></li>
       <li><span class="stat-value" data-count>5</span><span class="stat-label">years of professional GIS and remote sensing work</span></li>
     </ul>
@@ -152,8 +152,6 @@
   </div>
 </section>
 
-{{ testimonials }}
-
 <section class="section section-alt" id="products" aria-labelledby="products-title">
   <div class="wrap">
     <header class="section-head">
@@ -254,7 +252,7 @@
     <ol class="steps">
       <li data-reveal>
         <h3>Scoping call</h3>
-        <p>A 20-minute call: you tell me the decision you need to make, and I tell you whether spatial data can help and what it would take.</p>
+        <p>A 15- or 30-minute call: you tell me the decision you need to make, and I tell you whether spatial data can help and what it would take.</p>
       </li>
       <li data-reveal>
         <h3>Pilot on your data</h3>
@@ -276,7 +274,7 @@
       <h2 id="about-title">Hello, I'm Oluwasola</h2>
       <p>I'm {{ name }}, a {{ roles_sentence }} based in Lagos.</p>
       <p>I trained in Surveying and Geoinformatics at the University of Ilorin (BSc), then earned a Master of Information Technology (MIT) with an AI specialisation from Miva Open University.</p>
-      <p>I have five years of professional GIS and remote sensing work behind me, and I have taught Python for geospatial analysis to a seminar of 1,500 people.</p>
+      <p>I have five years of professional GIS and remote sensing work behind me, and I have taught Python for geospatial analysis to 1,500 people through seminars.</p>
       <p>I plan and fly drone surveys myself in Nigeria, and work remotely from satellite data for clients across Africa and beyond.</p>
       <p>I report how every result was validated, including when the numbers are less flattering. Alongside client work, I build free public tools like the Lagos Access Map and GeoAID.</p>
       <dl class="creds">
@@ -293,8 +291,8 @@
     <div class="contact-panel" data-reveal>
       <div class="contact-pitch">
         <p class="eyebrow">Contact</p>
-        <h2 id="contact-title">Book a 20-minute call</h2>
-        <p>Tell me what you need to decide, where, and what data you already have. I'll tell you plainly whether I can help. The email opens with a short template, including a line for your time zone.</p>
+        <h2 id="contact-title">Book a call</h2>
+        <p>Tell me what you need to decide, where, and what data you already have. I'll tell you plainly whether I can help. Book 15 minutes to introduce yourself or 30 to scope a project, at a time shown in your own time zone. If you'd rather write, the email opens with a short template.</p>
         <div class="contact-person">{{ img_contact }}<p><strong>You'll speak with me directly.</strong><span>Lagos, Nigeria · {{ timezone }}</span></p></div>
         <div class="contact-actions">
           {{ contact_actions }}
@@ -306,7 +304,7 @@
         <li><span class="k">LinkedIn</span><span class="v"><a href="{{ linkedin }}" rel="me">oluwasola-oyinloye</a></span></li>
         <li><span class="k">GitHub</span><span class="v"><a href="{{ github }}" rel="me">Dexsholex</a></span></li>
         <li><span class="k">Medium</span><span class="v"><a href="{{ medium }}" rel="me">@Deyley</a></span></li>
-        {{ researchgate_item }}
+        {{ publication_item }}
         <li><span class="k">In brief</span><span class="v"><a href="/capability-statement/">Capability statement</a></span></li>
       </ul>
     </div>

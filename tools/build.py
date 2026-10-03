@@ -120,12 +120,7 @@ def service_fragments(services):
 
 def testimonials_html(items, gaps):
     if not items:
-        m = gaps.mark("client testimonial (anonymised, with the client's permission)")
-        if not m:
-            return ""
-        return ('<section class="section testimonials" aria-labelledby="t-title"><div class="wrap">'
-                '<header class="section-head"><p class="eyebrow">Clients</p><h2 id="t-title">What clients say</h2></header>'
-                f'<p>{m}</p></div></section>')
+        return ""  # add an approved quote to content/testimonials.json and the section appears
     quotes = []
     for t in items:
         link = f' · <a href="{esc(t["link"])}">{esc(t.get("link_label", "Case study"))}</a>' if t.get("link") else ""
@@ -220,7 +215,7 @@ def fragments(site, caps, osm, manifest, gaps, products):
     # WhatsApp appears only when a (business) number is set in site.json; "whatsapp": null hides it everywhere
     wa_number = site.get("whatsapp")
     if wa_number:
-        greeting = f"Hello {site['name'].split()[0]}, I'd like to book a 20-minute call."
+        greeting = f"Hello {site['name'].split()[0]}, I'd like to book a call."
         wa = esc(f"https://wa.me/{wa_number}?text={urllib.parse.quote(greeting)}")
         f["whatsapp_button"] = f'<a class="btn btn-ghost" href="{wa}">{icon("chat")}WhatsApp</a>'
         f["whatsapp_item"] = (f'<li><span class="k">WhatsApp</span><span class="v">'
@@ -230,6 +225,8 @@ def fragments(site, caps, osm, manifest, gaps, products):
     else:
         f["whatsapp_button"] = f["whatsapp_item"] = f["whatsapp_footer"] = ""
         f["privacy_services"] = "LinkedIn, GitHub, Medium and the GeoAID dashboard on Streamlit"
+    if site.get("booking_url"):
+        f["privacy_services"] = "Cal.com, " + f["privacy_services"]
     # Email works for clients anywhere; the body prompts for what a first call needs, time zone included
     body = site["call_body"].replace("\n", "\r\n")
     book = f"mailto:{site['email']}?subject={urllib.parse.quote(site['call_subject'])}&body={urllib.parse.quote(body)}"
@@ -238,26 +235,34 @@ def fragments(site, caps, osm, manifest, gaps, products):
     f["mailto_url"] = esc(f"mailto:{site['email']}")
     # With a booking link (Cal.com, Calendly) the main button picks a time and email becomes the alternative
     if site.get("booking_url"):
-        f["contact_actions"] = (f'<a class="btn" href="{esc(site["booking_url"])}">{icon("chat")}Pick a time</a>'
-                                f'<a class="btn btn-ghost" href="{f["email_book_url"]}">{icon("mail")}Email me</a>'
+        opts = site.get("booking_options") or [{"label": "Pick a time", "url": site["booking_url"]}]
+        buttons = [f'<a class="btn{"" if i == 0 else " btn-ghost"}" href="{esc(o["url"])}">{icon("calendar")}{esc(o["label"])}</a>'
+                   for i, o in enumerate(opts)]
+        f["contact_actions"] = ("".join(buttons) + f'<a class="btn btn-ghost" href="{f["email_book_url"]}">{icon("mail")}Email me</a>'
                                 + f["whatsapp_button"])
+        f["booking_host"] = esc(site["booking_url"].split("//", 1)[-1])
+        f["privacy_booking"] = ("If you book a call, Cal.com handles the booking and the details you enter there, "
+                                "under its own privacy policy. ")
     else:
         f["contact_actions"] = f'<a class="btn" href="{f["email_book_url"]}">{icon("mail")}Book by email</a>' + f["whatsapp_button"]
+        f["booking_host"] = f["email"] if "email" in f else esc(site["email"])
+        f["privacy_booking"] = ""
     f["roles_line"] = esc(" · ".join(site["roles"]))
     f["roles_br"] = "<br>".join(esc(r) for r in site["roles"])
     f["roles_sentence"] = esc(" and ".join(r[0].lower() + r[1:] for r in site["roles"]))
 
-    rg = links.get("researchgate")
-    if rg:
-        f["publications_label"] = f'<a href="{esc(rg)}" rel="me">publications on ResearchGate</a>'
-        f["researchgate_item"] = (f'<li><span class="k">ResearchGate</span><span class="v">'
-                                  f'<a href="{esc(rg)}" rel="me">Publications</a></span></li>')
-        f["researchgate_footer"] = f'<li><a href="{esc(rg)}" rel="me">ResearchGate</a></li>'
+    # A preprint DOI, when set, links the publications figure; nothing shows until then
+    pre = site.get("preprint") or {}
+    if pre.get("doi"):
+        doi_url = esc("https://doi.org/" + pre["doi"].removeprefix("https://doi.org/"))
+        title = esc(pre.get("title") or "Preprint")
+        f["publications_label"] = f'<a href="{doi_url}">research publications</a>'
+        f["publication_item"] = f'<li><span class="k">Preprint</span><span class="v"><a href="{doi_url}">{title}</a></span></li>'
+        f["publication_footer"] = f'<li><a href="{doi_url}">Preprint (DOI)</a></li>'
+        f["cap_publication"] = f'<p class="cap-pub">Preprint: {title}. doi.org/{esc(pre["doi"])}</p>'
     else:
-        m = gaps.mark("ResearchGate URL")
-        f["publications_label"] = "publications on ResearchGate" + (f" {m}" if m else "")
-        f["researchgate_item"] = f'<li><span class="k">ResearchGate</span><span class="v">{m}</span></li>' if m else ""
-        f["researchgate_footer"] = ""
+        f["publications_label"] = "research publications"
+        f["publication_item"] = f["publication_footer"] = f["cap_publication"] = ""
 
     # Oil palm
     for k, v in palm.items():
@@ -314,12 +319,12 @@ def fragments(site, caps, osm, manifest, gaps, products):
                              "(min-width: 880px) 340px, (min-width: 600px) 45vw, 92vw")
     f["img_contact"] = fixed_img(manifest, "contact", f"{site['name']}", "contact-avatar", 64)
     f["img_geoaid"] = picture(manifest, "geoaid-flood",
-                              "Map of modelled flood probability across Amuwo-Odofin, from dark blue (lower) "
-                              "to light blue (higher), inside the LGA boundary.",
+                              "Map of modelled flood probability across Amuwo-Odofin, from near-white (lower) "
+                              "to deep red (higher), inside the LGA boundary.",
                               "(min-width: 1100px) 560px, (min-width: 720px) 50vw, 92vw")
     f["img_geoaid_large"] = picture(manifest, "geoaid-flood",
-                                    "Map of modelled flood probability across Amuwo-Odofin, from dark blue (lower) "
-                                    "to light blue (higher), inside the LGA boundary.",
+                                    "Map of modelled flood probability across Amuwo-Odofin, from near-white (lower) "
+                                    "to deep red (higher), inside the LGA boundary.",
                                     "(min-width: 1100px) 1000px, 92vw", eager=True)
     f["geoaid_full"] = manifest["geoaid-flood"][-1]["src"]
     f["img_access_preview"] = picture(manifest, "access-map-preview",

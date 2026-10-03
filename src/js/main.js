@@ -148,7 +148,7 @@
       var place = (fd.get("place") || "").trim();
       var where = fd.get("where") || "";
       var lines = [
-        "Hello Oluwasola,", "", "I'd like to book a 20-minute call.", "",
+        "Hello Oluwasola,", "", "I'd like to book a call.", "",
         line("Services", fd.getAll("service")),
         where || place ? "Site: " + [where, place].filter(Boolean).join(", ") : "",
         line("Timing", fd.getAll("when")),
@@ -161,7 +161,7 @@
     brief.addEventListener("submit", function (ev) {
       ev.preventDefault();
       var services = new FormData(brief).getAll("service");
-      var subject = "20-minute call" + (services.length ? ": " + services.slice(0, 2).join(", ") : "");
+      var subject = "Call request" + (services.length ? ": " + services.slice(0, 2).join(", ") : "");
       window.location.href = "mailto:" + brief.dataset.email +
         "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(compose());
       briefStatus.textContent = "Opening your email app…";

@@ -7,7 +7,7 @@
   ],
   "flagship": "Geospatial analysis you can verify.",
   "title": "GIS & Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye",
-  "description": "GIS, drone mapping, satellite remote sensing and geospatial AI from Lagos, for clients in Nigeria, across Africa and worldwide. Book a 20-minute call.",
+  "description": "GIS, drone mapping, satellite remote sensing and geospatial AI from Lagos, for clients in Nigeria, across Africa and worldwide. Book a call.",
   "locality": "Lagos",
   "country_code": "NG",
   "country": "Nigeria",
@@ -19,14 +19,28 @@
   "timezone": "WAT, UTC+1",
   "email": "o.oyin1115@gmail.com",
   "whatsapp": null,
-  "call_subject": "20-minute call",
-  "call_body": "Hello Oluwasola,\n\nI'd like to book a 20-minute call.\n\nOrganisation:\nCountry or area of interest:\nWhat I need to decide:\nData we already have:\nTwo or three times that suit me (with time zone):\n",
-  "booking_url": null,
+  "call_subject": "Call request",
+  "call_body": "Hello Oluwasola,\n\nI'd like to book a call.\n\nOrganisation:\nCountry or area of interest:\nWhat I need to decide:\nData we already have:\nTwo or three times that suit me (with time zone):\n",
+  "booking_url": "https://cal.com/oluwasola-oyinloye",
+  "booking_options": [
+    {
+      "label": "30-minute scoping call",
+      "url": "https://cal.com/oluwasola-oyinloye/30min"
+    },
+    {
+      "label": "15-minute intro",
+      "url": "https://cal.com/oluwasola-oyinloye/15min"
+    }
+  ],
   "links": {
     "linkedin": "https://www.linkedin.com/in/oluwasola-oyinloye",
     "github": "https://github.com/Dexsholex",
     "medium": "https://medium.com/@Deyley",
     "researchgate": null
+  },
+  "preprint": {
+    "title": null,
+    "doi": null
   },
   "tools": {
     "Programming and analysis": [

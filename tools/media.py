@@ -38,8 +38,10 @@ PHOTOS = {
     "palm-crown": ("field/palm-crown.jpg", (0, 0, 1, 1), (480, 800, 1200)),
     "palm-pilot": ("field/palm-pilot.jpg", (0, 0.04, 1, 0.96), (360, 540, 900)),
 }
-# Single-hue sequential ramp (blue), dark for low values so they recede into the panel
-FLOOD_RAMP = ["#104281", "#1c5cab", "#2a78d6", "#5598e7", "#86b6ef", "#cde2fb"]
+# Single-hue sequential ramp (red), near-white for low values so they recede into the light map panel;
+# lightness carries the order, so it stays readable with colour-vision deficiency
+FLOOD_RAMP = ["#fee5d9", "#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15"]
+MAP_PAPER = "#faf8f3"
 CATEGORY_COLOURS = ["#3987e5", "#d95926", "#199e70", "#8a918d"]  # hospital, clinic/doctors, pharmacy, other
 
 
@@ -83,12 +85,12 @@ def geoaid():
         crs = src.crs
     boundary = gpd.read_file(ASSETS / "geoaid" / "amuwo_odofin_boundary.geojson").to_crs(crs)
 
-    fig = plt.figure(figsize=(16, 10), dpi=100, facecolor=PANEL)
+    fig = plt.figure(figsize=(16, 10), dpi=100, facecolor=MAP_PAPER)
     ax = fig.add_axes([0.03, 0.04, 0.94, 0.92])
-    ax.set_facecolor(PANEL)
+    ax.set_facecolor(MAP_PAPER)
     cmap = LinearSegmentedColormap.from_list("flood", FLOOD_RAMP)
     ax.imshow(band, cmap=cmap, vmin=0, vmax=1, extent=(b.left, b.right, b.bottom, b.top), interpolation="nearest")
-    boundary.boundary.plot(ax=ax, color="#e7ede9", linewidth=1.4, alpha=0.6)
+    boundary.boundary.plot(ax=ax, color="#2b3631", linewidth=1.4, alpha=0.55)
     ax.set_aspect("equal")
     ax.set_axis_off()
     im = figure_to_image(fig)
