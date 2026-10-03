@@ -10,7 +10,7 @@
       <p class="lead">I turn satellite, drone and aerial imagery into answers for plantation operators, agric lenders, developers and NGOs in Nigeria, across Africa and worldwide, and I tell you how far to trust each one.</p>
       <div class="hero-actions">
         <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book a 20-minute call</a>
-        <a class="btn btn-ghost" href="{{ whatsapp_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>WhatsApp</a>
+        {{ whatsapp_button }}
       </div>
       <p class="hero-meta">Based in Lagos ({{ timezone }}) · On site across Nigeria · Remote for clients anywhere · <a href="#work">See the work</a></p>
     </div>
@@ -291,12 +291,12 @@
         <div class="contact-person">{{ img_contact }}<p><strong>You'll speak with me directly.</strong><span>Lagos, Nigeria · {{ timezone }}</span></p></div>
         <div class="contact-actions">
           <a class="btn" href="{{ call_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>Book by email</a>
-          <a class="btn btn-ghost" href="{{ whatsapp_url }}"><svg aria-hidden="true" focusable="false"><use href="#i-chat"/></svg>WhatsApp</a>
+          {{ whatsapp_button }}
         </div>
       </div>
       <ul class="contact-list">
         <li><span class="k">Email</span><span class="v"><a href="{{ mailto_url }}">{{ email }}</a><button class="copy" type="button" data-copy="{{ email }}" hidden><svg aria-hidden="true" focusable="false"><use href="#i-copy"/></svg><span>Copy</span></button></span></li>
-        <li><span class="k">WhatsApp</span><span class="v"><a href="{{ whatsapp_url }}">{{ whatsapp_display }}</a></span></li>
+        {{ whatsapp_item }}
         <li><span class="k">LinkedIn</span><span class="v"><a href="{{ linkedin }}" rel="me">oluwasola-oyinloye</a></span></li>
         <li><span class="k">GitHub</span><span class="v"><a href="{{ github }}" rel="me">Dexsholex</a></span></li>
         <li><span class="k">Medium</span><span class="v"><a href="{{ medium }}" rel="me">@Deyley</a></span></li>

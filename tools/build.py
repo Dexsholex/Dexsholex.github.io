@@ -79,6 +79,14 @@ def fixed_img(manifest, name, alt, cls="", size=None):
 
 
 # ---------- fragments ----------
+def phone_display(number):
+    """+234 909 000 0000 for Nigerian numbers, otherwise +<digits>."""
+    d = "".join(ch for ch in str(number) if ch.isdigit())
+    if d.startswith("234") and len(d) == 13:
+        return f"+234 {d[3:6]} {d[6:9]} {d[9:]}"
+    return "+" + d
+
+
 def gallery_item(manifest, name, alt, caption, shape="wide"):
     full = manifest[name][-1]["src"]
     sizes = "(min-width: 1024px) 380px, (min-width: 600px) 46vw, 92vw"
@@ -121,8 +129,19 @@ def fragments(site, caps, osm, manifest, gaps, products):
     links, proj, palm = site["links"], site["projects"], site["projects"]["oil_palm"]
     f = {}
 
-    wa = f"https://wa.me/{site['whatsapp']}?text={urllib.parse.quote(site['call_message'])}"
-    f["whatsapp_url"] = esc(wa)
+    # WhatsApp appears only when a (business) number is set in site.json; "whatsapp": null hides it everywhere
+    wa_number = site.get("whatsapp")
+    if wa_number:
+        greeting = f"Hello {site['name'].split()[0]}, I'd like to book a 20-minute call."
+        wa = esc(f"https://wa.me/{wa_number}?text={urllib.parse.quote(greeting)}")
+        f["whatsapp_button"] = f'<a class="btn btn-ghost" href="{wa}">{icon("chat")}WhatsApp</a>'
+        f["whatsapp_item"] = (f'<li><span class="k">WhatsApp</span><span class="v">'
+                              f'<a href="{wa}">{esc(phone_display(wa_number))}</a></span></li>')
+        f["whatsapp_footer"] = f'<li><a href="{wa}">WhatsApp {esc(phone_display(wa_number))}</a></li>'
+        f["privacy_services"] = "WhatsApp, LinkedIn, GitHub, Medium and the GeoAID dashboard on Streamlit"
+    else:
+        f["whatsapp_button"] = f["whatsapp_item"] = f["whatsapp_footer"] = ""
+        f["privacy_services"] = "LinkedIn, GitHub, Medium and the GeoAID dashboard on Streamlit"
     # Email works for clients anywhere; the body prompts for what a first call needs, time zone included
     body = site["call_body"].replace("\n", "\r\n")
     book = f"mailto:{site['email']}?subject={urllib.parse.quote(site['call_subject'])}&body={urllib.parse.quote(body)}"
@@ -264,7 +283,7 @@ def person_and_service(site, caps, manifest):
     person = {
         "@type": "Person", "@id": base + "#person", "name": site["name"], "jobTitle": site["roles"],
         "url": base, "image": base.rstrip("/") + manifest["portrait"][-1]["src"],
-        "email": "mailto:" + site["email"], "telephone": "+" + site["whatsapp"], "address": address,
+        "email": "mailto:" + site["email"], "address": address,
         "alumniOf": [ilorin, miva],
         "hasCredential": [
             {"@type": "EducationalOccupationalCredential", "credentialCategory": "degree",
@@ -275,15 +294,19 @@ def person_and_service(site, caps, manifest):
         "knowsAbout": skills + [t for group in site["tools"].values() for t in group], "knowsLanguage": "en",
         "sameAs": same_as,
     }
+    if site.get("whatsapp"):
+        person["telephone"] = "+" + str(site["whatsapp"])
     service = {
         "@type": "ProfessionalService", "@id": base + "#service", "name": site["name"],
         "description": site["description"], "url": base, "image": base + "og.png",
-        "email": "mailto:" + site["email"], "telephone": "+" + site["whatsapp"], "address": address,
+        "email": "mailto:" + site["email"], "address": address,
         "areaServed": [{"@type": "Country", "name": "Nigeria"}, {"@type": "Continent", "name": "Africa"},
                        {"@type": "Place", "name": "Worldwide"}],
         "availableLanguage": "en", "founder": {"@id": base + "#person"},
         "knowsAbout": skills, "sameAs": same_as,
     }
+    if site.get("whatsapp"):
+        service["telephone"] = person["telephone"]
     return person, service
 
 
@@ -423,7 +446,6 @@ def main():
         "name": esc(site["name"]),
         "flagship": esc(site["flagship"]),
         "email": esc(site["email"]),
-        "whatsapp_display": esc(site["whatsapp_display"]),
         "timezone": esc(site["timezone"]),
         "linkedin": esc(site["links"]["linkedin"]),
         "github": esc(site["links"]["github"]),
