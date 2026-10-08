@@ -70,6 +70,17 @@
     if (!u.hash && !/^\/([a-z]{2}\/)?$/.test(u.pathname) && location.pathname.indexOf(u.pathname) === 0) a.setAttribute("aria-current", "page");
   });
 
+  // Menu that scrolls sideways on phones: fade the far edge while more items are hidden there
+  var siteNav = document.querySelector(".site-nav");
+  if (siteNav) {
+    var navMore = function () {
+      siteNav.classList.toggle("has-more", siteNav.scrollWidth - siteNav.clientWidth - Math.abs(siteNav.scrollLeft) > 4);
+    };
+    siteNav.addEventListener("scroll", navMore, { passive: true });
+    window.addEventListener("resize", navMore);
+    navMore();
+  }
+
   // Language menu: closes on Escape or a click elsewhere
   var langMenu = document.querySelector("[data-lang-menu]");
   if (langMenu) {

@@ -6,8 +6,7 @@
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="byline">{{ m.fixed_img('avatar', '', 'avatar', 56) }}<span><strong>{{ site.name }}</strong><span>{% for r in site.roles %}{{ r }}{% if not loop.last %}<br>{% endif %}{% endfor %}</span></span></p>
-      <p class="kicker">SIG · Teledetección · Cartografía con drones · IA geoespacial</p>
-      <h1 id="hero-title">{{ site.flagship }}</h1>
+      <h1 id="hero-title"><span class="kicker hero-topic">{{ site.topic }}</span><span class="hero-flag">{{ site.flagship }}</span></h1>
       <p class="lead">Hago trabajos de SIG, teledetección, cartografía con drones e IA geoespacial para plantaciones, prestamistas agrícolas, exportadores, promotores, gobiernos y ONG, en Nigeria y en el extranjero. Convierto imágenes y datos de ubicación en respuestas, y le digo hasta qué punto puede fiarse de cada una.</p>
       <div class="hero-actions">
         {{ m.book_button() }}

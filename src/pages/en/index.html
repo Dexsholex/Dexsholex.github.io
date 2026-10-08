@@ -6,8 +6,7 @@
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="byline">{{ m.fixed_img('avatar', '', 'avatar', 56) }}<span><strong>{{ site.name }}</strong><span>{% for r in site.roles %}{{ r }}{% if not loop.last %}<br>{% endif %}{% endfor %}</span></span></p>
-      <p class="kicker">GIS · Remote sensing · Drone mapping · Geospatial AI</p>
-      <h1 id="hero-title">{{ site.flagship }}</h1>
+      <h1 id="hero-title"><span class="kicker hero-topic">{{ site.topic }}</span><span class="hero-flag">{{ site.flagship }}</span></h1>
       <p class="lead">I do GIS, remote sensing, drone mapping and geospatial AI work for plantation operators, agric lenders, exporters, developers, governments and NGOs, in Nigeria and abroad. I turn imagery and location data into answers, and I tell you how far to trust each one.</p>
       <div class="hero-actions">
         {{ m.book_button() }}

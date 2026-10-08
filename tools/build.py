@@ -186,7 +186,7 @@ def typography(page_html, lang):
 def merged_site(site, ui):
     s = copy.deepcopy(site)
     u = ui["site"]
-    for k in ("roles", "flagship", "title", "description", "call_subject", "call_body"):
+    for k in ("roles", "flagship", "topic", "title", "description", "call_subject", "call_body"):
         s[k] = u[k]
     s["booking_options"] = [dict(o, label=u["booking"][o["key"]]) for o in site["booking_options"]]
     s["tools"] = [{"group": u["tool_groups"][g["key"]], "items": [u["tool_items"].get(i, i) for i in g["items"]]}
@@ -331,6 +331,7 @@ def jsonld(page, ctx):
     service = {
         "@type": "ProfessionalService", "@id": base + "#service", "name": site["name"],
         "description": site["description"], "url": home, "image": base + ctx["og_default"],
+        "logo": base + "apple-touch-icon.png",
         "email": "mailto:" + site["email"], "address": address, "areaServed": area,
         "availableLanguage": "en", "founder": {"@id": base + "#person"},
         "knowsAbout": [s["title"] for s in services], "sameAs": same_as,
