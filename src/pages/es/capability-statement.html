@@ -52,7 +52,7 @@
       </div>
 
       <h2>Sectores</h2>
-      <ul class="cap-list tight">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+      <p class="cap-tools">{{ services.sectors.values()|join(' · ') }} · {{ t.services.any_chip }}</p>
     </div>
 
     <div>
@@ -60,7 +60,7 @@
       <p>Sobre el terreno en Nigeria. A distancia en África y en todo el mundo.</p>
 
       <h2>Formas de colaborar</h2>
-      <p>Piloto · Proyecto · Seguimiento · Días de asesoría · Formación. Alcance por escrito en cada colaboración; acuerdo de confidencialidad si lo solicita.</p>
+      <p>Piloto · Proyecto · Seguimiento · Asesoría y estrategia · Formación. Alcance por escrito en cada colaboración; acuerdo de confidencialidad si lo solicita.</p>
 
       <h2>Herramientas</h2>
       <p class="cap-tools">{% for g in site.tools %}<b>{{ g.group }}:</b> {{ g['items']|join(', ') }}. {% endfor %}</p>

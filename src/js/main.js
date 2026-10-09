@@ -198,24 +198,23 @@
     });
   });
 
-  // Sector filter on the service lists
+  // Industry filter on the service lists
   var filter = document.querySelector("[data-sector-filter]");
   var sectorList = document.querySelector("[data-sector-list]");
   if (filter && sectorList) {
     var sectorStatus = document.querySelector("[data-sector-status]");
+    var sectorSelect = filter.querySelector("[data-sector-select]");
     filter.hidden = false;
-    filter.addEventListener("click", function (ev) {
-      var b = ev.target.closest("button[data-sector]");
-      if (!b) return;
-      filter.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
-      var key = b.dataset.sector;
+    sectorSelect.addEventListener("change", function () {
+      var key = sectorSelect.value;
       var shown = 0;
       sectorList.querySelectorAll("li[data-sectors]").forEach(function (li) {
         var show = key === "all" || li.dataset.sectors.split(" ").indexOf(key) > -1;
         li.hidden = !show;
         if (show) shown++;
       });
-      if (sectorStatus) sectorStatus.textContent = fill(key === "all" ? T.services_count : T.services_for, { n: shown, sector: b.textContent });
+      var name = sectorSelect.options[sectorSelect.selectedIndex].text;
+      if (sectorStatus) sectorStatus.textContent = fill(key === "all" ? T.services_count : T.services_for, { n: shown, sector: name });
     });
   }
 

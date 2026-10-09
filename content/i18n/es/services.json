@@ -1,12 +1,19 @@
 {
   "sectors": {
     "agriculture": "Agricultura y plantaciones",
-    "finance": "Crédito agrícola y finanzas",
+    "finance": "Banca, seguros y crédito agrícola",
+    "energy": "Energía, agua y redes",
+    "mining": "Petróleo, gas y minería",
     "construction": "Inmobiliario, construcción e infraestructuras",
-    "government": "Administración pública y urbanismo",
-    "development": "ONG, salud y desarrollo",
-    "environment": "Medio ambiente, clima y seguros",
-    "mining": "Minería, canteras y energía"
+    "transport": "Transporte y logística",
+    "telecoms": "Telecomunicaciones",
+    "retail": "Comercio minorista y consumo",
+    "government": "Gobierno y sector público",
+    "health": "Salud",
+    "development": "ONG y desarrollo internacional",
+    "environment": "ESG, medio ambiente y clima",
+    "education": "Educación e investigación",
+    "consulting": "Consultoras e ingenierías"
   },
   "also": "Además: cartografía y producción de mapas para informes, digitalización y limpieza de datos, geocodificación, cartografía en OpenStreetMap, estudios de aptitud de terrenos y puntos de control GNSS. Si su pregunta tiene que ver con un lugar, consúlteme.",
   "services": {
@@ -275,6 +282,70 @@
           "GeoPandas",
           "Shapely",
           "GeoJSON"
+        ]
+      }
+    },
+    "location-assessment": {
+      "title": "Evaluación de ubicaciones y selección de emplazamientos",
+      "short": "Dónde construir, abrir, ampliar o invertir: emplazamientos candidatos puntuados por acceso, población, competencia, riesgo y coste.",
+      "page": {
+        "title": "Selección de emplazamientos y evaluación de ubicaciones · Oluwasola Oyinloye",
+        "description": "Selección de emplazamientos para comercio, telecomunicaciones, energía, salud e inmobiliario: candidatos puntuados por acceso, población, riesgo y coste.",
+        "headline": "Evaluación de ubicaciones y selección de emplazamientos",
+        "crumb": "Evaluación de ubicaciones",
+        "lead": "Dónde abrir una tienda, instalar una torre, construir una minirred o situar un centro de salud es una decisión espacial. Puntúo los emplazamientos candidatos según los factores que le importan y muestro las ventajas y desventajas en un mapa, para que la elección pueda explicarse ante un consejo, un financiador o un regulador.",
+        "get": [
+          "Una lista corta de emplazamientos candidatos, cada uno puntuado según los criterios que usted fije, con las ponderaciones por escrito.",
+          "Análisis de área de influencia y acceso: cuántas personas viven a una distancia o tiempo de viaje dados, y quién las atiende ya.",
+          "Evaluación de riesgos de cada emplazamiento: exposición a inundaciones, cobertura del suelo, pendiente y distancia a carreteras y líneas eléctricas.",
+          "Mapas y una tabla comparativa que su equipo puede llevar a una reunión.",
+          "Los datos y el método, para volver a puntuar cuando aparezca un nuevo emplazamiento."
+        ],
+        "who": "Cadenas y marcas que planifican puntos de venta, operadores de telecomunicaciones y empresas de torres, promotores de energía y minirredes, programas de salud que sitúan centros, bancos que planifican sucursales y redes de agentes, y promotores que evalúan terrenos.",
+        "steps": [
+          [
+            "Criterios",
+            "Qué hace bueno o malo un emplazamiento para usted"
+          ],
+          [
+            "Datos",
+            "Población, carreteras, usos del suelo, competidores y riesgo"
+          ],
+          [
+            "Puntuación",
+            "Puntuación ponderada y áreas de influencia"
+          ],
+          [
+            "Comprobación",
+            "Cómo cambia el orden con las ponderaciones, y revisión de las imágenes"
+          ],
+          [
+            "Decisión",
+            "Lista ordenada, mapas y el método"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "¿Necesita nuestros propios datos?",
+            "a": "Ayuda, pero no es imprescindible. Datos abiertos como WorldPop, OpenStreetMap y las imágenes de satélite cubren la mayor parte de África. Sus datos de ventas, clientes o activos afinan el análisis, y se mantienen confidenciales."
+          },
+          {
+            "q": "¿Puede comparar emplazamientos en varios países?",
+            "a": "Sí. El mismo método funciona entre países siempre que los datos sean comparables. Cuando no lo son, lo digo y lo ajusto."
+          },
+          {
+            "q": "¿Cómo trata los criterios que dependen en parte del criterio personal?",
+            "a": "Las ponderaciones se acuerdan con usted y se dejan por escrito, y muestro cómo cambia el orden si cambian, para que la respuesta no dependa de un único supuesto."
+          }
+        ],
+        "where": "En cualquier lugar, a distancia; visitas en Nigeria",
+        "chips": [
+          "QGIS",
+          "GeoPandas",
+          "PostGIS",
+          "WorldPop",
+          "OpenStreetMap",
+          "Google Earth Engine"
         ]
       }
     },

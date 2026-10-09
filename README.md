@@ -24,7 +24,7 @@ tests/                       checks on the built site
 tools/                       build, release, image, data and check scripts
 ```
 
-Service icons: `detect`, `drone`, `orbit`, `forest`, `wave`, `layers`, `webmap`, `chart`, `people`.
+Service icons: `detect`, `drone`, `orbit`, `forest`, `pin`, `wave`, `layers`, `webmap`, `chart`, `people`.
 
 ## Languages
 

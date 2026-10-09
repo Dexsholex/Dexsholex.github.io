@@ -168,6 +168,8 @@
       </li>
     </ul>
 
+    {{ m.industries() }}
+
     <div class="where" aria-labelledby="where-title">
       <h3 id="where-title">Dónde trabajo</h3>
       <ul class="where-grid">
@@ -196,7 +198,7 @@
     <header class="section-head">
       <p class="eyebrow">Servicios</p>
       <h2 id="services-title">Servicios SIG y geoespaciales</h2>
-      <p>Nueve áreas de servicio, desde levantamientos con dron hasta controles EUDR y formación. Elija su sector para ver dónde puedo ayudar.</p>
+      <p>{{ services.services|length }} áreas de servicio, desde levantamientos con dron y selección de emplazamientos hasta controles EUDR y formación, para clientes de cualquier sector. Elija el suyo para ver dónde puedo ayudar.</p>
     </header>
     {{ m.sector_filter() }}
     <ul class="services" data-sector-list>
@@ -257,8 +259,8 @@
         <p>El mismo análisis repetido cada mes, cada campaña o cada año, para programas y carteras que necesitan seguir los cambios.</p>
       </li>
       <li data-reveal>
-        <h3>Días de asesoría</h3>
-        <p>Apoyo por días para programas de ONG, consultoras y equipos de investigación: revisión de datos y métodos, o participación en una licitación como especialista geoespacial.</p>
+        <h3>Asesoría y estrategia</h3>
+        <p>Asesoramiento estratégico y técnico, por días o por meses: qué desarrollar o comprar, una revisión de sus datos y métodos, o un especialista geoespacial para su licitación.</p>
       </li>
       <li data-reveal>
         <h3>Formación</h3>

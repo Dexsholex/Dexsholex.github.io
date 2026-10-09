@@ -60,13 +60,25 @@
 {%- endmacro %}
 
 {% macro sector_filter() -%}
-<div class="sector-filter" role="group" aria-label="{{ t.services.filter_label }}" data-sector-filter hidden>
-  <button type="button" aria-pressed="true" data-sector="all">{{ t.services.all_sectors }}</button>
-  {%- for key, name in services.sectors.items() %}
-  <button type="button" aria-pressed="false" data-sector="{{ key }}">{{ name }}</button>
-  {%- endfor %}
+<div class="sector-filter" data-sector-filter hidden>
+  <label for="sector-select">{{ t.services.filter_label }}</label>
+  <select id="sector-select" data-sector-select>
+    <option value="all">{{ t.services.all_sectors }}</option>
+    {% for key, name in services.sectors.items() %}
+    <option value="{{ key }}">{{ name }}</option>
+    {% endfor %}
+  </select>
 </div>
 <p class="visually-hidden" aria-live="polite" data-sector-status></p>
+{%- endmacro %}
+
+{#- The industries list with the open invitation; used on the home page -#}
+{% macro industries() -%}
+<div class="industries" aria-labelledby="industries-title">
+  <h3 id="industries-title">{{ t.services.industries_title }}</h3>
+  <ul class="chips industry-chips">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}<li class="chip-any">{{ t.services.any_chip }}</li></ul>
+  <p class="sector-any">{{ t.services.any_industry }}</p>
+</div>
 {%- endmacro %}
 
 {% macro faq_list(items) -%}

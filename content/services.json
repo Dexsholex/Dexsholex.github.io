@@ -2,11 +2,18 @@
   "sectors": [
     "agriculture",
     "finance",
+    "energy",
+    "mining",
     "construction",
+    "transport",
+    "telecoms",
+    "retail",
     "government",
+    "health",
     "development",
     "environment",
-    "mining"
+    "education",
+    "consulting"
   ],
   "services": [
     {
@@ -15,9 +22,15 @@
       "sectors": [
         "agriculture",
         "finance",
+        "energy",
+        "mining",
         "construction",
+        "transport",
+        "telecoms",
+        "retail",
         "government",
-        "environment"
+        "environment",
+        "consulting"
       ],
       "related": [
         "oil-palm",
@@ -29,10 +42,14 @@
       "icon": "drone",
       "sectors": [
         "agriculture",
-        "construction",
+        "energy",
         "mining",
+        "construction",
+        "transport",
+        "telecoms",
+        "government",
         "environment",
-        "government"
+        "consulting"
       ],
       "related": [
         "oil-palm"
@@ -44,10 +61,13 @@
       "sectors": [
         "agriculture",
         "finance",
-        "environment",
+        "energy",
+        "mining",
         "government",
         "development",
-        "mining"
+        "environment",
+        "education",
+        "consulting"
       ],
       "related": [
         "geoaid"
@@ -59,10 +79,29 @@
       "sectors": [
         "agriculture",
         "finance",
-        "environment"
+        "environment",
+        "consulting"
       ],
       "related": [
         "oil-palm"
+      ]
+    },
+    {
+      "slug": "location-assessment",
+      "icon": "pin",
+      "sectors": [
+        "retail",
+        "telecoms",
+        "energy",
+        "finance",
+        "construction",
+        "transport",
+        "health",
+        "government",
+        "development"
+      ],
+      "related": [
+        "access-map"
       ]
     },
     {
@@ -73,7 +112,14 @@
         "government",
         "development",
         "environment",
-        "finance"
+        "finance",
+        "health",
+        "retail",
+        "transport",
+        "telecoms",
+        "energy",
+        "consulting",
+        "education"
       ],
       "related": [
         "access-map"
@@ -87,7 +133,10 @@
         "government",
         "development",
         "environment",
-        "finance"
+        "finance",
+        "energy",
+        "transport",
+        "health"
       ],
       "related": [
         "geoaid"
@@ -101,7 +150,13 @@
         "development",
         "environment",
         "agriculture",
-        "construction"
+        "construction",
+        "health",
+        "transport",
+        "energy",
+        "retail",
+        "consulting",
+        "education"
       ],
       "related": [
         "geoaid-dashboard",
@@ -116,7 +171,12 @@
         "development",
         "finance",
         "construction",
-        "agriculture"
+        "agriculture",
+        "telecoms",
+        "energy",
+        "transport",
+        "retail",
+        "health"
       ],
       "related": [
         "oil-palm",
@@ -130,7 +190,11 @@
         "government",
         "development",
         "agriculture",
-        "environment"
+        "environment",
+        "education",
+        "consulting",
+        "health",
+        "energy"
       ],
       "related": []
     }

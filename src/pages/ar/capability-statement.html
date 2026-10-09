@@ -52,7 +52,7 @@
       </div>
 
       <h2>القطاعات</h2>
-      <ul class="cap-list tight">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+      <p class="cap-tools">{{ services.sectors.values()|join(' · ') }} · {{ t.services.any_chip }}</p>
     </div>
 
     <div>
@@ -60,7 +60,7 @@
       <p>ميدانيًا في نيجيريا. وعن بُعد في أفريقيا والعالم.</p>
 
       <h2>طرق التعاون</h2>
-      <p>مشروع تجريبي · مشروع · متابعة دورية · أيام استشارية · تدريب. نطاق مكتوب لكل تعاون؛ واتفاقية عدم إفصاح عند الطلب.</p>
+      <p>مشروع تجريبي · مشروع · متابعة دورية · الاستشارات والاستراتيجية · تدريب. نطاق مكتوب لكل تعاون؛ واتفاقية عدم إفصاح عند الطلب.</p>
 
       <h2>الأدوات</h2>
       <p class="cap-tools">{% for g in site.tools %}<b>{{ g.group }}:</b> {{ g['items']|join('، ') }}. {% endfor %}</p>

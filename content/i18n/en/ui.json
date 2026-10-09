@@ -57,8 +57,11 @@
     "no_tracking": "No cookies, analytics or tracking."
   },
   "services": {
-    "filter_label": "Show services for a sector",
-    "all_sectors": "All sectors"
+    "filter_label": "Your industry",
+    "all_sectors": "All industries",
+    "any_industry": "Don't see your industry? I work with any organisation whose question involves a place. Tell me what you need to decide.",
+    "industries_title": "Industries I work with",
+    "any_chip": "Any other industry"
   },
   "products": {
     "status": {

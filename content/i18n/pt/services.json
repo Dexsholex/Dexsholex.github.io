@@ -1,12 +1,19 @@
 {
   "sectors": {
     "agriculture": "Agricultura e plantações",
-    "finance": "Crédito agrícola e finanças",
+    "finance": "Banca, seguros e crédito agrícola",
+    "energy": "Energia, água e redes",
+    "mining": "Petróleo, gás e mineração",
     "construction": "Imobiliário, construção e infraestruturas",
-    "government": "Administração pública e urbanismo",
-    "development": "ONG, saúde e desenvolvimento",
-    "environment": "Ambiente, clima e seguros",
-    "mining": "Mineração, pedreiras e energia"
+    "transport": "Transportes e logística",
+    "telecoms": "Telecomunicações",
+    "retail": "Retalho e bens de consumo",
+    "government": "Administração e setor público",
+    "health": "Saúde",
+    "development": "ONG e desenvolvimento internacional",
+    "environment": "ESG, ambiente e clima",
+    "education": "Educação e investigação",
+    "consulting": "Consultoras e empresas de engenharia"
   },
   "also": "E ainda: cartografia e produção de mapas para relatórios, digitalização e limpeza de dados, geocodificação, mapeamento no OpenStreetMap, estudos de aptidão de locais e pontos de controlo GNSS. Se a sua pergunta envolve um lugar, pergunte.",
   "services": {
@@ -275,6 +282,70 @@
           "GeoPandas",
           "Shapely",
           "GeoJSON"
+        ]
+      }
+    },
+    "location-assessment": {
+      "title": "Avaliação de locais e seleção de localização",
+      "short": "Onde construir, abrir, expandir ou investir: locais candidatos pontuados por acesso, população, concorrência, risco e custo.",
+      "page": {
+        "title": "Seleção de locais e avaliação de localização em África · Oluwasola Oyinloye",
+        "description": "Seleção de locais e avaliação de localização para retalho, telecomunicações, energia, saúde e imobiliário: acesso, população, risco e custo.",
+        "headline": "Avaliação de locais e seleção de localização",
+        "crumb": "Avaliação de locais",
+        "lead": "Onde abrir uma loja, instalar uma torre, construir uma mini-rede ou localizar um centro de saúde é uma decisão espacial. Pontuo os locais candidatos segundo os fatores que lhe importam e mostro as contrapartidas num mapa, para que a escolha possa ser explicada a uma administração, a um financiador ou a um regulador.",
+        "get": [
+          "Uma lista curta de locais candidatos, cada um pontuado segundo os critérios que definir, com os pesos escritos.",
+          "Análise de área de influência e acesso: quantas pessoas vivem a uma dada distância ou tempo de viagem, e quem já as serve.",
+          "Avaliação de risco de cada local: exposição a inundações, ocupação do solo, declive e distância a estradas e linhas elétricas.",
+          "Mapas e uma tabela comparativa que a sua equipa pode levar para uma reunião.",
+          "Os dados e o método, para voltar a pontuar quando surgir um novo local."
+        ],
+        "who": "Retalhistas e marcas que planeiam pontos de venda, operadores de telecomunicações e empresas de torres, promotores de energia e mini-redes, programas de saúde que localizam unidades, bancos que planeiam balcões e redes de agentes, e promotores que avaliam terrenos.",
+        "steps": [
+          [
+            "Critérios",
+            "O que torna um local bom ou mau para si"
+          ],
+          [
+            "Dados",
+            "População, estradas, uso do solo, concorrentes e risco"
+          ],
+          [
+            "Pontuação",
+            "Pontuação ponderada e áreas de influência"
+          ],
+          [
+            "Verificação",
+            "Como a classificação muda com os pesos, e uma análise das imagens"
+          ],
+          [
+            "Decisão",
+            "Lista ordenada, mapas e o método"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Precisa dos nossos próprios dados?",
+            "a": "Ajuda, mas não é obrigatório. Dados abertos como o WorldPop, o OpenStreetMap e as imagens de satélite cobrem a maior parte de África. Os seus dados de vendas, clientes ou ativos tornam a análise mais precisa, e ficam confidenciais."
+          },
+          {
+            "q": "Pode comparar locais em vários países?",
+            "a": "Sim. O mesmo método funciona entre países, desde que os dados sejam comparáveis. Quando não são, digo-o e ajusto."
+          },
+          {
+            "q": "Como trata critérios que dependem em parte de julgamento?",
+            "a": "Os pesos são acordados consigo e ficam escritos, e mostro como a classificação muda se eles mudarem, para que a resposta não dependa de uma única hipótese."
+          }
+        ],
+        "where": "Em qualquer lugar, à distância; visitas ao local na Nigéria",
+        "chips": [
+          "QGIS",
+          "GeoPandas",
+          "PostGIS",
+          "WorldPop",
+          "OpenStreetMap",
+          "Google Earth Engine"
         ]
       }
     },

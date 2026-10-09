@@ -1,12 +1,19 @@
 {
   "sectors": {
     "agriculture": "Agriculture and plantations",
-    "finance": "Agric lending and finance",
+    "finance": "Banking, insurance and agric lending",
+    "energy": "Energy and utilities",
+    "mining": "Oil, gas and mining",
     "construction": "Real estate, construction and infrastructure",
-    "government": "Government and urban planning",
-    "development": "NGOs, health and development",
-    "environment": "Environment, climate and insurance",
-    "mining": "Mining, quarrying and energy"
+    "transport": "Transportation and logistics",
+    "telecoms": "Telecoms",
+    "retail": "Retail and consumer goods",
+    "government": "Government and public sector",
+    "health": "Healthcare",
+    "development": "NGOs and international development",
+    "environment": "ESG, environment and climate",
+    "education": "Education and research",
+    "consulting": "Consultancies and engineering firms"
   },
   "also": "Also: cartography and map production for reports, digitising and data cleaning, geocoding, OpenStreetMap mapping, site suitability studies and GNSS ground control. If your question involves a place, ask.",
   "services": {
@@ -275,6 +282,70 @@
           "GeoPandas",
           "Shapely",
           "GeoJSON"
+        ]
+      }
+    },
+    "location-assessment": {
+      "title": "Location assessment and site selection",
+      "short": "Where to build, open, expand or invest: candidate sites scored on access, population, competition, risk and cost.",
+      "page": {
+        "title": "Site Selection and Location Assessment in Africa · Oluwasola Oyinloye",
+        "description": "Site selection and location assessment for retail, telecoms, energy, health and real estate: candidate sites scored on access, population, risk and cost.",
+        "headline": "Location assessment and site selection",
+        "crumb": "Location assessment",
+        "lead": "Where to open a store, place a tower, build a mini-grid or locate a clinic is a spatial decision. I score candidate sites on the factors that matter to you and show the trade-offs on a map, so the choice can be explained to a board, a funder or a regulator.",
+        "get": [
+          "A shortlist of candidate sites, each scored on the criteria you set, with the weights written down.",
+          "Catchment and access analysis: how many people live within a given travel time or distance, and who else already serves them.",
+          "Risk screening for each site: flood exposure, land cover, slope, and distance to roads and power lines.",
+          "Maps and a comparison table your team can take into a meeting.",
+          "The data and the method, so the scoring can be run again when a new site comes up."
+        ],
+        "who": "Retailers and consumer brands planning outlets, telecom operators and tower companies, energy and mini-grid developers, health programmes placing facilities, banks planning branches and agent networks, and developers screening land.",
+        "steps": [
+          [
+            "Criteria",
+            "What makes a site good or bad for you"
+          ],
+          [
+            "Data",
+            "Population, roads, land use, competitors and risk"
+          ],
+          [
+            "Score",
+            "Weighted scoring and catchments"
+          ],
+          [
+            "Check",
+            "How the ranking changes with the weights, and a look at the imagery"
+          ],
+          [
+            "Decide",
+            "Ranked shortlist, maps and the method"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Do you need our own data?",
+            "a": "It helps but isn't required. Open data such as WorldPop, OpenStreetMap and satellite imagery covers most of Africa. Your sales, customer or asset data makes the analysis sharper, and it stays confidential."
+          },
+          {
+            "q": "Can you compare sites in several countries?",
+            "a": "Yes. The same method works across countries as long as the data is comparable. Where it isn't, I say so and adjust."
+          },
+          {
+            "q": "How do you handle criteria that are partly a matter of judgement?",
+            "a": "The weights are agreed with you and written down, and I show how the ranking changes if they change, so the answer doesn't hang on one assumption."
+          }
+        ],
+        "where": "Anywhere, done remotely; site visits in Nigeria",
+        "chips": [
+          "QGIS",
+          "GeoPandas",
+          "PostGIS",
+          "WorldPop",
+          "OpenStreetMap",
+          "Google Earth Engine"
         ]
       }
     },

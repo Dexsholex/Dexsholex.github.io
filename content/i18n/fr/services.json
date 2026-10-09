@@ -1,12 +1,19 @@
 {
   "sectors": {
     "agriculture": "Agriculture et plantations",
-    "finance": "Financement agricole et finance",
+    "finance": "Banque, assurance et financement agricole",
+    "energy": "Énergie, eau et réseaux",
+    "mining": "Pétrole, gaz et mines",
     "construction": "Immobilier, construction et infrastructures",
-    "government": "Administrations et urbanisme",
-    "development": "ONG, santé et développement",
-    "environment": "Environnement, climat et assurance",
-    "mining": "Mines, carrières et énergie"
+    "transport": "Transport et logistique",
+    "telecoms": "Télécommunications",
+    "retail": "Commerce de détail et grande consommation",
+    "government": "Administrations et secteur public",
+    "health": "Santé",
+    "development": "ONG et développement international",
+    "environment": "ESG, environnement et climat",
+    "education": "Éducation et recherche",
+    "consulting": "Cabinets de conseil et d'ingénierie"
   },
   "also": "Et aussi : cartographie et production de cartes pour vos rapports, numérisation et nettoyage de données, géocodage, cartographie OpenStreetMap, études d'aptitude de sites et points de contrôle GNSS. Si votre question concerne un lieu, posez-la.",
   "services": {
@@ -275,6 +282,70 @@
           "GeoPandas",
           "Shapely",
           "GeoJSON"
+        ]
+      }
+    },
+    "location-assessment": {
+      "title": "Évaluation de sites et choix d'implantation",
+      "short": "Où construire, ouvrir, s'étendre ou investir : des sites candidats notés sur l'accès, la population, la concurrence, le risque et le coût.",
+      "page": {
+        "title": "Choix d'implantation et évaluation de sites en Afrique · Oluwasola Oyinloye",
+        "description": "Choix d'implantation et évaluation de sites pour le commerce, les télécoms, l'énergie, la santé et l'immobilier : accès, population, risque et coût.",
+        "headline": "Évaluation de sites et choix d'implantation",
+        "crumb": "Évaluation de sites",
+        "lead": "Où ouvrir un magasin, installer une antenne, construire un mini-réseau ou implanter un centre de santé : c'est une décision spatiale. Je note les sites candidats sur les critères qui comptent pour vous et je montre les compromis sur une carte, pour que le choix puisse être justifié devant un conseil, un bailleur ou un régulateur.",
+        "get": [
+          "Une liste restreinte de sites candidats, chacun noté selon vos critères, avec les pondérations écrites noir sur blanc.",
+          "Une analyse de zone de chalandise et d'accessibilité : combien de personnes vivent à une distance ou un temps de trajet donné, et qui les dessert déjà.",
+          "Un contrôle des risques pour chaque site : exposition aux inondations, occupation du sol, pente, distance aux routes et aux lignes électriques.",
+          "Des cartes et un tableau comparatif que votre équipe peut présenter en réunion.",
+          "Les données et la méthode, pour relancer la notation quand un nouveau site se présente."
+        ],
+        "who": "Enseignes et marques qui planifient leurs points de vente, opérateurs télécoms et sociétés de tours, développeurs d'énergie et de mini-réseaux, programmes de santé qui implantent des structures, banques qui planifient agences et réseaux d'agents, et promoteurs qui évaluent des terrains.",
+        "steps": [
+          [
+            "Critères",
+            "Ce qui rend un site bon ou mauvais pour vous"
+          ],
+          [
+            "Données",
+            "Population, routes, occupation du sol, concurrents et risques"
+          ],
+          [
+            "Notation",
+            "Notation pondérée et zones de chalandise"
+          ],
+          [
+            "Contrôle",
+            "Effet des pondérations sur le classement, et vérification sur l'imagerie"
+          ],
+          [
+            "Décision",
+            "Liste classée, cartes et méthode"
+          ]
+        ],
+        "faq": [
+          {
+            "q": "Avez-vous besoin de nos propres données ?",
+            "a": "C'est utile mais pas indispensable. Les données ouvertes comme WorldPop, OpenStreetMap et l'imagerie satellite couvrent la plus grande partie de l'Afrique. Vos données de ventes, de clients ou d'actifs affinent l'analyse, et restent confidentielles."
+          },
+          {
+            "q": "Pouvez-vous comparer des sites dans plusieurs pays ?",
+            "a": "Oui. La même méthode fonctionne d'un pays à l'autre tant que les données sont comparables. Quand elles ne le sont pas, je le signale et j'adapte."
+          },
+          {
+            "q": "Comment traitez-vous les critères qui relèvent en partie du jugement ?",
+            "a": "Les pondérations sont convenues avec vous et écrites, et je montre comment le classement change si elles changent, pour que la réponse ne repose pas sur une seule hypothèse."
+          }
+        ],
+        "where": "Partout, à distance ; visites de site au Nigeria",
+        "chips": [
+          "QGIS",
+          "GeoPandas",
+          "PostGIS",
+          "WorldPop",
+          "OpenStreetMap",
+          "Google Earth Engine"
         ]
       }
     },

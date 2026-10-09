@@ -168,6 +168,8 @@
       </li>
     </ul>
 
+    {{ m.industries() }}
+
     <div class="where" aria-labelledby="where-title">
       <h3 id="where-title">Where I work</h3>
       <ul class="where-grid">
@@ -196,7 +198,7 @@
     <header class="section-head">
       <p class="eyebrow">Services</p>
       <h2 id="services-title">GIS and geospatial services</h2>
-      <p>Nine service areas, from drone surveys to EUDR checks and training. Pick your sector to see where I can help.</p>
+      <p>{{ services.services|length }} service areas, from drone surveys and site selection to EUDR checks and training, for clients in any industry. Choose yours to see where I can help.</p>
     </header>
     {{ m.sector_filter() }}
     <ul class="services" data-sector-list>
@@ -257,8 +259,8 @@
         <p>The same analysis repeated monthly, by season or by year, for programmes and portfolios that need to track change.</p>
       </li>
       <li data-reveal>
-        <h3>Advisory days</h3>
-        <p>Day-rate support for NGO programmes, consultancies and research teams: reviewing data and methods, or joining a bid as the geospatial specialist.</p>
+        <h3>Advisory and strategy</h3>
+        <p>Strategic and technical advice by the day or month: what to build or buy, a review of your data and methods, or a geospatial specialist for your bid.</p>
       </li>
       <li data-reveal>
         <h3>Training</h3>

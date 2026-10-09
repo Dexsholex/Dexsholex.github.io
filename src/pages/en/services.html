@@ -19,8 +19,8 @@
   <section class="section" aria-labelledby="all-title">
     <div class="wrap">
       <header class="section-head">
-        <h2 id="all-title">Nine service areas</h2>
-        <p>Pick your sector to see where I can help.</p>
+        <h2 id="all-title">{{ services.services|length }} service areas</h2>
+        <p>Choose your industry to see where I can help.</p>
       </header>
       {{ m.sector_filter() }}
       <ul class="services" data-sector-list>
@@ -37,7 +37,7 @@
         <h2 id="sectors-title">Who I work with</h2>
         <p class="small">If your organisation makes decisions about land, water, people or assets in a place, there is usually a geospatial question in it.</p>
       </div>
-      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+      <div><ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul><p class="sector-any">{{ t.services.any_industry }}</p></div>
     </div>
   </section>
 

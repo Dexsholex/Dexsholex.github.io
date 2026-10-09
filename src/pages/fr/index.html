@@ -168,6 +168,8 @@
       </li>
     </ul>
 
+    {{ m.industries() }}
+
     <div class="where" aria-labelledby="where-title">
       <h3 id="where-title">Où je travaille</h3>
       <ul class="where-grid">
@@ -196,7 +198,7 @@
     <header class="section-head">
       <p class="eyebrow">Services</p>
       <h2 id="services-title">Services SIG et géospatiaux</h2>
-      <p>Neuf domaines, des relevés par drone aux contrôles RDUE et à la formation. Choisissez votre secteur pour voir où je peux vous aider.</p>
+      <p>{{ services.services|length }} domaines de services, des relevés par drone et du choix d'implantation aux contrôles RDUE et à la formation, pour des clients de tous secteurs. Choisissez le vôtre pour voir où je peux vous aider.</p>
     </header>
     {{ m.sector_filter() }}
     <ul class="services" data-sector-list>
@@ -257,8 +259,8 @@
         <p>La même analyse répétée chaque mois, chaque saison ou chaque année, pour les programmes et portefeuilles qui doivent suivre les changements.</p>
       </li>
       <li data-reveal>
-        <h3>Jours de conseil</h3>
-        <p>Un appui facturé à la journée pour les programmes d'ONG, les cabinets de conseil et les équipes de recherche : revue des données et des méthodes, ou participation à un appel d'offres comme spécialiste géospatial.</p>
+        <h3>Conseil et stratégie</h3>
+        <p>Un conseil stratégique et technique, à la journée ou au mois : quoi développer ou acheter, une revue de vos données et méthodes, ou un spécialiste géospatial pour votre appel d'offres.</p>
       </li>
       <li data-reveal>
         <h3>Formation</h3>

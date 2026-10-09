@@ -52,7 +52,7 @@
       </div>
 
       <h2>Sectors</h2>
-      <ul class="cap-list tight">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
+      <p class="cap-tools">{{ services.sectors.values()|join(' · ') }} · {{ t.services.any_chip }}</p>
     </div>
 
     <div>
@@ -60,7 +60,7 @@
       <p>On site in Nigeria. Remote across Africa and worldwide.</p>
 
       <h2>Ways to work</h2>
-      <p>Pilot · Project · Monitoring · Advisory days · Training. Written scope for every engagement; NDA on request.</p>
+      <p>Pilot · Project · Monitoring · Advisory and strategy · Training. Written scope for every engagement; NDA on request.</p>
 
       <h2>Tools</h2>
       <p class="cap-tools">{% for g in site.tools %}<b>{{ g.group }}:</b> {{ g['items']|join(', ') }}. {% endfor %}</p>

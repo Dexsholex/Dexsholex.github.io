@@ -57,8 +57,11 @@
     "no_tracking": "Sem cookies, estatísticas ou rastreamento."
   },
   "services": {
-    "filter_label": "Mostrar os serviços para um setor",
-    "all_sectors": "Todos os setores"
+    "filter_label": "O seu setor",
+    "all_sectors": "Todos os setores",
+    "any_industry": "Não encontra o seu setor? Trabalho com qualquer organização cuja pergunta envolva um lugar. Diga-me o que precisa de decidir.",
+    "industries_title": "Setores com que trabalho",
+    "any_chip": "Qualquer outro setor"
   },
   "products": {
     "status": {
