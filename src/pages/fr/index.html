@@ -1,4 +1,4 @@
-{#page {"kind": "home", "title": "Services SIG et géospatiaux en Afrique · Oluwasola Oyinloye", "description": "SIG, cartographie par drone, télédétection et IA géospatiale depuis Lagos, pour des clients au Nigeria, en Afrique et dans le monde. Réservez un appel."} #}
+{#page {"kind": "home", "title": "SIG, géomatique et télédétection en Afrique · Oluwasola Oyinloye", "description": "SIG, géomatique, télédétection, cartographie par drone et IA géospatiale depuis Lagos, pour des clients au Nigeria, en Afrique et dans le monde."} #}
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
 {% block content %}
@@ -7,7 +7,7 @@
     <div class="hero-copy">
       <p class="byline">{{ m.fixed_img('avatar', '', 'avatar', 56) }}<span><strong>{{ site.name }}</strong><span>{% for r in site.roles %}{{ r }}{% if not loop.last %}<br>{% endif %}{% endfor %}</span></span></p>
       <h1 id="hero-title"><span class="kicker hero-topic">{{ site.topic }}</span><span class="hero-flag">{{ site.flagship }}</span></h1>
-      <p class="lead">Je réalise des travaux de SIG, de télédétection, de cartographie par drone et d'IA géospatiale pour des plantations, des prêteurs agricoles, des exportateurs, des promoteurs, des administrations et des ONG, au Nigeria et à l'étranger. Je transforme l'imagerie et les données de localisation en réponses, et je vous dis jusqu'où faire confiance à chacune.</p>
+      <p class="lead">Je réalise des travaux de SIG et de géomatique, de télédétection, de cartographie par drone et d'IA géospatiale pour des plantations, des prêteurs agricoles, des exportateurs, des promoteurs, des administrations et des ONG, au Nigeria et à l'étranger. Je transforme l'imagerie et les données de localisation en réponses, et je vous dis jusqu'où faire confiance à chacune.</p>
       <div class="hero-actions">
         {{ m.book_button() }}
         <a class="btn btn-ghost" href="{{ link('/services/') }}">{{ t.cta.explore_services }}{{ m.icon('arrow') }}</a>

@@ -149,12 +149,12 @@
       }
     },
     "remote-sensing": {
-      "title": "Teledetección satelital",
+      "title": "Teledetección y observación de la Tierra",
       "short": "Cobertura del suelo, vegetación, agua y cambios en el tiempo, leídos en imágenes de satélite ópticas y de radar, en cualquier lugar.",
       "page": {
-        "title": "Teledetección satelital en África · Oluwasola Oyinloye",
-        "description": "Cartografía de cobertura del suelo, vegetación, cultivos, agua y cambios con imágenes Sentinel y de otros satélites, para cualquier zona de África o del mundo.",
-        "headline": "Teledetección satelital",
+        "title": "Teledetección y observación de la Tierra en África · Oluwasola Oyinloye",
+        "description": "Análisis de imágenes de satélite y observación de la Tierra: usos y cobertura del suelo, detección de cambios, cultivos y agua en toda África.",
+        "headline": "Teledetección y observación de la Tierra",
         "crumb": "Teledetección",
         "lead": "Las imágenes de satélite cubren todos los lugares del planeta, una y otra vez, y muchas son gratuitas. Las convierto en mapas y cifras: qué hay sobre el terreno, cómo está cambiando y dónde están el agua y la vegetación.",
         "get": [

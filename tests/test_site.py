@@ -78,6 +78,8 @@ def sha(text):
 
 
 PAGES = {}
+# Search engine ownership files (static/google<id>.html) are plain text, not pages
+VERIFICATION = re.compile(r"^google[0-9a-f]+\.html$")
 
 
 def setUpModule():
@@ -87,6 +89,8 @@ def setUpModule():
     if out.returncode:
         raise RuntimeError("build failed:\n" + out.stdout + out.stderr)
     for f in sorted(DIST.rglob("*.html")):
+        if VERIFICATION.match(f.name):
+            continue
         p = Page()
         p.feed(f.read_text(encoding="utf-8"))
         PAGES[url_path(f)] = (f, p)

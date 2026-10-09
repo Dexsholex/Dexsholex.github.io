@@ -508,11 +508,9 @@ html.cv-off .section { content-visibility: visible; } /* set before any jump to 
 }
 [dir="rtl"] .sector-filter select { padding: .5rem 1rem .5rem 2.6rem; background-position: left .95rem center; }
 .sector-filter select:hover { border-color: var(--muted); }
-.sector-any { max-width: 46rem; margin-top: .9rem; color: var(--muted); font-size: .9375rem; }
 .industries { display: grid; gap: .85rem; margin-top: 2.5rem; }
 .industries h3 { color: var(--muted); font: 600 .8125rem/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .industry-chips li { background: var(--surface); }
-.industry-chips .chip-any { border-style: dashed; color: var(--accent-text); font-weight: 600; }
 .services-also { max-width: 52rem; margin-top: 1.5rem; color: var(--muted); font-size: .9375rem; }
 .services + .services-also + .case-links { margin-top: 1rem; }
 .icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-text); }

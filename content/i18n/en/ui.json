@@ -59,9 +59,7 @@
   "services": {
     "filter_label": "Your industry",
     "all_sectors": "All industries",
-    "any_industry": "Don't see your industry? I work with any organisation whose question involves a place. Tell me what you need to decide.",
-    "industries_title": "Industries I work with",
-    "any_chip": "Any other industry"
+    "industries_title": "Industries I work with"
   },
   "products": {
     "status": {
@@ -225,7 +223,7 @@
     ],
     "flagship": "Geospatial analysis you can verify.",
     "title": "GIS & Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye",
-    "description": "GIS, drone mapping, satellite remote sensing and geospatial AI from Lagos, for clients in Nigeria, across Africa and worldwide. Book a call.",
+    "description": "GIS, remote sensing and earth observation, drone mapping and geospatial AI from Lagos, for clients in Nigeria, across Africa and worldwide.",
     "call_subject": "Call request",
     "call_body": "Hello Oluwasola,\n\nI'd like to book a call.\n\nOrganisation:\nCountry or area of interest:\nWhat I need to decide:\nData we already have:\nTwo or three times that suit me (with time zone):\n",
     "booking": {

@@ -1,4 +1,4 @@
-{#page {"kind": "hub", "title": "GIS and Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye", "description": "GIS, drone mapping, remote sensing, geospatial AI, EUDR checks, flood risk, web GIS, spatial databases and training. On site in Nigeria, remote worldwide."} #}
+{#page {"kind": "hub", "title": "GIS and Geospatial Services in Nigeria and Africa · Oluwasola Oyinloye", "description": "GIS, remote sensing and earth observation, drone mapping, geospatial AI, EUDR checks, site selection, flood risk, web GIS and training. Nigeria and worldwide."} #}
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
 {% block content %}
@@ -37,7 +37,7 @@
         <h2 id="sectors-title">Who I work with</h2>
         <p class="small">If your organisation makes decisions about land, water, people or assets in a place, there is usually a geospatial question in it.</p>
       </div>
-      <div><ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul><p class="sector-any">{{ t.services.any_industry }}</p></div>
+      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
     </div>
   </section>
 

@@ -22,7 +22,7 @@
       "short": "Deep-learning models that find and count objects in imagery, and predictive models tested on ground they have not seen.",
       "page": {
         "title": "Geospatial AI and Machine Learning Services · Oluwasola Oyinloye",
-        "description": "Object detection, counting and classification in drone and satellite imagery, plus predictive spatial models tested on ground they have not seen.",
+        "description": "Geospatial AI and data science: object detection and counting in drone and satellite imagery, and predictive spatial models tested on unseen ground.",
         "headline": "Geospatial AI and machine learning",
         "crumb": "Geospatial AI",
         "lead": "Models that read imagery at a scale no team could manage by hand, and predictive models that tell you how far to trust them. The oil palm project counted 718,751 palms this way.",
@@ -85,8 +85,8 @@
       "title": "Drone mapping and photogrammetry",
       "short": "Survey flights planned and flown in-house, then turned into orthomosaics, surface and terrain models, and counts.",
       "page": {
-        "title": "Drone Mapping and Photogrammetry in Nigeria · Oluwasola Oyinloye",
-        "description": "Drone surveys planned and flown in-house, turned into orthomosaics, elevation models and object counts for plantations, construction and mining in Nigeria.",
+        "title": "Drone Mapping and Aerial Survey Services in Nigeria · Oluwasola Oyinloye",
+        "description": "Drone mapping and aerial survey services across Nigeria, planned and flown in-house: orthomosaics, elevation models, and tree or stockpile counts.",
         "headline": "Drone mapping and photogrammetry",
         "crumb": "Drone mapping",
         "lead": "Drone surveys across Nigeria, planned and flown in-house, and processed into maps you can measure from: orthomosaics, surface and terrain models, and counts of trees or other objects.",
@@ -149,12 +149,12 @@
       }
     },
     "remote-sensing": {
-      "title": "Satellite remote sensing",
+      "title": "Satellite remote sensing and earth observation",
       "short": "Land cover, vegetation, water and change over time, read from optical and radar satellite imagery, anywhere.",
       "page": {
-        "title": "Satellite Remote Sensing in Nigeria and Africa · Oluwasola Oyinloye",
-        "description": "Land cover, vegetation, crop, water and change mapping from Sentinel and other satellite imagery, for any area in Nigeria, Africa or beyond, done remotely.",
-        "headline": "Satellite remote sensing",
+        "title": "Remote Sensing and Earth Observation Services in Africa · Oluwasola Oyinloye",
+        "description": "Satellite imagery analysis and earth observation: land use and land cover mapping, change detection, and crop and water monitoring for any area in Africa.",
+        "headline": "Satellite remote sensing and earth observation",
         "crumb": "Satellite remote sensing",
         "lead": "Satellite imagery covers every site on earth, again and again, and much of it is free. I turn it into maps and numbers: what is on the land, how it is changing, and where water and vegetation are.",
         "get": [
@@ -217,8 +217,8 @@
       "title": "EUDR geolocation and deforestation checks",
       "short": "Plot points and polygons checked and screened for deforestation since 31 December 2020, ready for your EU due diligence.",
       "page": {
-        "title": "EUDR Geolocation and Deforestation Checks in Africa · Oluwasola Oyinloye",
-        "description": "Plot geolocation, polygon checks and satellite deforestation screening against the EUDR cut-off of 31 December 2020, for cocoa, palm oil, rubber and wood.",
+        "title": "EUDR Compliance: Geolocation and Deforestation Checks · Oluwasola Oyinloye",
+        "description": "EUDR compliance support for cocoa, palm oil, rubber, coffee and wood: plot geolocation, polygon checks and deforestation screening since 31 Dec 2020.",
         "headline": "EUDR geolocation and deforestation checks",
         "crumb": "EUDR checks",
         "lead": "The EU Deforestation Regulation (EUDR) asks companies selling cattle, cocoa, coffee, oil palm, rubber, soya or wood, and products made from them, in the EU to give the location of every plot the commodity came from and to show that the land was not deforested after 31 December 2020. I prepare and check that plot data and screen each plot against satellite imagery.",
@@ -289,8 +289,8 @@
       "title": "Location assessment and site selection",
       "short": "Where to build, open, expand or invest: candidate sites scored on access, population, competition, risk and cost.",
       "page": {
-        "title": "Site Selection and Location Assessment in Africa · Oluwasola Oyinloye",
-        "description": "Site selection and location assessment for retail, telecoms, energy, health and real estate: candidate sites scored on access, population, risk and cost.",
+        "title": "Site Selection and Location Intelligence in Africa · Oluwasola Oyinloye",
+        "description": "Location intelligence and site selection for retail, telecoms, energy, health and real estate: candidate sites scored on access, population, risk and cost.",
         "headline": "Location assessment and site selection",
         "crumb": "Location assessment",
         "lead": "Where to open a store, place a tower, build a mini-grid or locate a clinic is a spatial decision. I score candidate sites on the factors that matter to you and show the trade-offs on a map, so the choice can be explained to a board, a funder or a regulator.",
@@ -353,8 +353,8 @@
       "title": "GIS mapping and spatial analysis",
       "short": "Site selection, access and proximity analysis, map production and clean, well-structured spatial data.",
       "page": {
-        "title": "GIS Mapping and Spatial Analysis Services in Nigeria · Oluwasola Oyinloye",
-        "description": "Site selection, access and proximity analysis, map production and clean spatial data, in QGIS and Python, for clients in Nigeria, Africa and worldwide.",
+        "title": "GIS Consulting, Mapping and Spatial Analysis in Nigeria · Oluwasola Oyinloye",
+        "description": "GIS consulting and mapping: spatial analysis, geospatial data analysis, access studies and clean spatial data in QGIS and Python, for Nigeria and beyond.",
         "headline": "GIS mapping and spatial analysis",
         "crumb": "GIS mapping and analysis",
         "lead": "Most location questions don't need AI. They need clean data, the right analysis and a map people can read.",
@@ -414,8 +414,8 @@
       "title": "Flood, climate and environmental risk",
       "short": "Where flooding is more likely, which people, roads and facilities sit in the way, and how land cover is changing.",
       "page": {
-        "title": "Flood and Climate Risk Mapping in Nigeria and Africa · Oluwasola Oyinloye",
-        "description": "Flood susceptibility, exposure and environmental change mapping from satellite data, with validation you can check, for sites in Nigeria, Africa and beyond.",
+        "title": "Flood Risk Mapping and Assessment in Nigeria and Africa · Oluwasola Oyinloye",
+        "description": "Flood risk maps and flood risk assessment from satellite data: susceptibility, exposure and environmental change, with validation you can check.",
         "headline": "Flood, climate and environmental risk",
         "crumb": "Flood and climate risk",
         "lead": "Before you buy land, plan a programme or insure an asset, it helps to know where water goes and what sits in its way. I map that from satellite data and say how far the map can be trusted.",
@@ -543,8 +543,8 @@
       "title": "Spatial databases and data engineering",
       "short": "PostGIS databases and repeatable Python and Earth Engine pipelines that keep spatial data current.",
       "page": {
-        "title": "Spatial Databases and Geospatial Data Engineering · Oluwasola Oyinloye",
-        "description": "PostGIS databases and repeatable Python and Google Earth Engine pipelines that keep spatial data clean, current and easy to query.",
+        "title": "Geospatial Data Engineering and Spatial Databases · Oluwasola Oyinloye",
+        "description": "Geospatial data management: PostGIS databases and repeatable Python and Earth Engine pipelines that keep spatial data clean, current and easy to query.",
         "headline": "Spatial databases and data engineering",
         "crumb": "Spatial data engineering",
         "lead": "When the same spatial data is copied between laptops, versions drift and nobody trusts the numbers. I set up one source of truth and the pipelines that keep it current.",
@@ -602,8 +602,8 @@
       "title": "Training and capacity building",
       "short": "Hands-on Python, GIS and remote sensing training for teams, from small workshops to seminars that have reached 1,500 people.",
       "page": {
-        "title": "GIS, Remote Sensing and Python Training for Teams · Oluwasola Oyinloye",
-        "description": "Hands-on training in Python for geospatial analysis, QGIS and Google Earth Engine for teams, universities and NGOs, in person in Nigeria or online.",
+        "title": "GIS Training in Lagos and Online · Oluwasola Oyinloye",
+        "description": "GIS and remote sensing training in Lagos and online: Python for geospatial analysis, QGIS and Google Earth Engine, for teams, universities and NGOs.",
         "headline": "Training and capacity building",
         "crumb": "Training",
         "lead": "I have taught Python for geospatial analysis to 1,500 people through seminars. I also run smaller, hands-on sessions where your team works on its own data.",

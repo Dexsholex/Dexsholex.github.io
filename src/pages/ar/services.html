@@ -37,7 +37,7 @@
         <h2 id="sectors-title">مع من أعمل</h2>
         <p class="small">إن كانت مؤسستك تتخذ قرارات بشأن أرض أو مياه أو سكان أو أصول في مكان ما، ففي الغالب هناك سؤال جغرافي مكاني وراء ذلك.</p>
       </div>
-      <div><ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul><p class="sector-any">{{ t.services.any_industry }}</p></div>
+      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
     </div>
   </section>
 

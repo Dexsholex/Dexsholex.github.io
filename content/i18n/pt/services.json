@@ -86,7 +86,7 @@
       "short": "Voos de levantamento planeados e realizados internamente, transformados em ortomosaicos, modelos de superfície e de terreno, e contagens.",
       "page": {
         "title": "Mapeamento com drones e fotogrametria na Nigéria · Oluwasola Oyinloye",
-        "description": "Levantamentos com drones planeados e realizados internamente: ortomosaicos, modelos de elevação e contagens para plantações, obras e minas na Nigéria.",
+        "description": "Mapeamento com drones, incluindo agrícola, planeado e realizado internamente: ortomosaicos, modelos de elevação e contagens na Nigéria.",
         "headline": "Mapeamento com drones e fotogrametria",
         "crumb": "Mapeamento com drones",
         "lead": "Levantamentos com drones em toda a Nigéria, planeados e realizados internamente, e processados em mapas onde se pode medir: ortomosaicos, modelos de superfície e de terreno, e contagens de árvores ou de outros objetos.",
@@ -149,12 +149,12 @@
       }
     },
     "remote-sensing": {
-      "title": "Deteção remota por satélite",
+      "title": "Deteção remota e observação da Terra",
       "short": "Ocupação do solo, vegetação, água e mudanças ao longo do tempo, lidas em imagens de satélite óticas e radar, em qualquer lugar.",
       "page": {
-        "title": "Deteção remota por satélite em África · Oluwasola Oyinloye",
-        "description": "Mapeamento da ocupação do solo, vegetação, culturas, água e mudanças com imagens Sentinel e de outros satélites, para qualquer zona de África ou do mundo.",
-        "headline": "Deteção remota por satélite",
+        "title": "Deteção remota e observação da Terra em África · Oluwasola Oyinloye",
+        "description": "Análise de imagens de satélite e observação da Terra: uso e ocupação do solo, deteção de mudanças, monitorização de culturas e água em África.",
+        "headline": "Deteção remota e observação da Terra",
         "crumb": "Deteção remota",
         "lead": "As imagens de satélite cobrem todos os locais do planeta, uma e outra vez, e muitas são gratuitas. Transformo-as em mapas e números: o que está no terreno, como está a mudar, e onde estão a água e a vegetação.",
         "get": [
@@ -217,8 +217,8 @@
       "title": "EUDR: geolocalização e controlo da desflorestação",
       "short": "Pontos e polígonos de parcelas verificados e controlados quanto à desflorestação desde 31 de dezembro de 2020, prontos para a sua diligência devida na UE.",
       "page": {
-        "title": "EUDR: geolocalização e desflorestação em África · Oluwasola Oyinloye",
-        "description": "Geolocalização de parcelas, verificação de polígonos e deteção da desflorestação por satélite desde 31 de dezembro de 2020, para o EUDR.",
+        "title": "EUDR: georreferenciação e desflorestação em África · Oluwasola Oyinloye",
+        "description": "Georreferenciação de parcelas, verificação de polígonos e deteção da desflorestação por satélite desde 31 de dezembro de 2020, para o EUDR.",
         "headline": "EUDR: geolocalização e controlo da desflorestação",
         "crumb": "Controlos EUDR",
         "lead": "O Regulamento da UE relativo à desflorestação (EUDR) exige que as empresas que vendem na UE gado, cacau, café, óleo de palma, borracha, soja ou madeira, e produtos derivados, indiquem a localização de cada parcela de origem e mostrem que o terreno não foi desflorestado depois de 31 de dezembro de 2020. Preparo e verifico esses dados de parcelas e controlo cada parcela com imagens de satélite.",

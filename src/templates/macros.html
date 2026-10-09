@@ -72,12 +72,11 @@
 <p class="visually-hidden" aria-live="polite" data-sector-status></p>
 {%- endmacro %}
 
-{#- The industries list with the open invitation; used on the home page -#}
+{#- The industries list on the home page -#}
 {% macro industries() -%}
 <div class="industries" aria-labelledby="industries-title">
   <h3 id="industries-title">{{ t.services.industries_title }}</h3>
-  <ul class="chips industry-chips">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}<li class="chip-any">{{ t.services.any_chip }}</li></ul>
-  <p class="sector-any">{{ t.services.any_industry }}</p>
+  <ul class="chips industry-chips">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
 </div>
 {%- endmacro %}
 

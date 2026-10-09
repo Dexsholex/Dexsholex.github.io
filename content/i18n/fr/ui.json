@@ -59,9 +59,7 @@
   "services": {
     "filter_label": "Votre secteur",
     "all_sectors": "Tous les secteurs",
-    "any_industry": "Votre secteur n'est pas dans la liste ? Je travaille avec toute organisation dont la question concerne un lieu. Dites-moi ce que vous devez décider.",
-    "industries_title": "Secteurs avec lesquels je travaille",
-    "any_chip": "Tout autre secteur"
+    "industries_title": "Secteurs avec lesquels je travaille"
   },
   "products": {
     "status": {
@@ -224,8 +222,8 @@
       "Spécialiste de l'IA géospatiale"
     ],
     "flagship": "Des analyses géospatiales vérifiables.",
-    "title": "Services SIG et géospatiaux en Afrique · Oluwasola Oyinloye",
-    "description": "SIG, cartographie par drone, télédétection et IA géospatiale depuis Lagos, pour des clients au Nigeria, en Afrique et dans le monde. Réservez un appel.",
+    "title": "SIG, géomatique et télédétection en Afrique · Oluwasola Oyinloye",
+    "description": "SIG, géomatique, télédétection, cartographie par drone et IA géospatiale depuis Lagos, pour des clients au Nigeria, en Afrique et dans le monde.",
     "call_subject": "Demande d'appel",
     "call_body": "Bonjour Oluwasola,\n\nJe souhaite réserver un appel.\n\nOrganisation :\nPays ou zone concernée :\nDécision à prendre :\nDonnées dont nous disposons :\nDeux ou trois créneaux qui me conviennent (avec le fuseau horaire) :\n",
     "booking": {

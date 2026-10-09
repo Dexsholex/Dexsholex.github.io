@@ -59,9 +59,7 @@
   "services": {
     "filter_label": "Su sector",
     "all_sectors": "Todos los sectores",
-    "any_industry": "¿No ve su sector? Trabajo con cualquier organización cuya pregunta tenga que ver con un lugar. Cuénteme qué necesita decidir.",
-    "industries_title": "Sectores con los que trabajo",
-    "any_chip": "Cualquier otro sector"
+    "industries_title": "Sectores con los que trabajo"
   },
   "products": {
     "status": {
@@ -225,7 +223,7 @@
     ],
     "flagship": "Análisis geoespacial que puede verificar.",
     "title": "Servicios SIG y geoespaciales en África · Oluwasola Oyinloye",
-    "description": "SIG, cartografía con drones, teledetección satelital e IA geoespacial desde Lagos, para clientes en Nigeria, en África y en todo el mundo. Reserve una llamada.",
+    "description": "SIG, teledetección y observación de la Tierra, cartografía con drones e IA geoespacial desde Lagos, para clientes en África y en todo el mundo.",
     "call_subject": "Solicitud de llamada",
     "call_body": "Hola, Oluwasola:\n\nMe gustaría reservar una llamada.\n\nOrganización:\nPaís o zona de interés:\nLo que necesito decidir:\nDatos de los que ya disponemos:\nDos o tres horarios que me vienen bien (con zona horaria):\n",
     "booking": {

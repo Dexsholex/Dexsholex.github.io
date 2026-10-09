@@ -37,7 +37,7 @@
         <h2 id="sectors-title">Con quién trabajo</h2>
         <p class="small">Si su organización toma decisiones sobre tierra, agua, personas o bienes en un lugar, casi siempre hay una pregunta geoespacial detrás.</p>
       </div>
-      <div><ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul><p class="sector-any">{{ t.services.any_industry }}</p></div>
+      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
     </div>
   </section>
 

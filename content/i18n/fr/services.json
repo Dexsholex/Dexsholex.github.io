@@ -86,7 +86,7 @@
       "short": "Des vols de relevé planifiés et réalisés en interne, puis transformés en orthomosaïques, modèles de surface et de terrain, et comptages.",
       "page": {
         "title": "Cartographie par drone et photogrammétrie au Nigeria · Oluwasola Oyinloye",
-        "description": "Relevés par drone planifiés et réalisés en interne : orthomosaïques, modèles d'élévation et comptages pour plantations, chantiers et mines au Nigeria.",
+        "description": "Cartographie par drone, y compris agricole, planifiée et réalisée en interne : orthomosaïques, modèles d'élévation et comptages au Nigeria.",
         "headline": "Cartographie par drone et photogrammétrie",
         "crumb": "Cartographie par drone",
         "lead": "Des relevés par drone partout au Nigeria, planifiés et réalisés en interne, puis traités en cartes sur lesquelles on peut mesurer : orthomosaïques, modèles de surface et de terrain, comptages d'arbres ou d'autres objets.",
@@ -149,12 +149,12 @@
       }
     },
     "remote-sensing": {
-      "title": "Télédétection par satellite",
+      "title": "Télédétection et observation de la Terre",
       "short": "Occupation du sol, végétation, eau et évolution dans le temps, lues dans l'imagerie satellite optique et radar, partout dans le monde.",
       "page": {
-        "title": "Télédétection par satellite en Afrique · Oluwasola Oyinloye",
-        "description": "Occupation du sol, végétation, cultures, eau et changements cartographiés par imagerie Sentinel et autres satellites, en Afrique et ailleurs.",
-        "headline": "Télédétection par satellite",
+        "title": "Télédétection et observation de la Terre en Afrique · Oluwasola Oyinloye",
+        "description": "Analyse d'images satellite et observation de la Terre : occupation du sol, détection des changements, suivi des cultures et de l'eau, partout en Afrique.",
+        "headline": "Télédétection et observation de la Terre",
         "crumb": "Télédétection",
         "lead": "L'imagerie satellite couvre chaque site de la planète, encore et encore, et une grande partie est gratuite. J'en tire des cartes et des chiffres : ce qui se trouve sur le terrain, comment il évolue, où sont l'eau et la végétation.",
         "get": [
@@ -353,8 +353,8 @@
       "title": "Cartographie SIG et analyse spatiale",
       "short": "Choix de sites, analyses d'accessibilité et de proximité, production de cartes et données spatiales propres et bien structurées.",
       "page": {
-        "title": "Cartographie SIG et analyse spatiale · Oluwasola Oyinloye",
-        "description": "Choix de sites, analyses d'accessibilité et de proximité, production de cartes et données spatiales propres, avec QGIS et Python, en Afrique et ailleurs.",
+        "title": "SIG, géomatique et analyse spatiale · Oluwasola Oyinloye",
+        "description": "Conseil SIG et géomatique : analyse spatiale, choix de sites, accessibilité et cartes, avec QGIS et Python, pour des clients en Afrique et ailleurs.",
         "headline": "Cartographie SIG et analyse spatiale",
         "crumb": "Cartographie SIG et analyse",
         "lead": "La plupart des questions de localisation n'ont pas besoin d'IA. Elles demandent des données propres, la bonne analyse et une carte lisible.",
@@ -602,7 +602,7 @@
       "title": "Formation et renforcement des capacités",
       "short": "Formations pratiques en Python, SIG et télédétection pour les équipes, des petits ateliers aux séminaires qui ont réuni 1 500 personnes.",
       "page": {
-        "title": "Formation SIG, télédétection et Python · Oluwasola Oyinloye",
+        "title": "Formation SIG, géomatique et télédétection · Oluwasola Oyinloye",
         "description": "Formations pratiques en Python géospatial, QGIS et Google Earth Engine pour équipes, universités et ONG, en présentiel au Nigeria ou en ligne.",
         "headline": "Formation et renforcement des capacités",
         "crumb": "Formation",

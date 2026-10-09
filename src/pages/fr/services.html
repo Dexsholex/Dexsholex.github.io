@@ -1,4 +1,4 @@
-{#page {"kind": "hub", "title": "Services SIG et géospatiaux au Nigeria et en Afrique · Oluwasola Oyinloye", "description": "SIG, cartographie par drone, télédétection, IA géospatiale, contrôles RDUE, risque d'inondation, SIG web, bases de données spatiales et formation."} #}
+{#page {"kind": "hub", "title": "Services SIG et géospatiaux au Nigeria et en Afrique · Oluwasola Oyinloye", "description": "SIG et géomatique, télédétection, cartographie par drone, IA géospatiale, contrôles RDUE, choix d'implantation, risque d'inondation et formation, en Afrique."} #}
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
 {% block content %}
@@ -37,7 +37,7 @@
         <h2 id="sectors-title">Avec qui je travaille</h2>
         <p class="small">Si votre organisation prend des décisions sur des terres, de l'eau, des personnes ou des biens situés quelque part, il y a souvent une question géospatiale derrière.</p>
       </div>
-      <div><ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul><p class="sector-any">{{ t.services.any_industry }}</p></div>
+      <ul class="sector-list">{% for name in services.sectors.values() %}<li>{{ name }}</li>{% endfor %}</ul>
     </div>
   </section>
 
