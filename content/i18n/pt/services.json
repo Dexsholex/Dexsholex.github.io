@@ -59,7 +59,7 @@
         "faq": [
           {
             "q": "De quantos dados anotados precisa?",
-            "a": "Muitas vezes menos do que se pensa. O detetor de palmeiras foi treinado com um pequeno conjunto anotado à mão e melhorado por etapas, à medida que surgiam novos tipos de erro."
+            "a": "Muitas vezes menos do que se pensa. O detetor de palmeiras aprendeu com 4 041 copas anotadas à mão em 435 recortes de imagem e foi melhorado por etapas, à medida que surgiam novos tipos de erro."
           },
           {
             "q": "Porquê testar em zonas reservadas?",

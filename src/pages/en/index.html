@@ -51,7 +51,7 @@
             <li class="tag tag-quiet">Anonymised</li>
           </ul>
           <h3><a href="{{ link(cases['oil-palm']) }}">Counting oil palms from aerial imagery</a></h3>
-          <p>For a commercial oil palm plantation, a YOLOv8 model finds each palm crown in aerial imagery and turns it into a mapped, countable tree, block by block.</p>
+          <p>For a commercial oil palm plantation in West Africa, a YOLOv8 model finds each palm crown in aerial imagery and turns it into a mapped, countable tree, block by block. On held-out test tiles it counted {{ palm.model_count }} palms where a hand count found {{ palm.hand_count }}.</p>
           {{ m.palm_bars('Blocks overlapped, so adding them up would count some palms twice. Plantation total:') }}
           <p class="small">{{ palm.double_counts }} double counts removed ({{ palm.double_count_share }}). Every hectare is attributed to exactly one block.</p>
           <p class="case-links">

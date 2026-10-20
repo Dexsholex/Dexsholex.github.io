@@ -1,13 +1,14 @@
 {#page {"kind": "case",
  "title": "Oil palm counting from aerial imagery · Oluwasola Oyinloye",
  "headline": "Counting 718,751 oil palms from aerial imagery",
- "description": "Case study: a YOLOv8 crown-detection pipeline that mapped 718,751 palms across 12,166.6 ha and 26 blocks for a commercial oil palm plantation.",
+ "description": "Case study: a YOLOv8 crown-detection pipeline that mapped 718,751 palms across 12,166.6 ha and 26 blocks for an oil palm plantation in West Africa.",
  "og_title": "Counting 718,751 oil palms from aerial imagery",
  "og_image": "og-oil-palm.png",
  "og_image_alt": "Case study card: 718,751 oil palms counted across 12,166.6 hectares from aerial imagery.",
  "crumb": "Oil palm tree counting",
  "published": "2026-10-02",
- "keywords": ["oil palm tree counting", "palm crown detection", "YOLOv8", "plantation inventory", "aerial imagery", "geospatial AI"]} #}
+ "modified": "2026-10-20",
+ "keywords": ["oil palm tree counting", "palm crown detection", "YOLOv8", "plantation inventory", "aerial imagery", "geospatial AI", "drone imagery"]} #}
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
 {% block content %}
@@ -21,7 +22,7 @@
         <li class="tag tag-quiet">Anonymised</li>
       </ul>
       <h1>Counting {{ palm.palms }} oil palms from aerial imagery</h1>
-      <p class="lead">A commercial oil palm plantation needed a tree-by-tree inventory of its estate. I built a pipeline that finds each palm crown in aerial imagery and turns it into a mapped, countable point.</p>
+      <p class="lead">A commercial oil palm plantation in West Africa needed a tree-by-tree inventory of its estate. I built a pipeline that finds each palm crown in aerial imagery and turns it into a mapped, countable point.</p>
       <dl class="kpis">
         <div><dt>Palms detected</dt><dd>{{ palm.palms }}</dd></div>
         <div><dt>Net area covered</dt><dd>{{ palm.hectares }} ha</dd></div>
@@ -51,10 +52,15 @@
         <li><b>Merge</b><span>Tile results joined and duplicates removed</span></li>
         <li><b>Inventory</b><span>One point per palm, in GeoPackage and CSV</span></li>
       </ol>
-      <p>The training data is a small, hand-annotated set of crowns taken from a stratified sample of tiles, chosen so that weed-only, palm-only and mixed scenes are all covered. Training, validation and test sets were split by spatial sector rather than by random tile, so the test score reflects ground the model had not seen.</p>
+      <p>The model learned from {{ palm.train_crowns }} crowns labelled by hand on {{ palm.train_tiles }} tiles from two blocks. The pilot block's tiles are a stratified sample, chosen so that weed-only, palm-only and mixed scenes are all covered. Training, validation and test sets were split 70/15/15 by spatial sector rather than by random tile, so the test score reflects ground the model had not seen.</p>
 
       <h2>Improving the model in production</h2>
-      <p>As blocks came in, two failure patterns showed up: dense mature canopy, where neighbouring crowns run together, and young palms that are small and easy to miss. I re-annotated examples of both and retrained. The current model is the result of {{ palm.iterations }} training iterations, each compared against the same held-out test set.</p>
+      <p>As blocks came in, two failure patterns showed up: dense mature canopy, where neighbouring crowns run together, and young palms that are small and easy to miss. I labelled examples of both from a second block and retrained. The released model is the result of {{ palm.iterations }} training iterations, each compared against the same held-out test set. Compared with the earlier baseline, it finds more of the palms and makes fewer false detections, so neither gain came at the cost of the other.</p>
+
+      <h2>How accurate it is</h2>
+      <p>I scored the released model on {{ palm.test_tiles }} test tiles holding {{ palm.test_palms }} hand-labelled palms, from ground it never trained on, and ran the earlier baseline on the same tiles.</p>
+      {{ m.palm_accuracy('Held-out test tiles: released model and earlier baseline', ['Released model', 'Earlier baseline'], ['Precision: share of detections that are real palms', 'Recall: share of real palms found', 'Palms counted in tile interiors (hand count: ' ~ palm.hand_count ~ ')', 'Difference from the hand count']) }}
+      <p>The count uses tile interiors because the pipeline's tiles overlap: a crown cut off at one tile's edge is seen whole in the next tile, and the duplicates are merged. The baseline fell short mostly in dense canopy and young palms, and retraining on those cases closed most of the gap. The full evaluation is in the <a href="{{ palm.repo }}/blob/main/MODEL_CARD.md">model card</a>.</p>
 
       <h2>Making the count add up</h2>
       <p>Blocks were delivered one at a time, and many of them overlapped. A check of every pair found {{ palm.overlap_hectares }} ha of shared coverage across {{ palm.overlap_pairs }} block pairs. Adding up each block's count on its own would have counted the palms in those zones two or three times.</p>
@@ -66,7 +72,8 @@
       <ul>
         <li>Overlaps were resolved with each block's rectangular extent, not surveyed property boundaries. Block totals could shift if true boundaries are applied. The plantation total should not change much, because the overlap is real imagery overlap.</li>
         <li>A few blocks keep only a thin sliver of ground after the overlap rule, so their palms-per-hectare figure looks very low. Those figures need a field check before anyone quotes them.</li>
-        <li>The figures above are detections. The workflow includes a counting-accuracy check against a manually counted area, and I'll add that result to the summary once it's published.</li>
+        <li>The interior count is close partly because errors cancel out: about 100 labelled palms are missed, and about as many detections have no matching label. By block, the differences were {{ palm.block_diffs[0] }} and {{ palm.block_diffs[1] }}. Totals over many palms hold up; not every single detection is right.</li>
+        <li>These are checks on held-out tiles, not a field count over a whole block. The plantation's palms are mostly young, and the model hasn't been measured on other plantations or on tall mature palms with heavily overlapping crowns.</li>
       </ul>
 
       <h2>What the plantation received</h2>
@@ -75,24 +82,24 @@
         <li>A plantation-wide master inventory that combines every block.</li>
         <li>A runbook for processing new blocks without retraining, unless a new failure pattern appears.</li>
       </ul>
+
+      <h2>Open code and model</h2>
+      <p>With the plantation owner's permission, the code and the trained model are public under the {{ palm.licence }} licence. The imagery and labels stay with the plantation. The model can also be exported to ONNX and run in QGIS through the Deepness plugin.</p>
     </div>
 
     <aside class="case-aside">
       <div class="aside-card">
         <h2>Summary</h2>
         <dl class="facts">
-          <div><dt>Client</dt><dd>A commercial oil palm plantation (anonymised)</dd></div>
+          <div><dt>Client</dt><dd>A commercial oil palm plantation in West Africa (anonymised)</dd></div>
           <div><dt>Data</dt><dd>RGB orthomosaics; elevation models for some blocks</dd></div>
           <div><dt>Method</dt><dd>YOLOv8 object detection</dd></div>
           <div><dt>Output</dt><dd>GeoPackage and CSV, UTM zone 31N</dd></div>
           <div><dt>As of</dt><dd>{{ palm.as_of }}</dd></div>
-          {% if palm.accuracy %}
-          <div><dt>Counting accuracy</dt><dd>{{ palm.accuracy }}</dd></div>
-          {% elif not release %}
-          <div><dt>Counting accuracy</dt><dd>{{ todo('validated counting accuracy figure') }}</dd></div>
-          {% else %}{{ todo('validated counting accuracy figure') }}{% endif %}
+          <div><dt>Count check</dt><dd>{{ palm.model_count }} against a hand count of {{ palm.hand_count }}, on held-out test tiles</dd></div>
+          <div><dt>Licence</dt><dd>Code and model public, {{ palm.licence }}</dd></div>
         </dl>
-        <ul class="chips"><li>Python</li><li>YOLOv8</li><li>PyTorch</li><li>GeoPackage</li></ul>
+        <ul class="chips"><li>Python</li><li>YOLOv8</li><li>PyTorch</li><li>GeoPackage</li><li>ONNX</li></ul>
         <p class="case-links"><a href="{{ palm.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a></p>
       </div>
       <div class="aside-cta">

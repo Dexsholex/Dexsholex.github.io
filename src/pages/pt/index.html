@@ -51,7 +51,7 @@
             <li class="tag tag-quiet">Anonimizado</li>
           </ul>
           <h3><a href="{{ link(cases['oil-palm']) }}">Contar palmeiras-de-óleo a partir de imagens aéreas</a></h3>
-          <p>Para uma plantação comercial de palmeiras-de-óleo, um modelo YOLOv8 encontra cada copa nas imagens aéreas e transforma-a numa árvore mapeada e contável, bloco a bloco.</p>
+          <p>Para uma plantação comercial de palmeiras-de-óleo na África Ocidental, um modelo YOLOv8 encontra cada copa nas imagens aéreas e transforma-a numa árvore mapeada e contável, bloco a bloco. Em recortes de teste reservados, contou {{ palm.model_count }} palmeiras onde a contagem manual encontrou {{ palm.hand_count }}.</p>
           {{ m.palm_bars('Os blocos sobrepunham-se, por isso somá-los contaria algumas palmeiras duas vezes. Total da plantação:') }}
           <p class="small">{{ palm.double_counts }} contagens duplicadas removidas ({{ palm.double_count_share }}). Cada hectare é atribuído a um único bloco.</p>
           <p class="case-links">

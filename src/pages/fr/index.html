@@ -51,7 +51,7 @@
             <li class="tag tag-quiet">Anonymisé</li>
           </ul>
           <h3><a href="{{ link(cases['oil-palm']) }}">Compter les palmiers à huile par imagerie aérienne</a></h3>
-          <p>Pour une plantation commerciale de palmiers à huile, un modèle YOLOv8 repère chaque couronne de palmier dans l'imagerie aérienne et en fait un arbre cartographié et comptable, bloc par bloc.</p>
+          <p>Pour une plantation commerciale de palmiers à huile en Afrique de l'Ouest, un modèle YOLOv8 repère chaque couronne de palmier dans l'imagerie aérienne et en fait un arbre cartographié et comptable, bloc par bloc. Sur des tuiles de test mises de côté, il a compté {{ palm.model_count }} palmiers là où le comptage manuel en a trouvé {{ palm.hand_count }}.</p>
           {{ m.palm_bars('Les blocs se chevauchaient : les additionner aurait compté certains palmiers deux fois. Total de la plantation :') }}
           <p class="small">{{ palm.double_counts }} doubles comptages supprimés ({{ palm.double_count_share }}). Chaque hectare est attribué à un seul bloc.</p>
           <p class="case-links">

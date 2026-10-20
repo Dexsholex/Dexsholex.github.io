@@ -59,7 +59,7 @@
         "faq": [
           {
             "q": "De combien de données annotées avez-vous besoin ?",
-            "a": "Souvent moins qu'on ne le pense. Le détecteur de palmiers a été entraîné sur un petit jeu annoté à la main, puis amélioré par étapes à mesure que de nouveaux types d'erreurs apparaissaient."
+            "a": "Souvent moins qu'on ne le pense. Le détecteur de palmiers a appris à partir de 4 041 couronnes annotées à la main sur 435 tuiles d'image, puis a été amélioré par étapes à mesure que de nouveaux types d'erreurs apparaissaient."
           },
           {
             "q": "Pourquoi tester sur des zones mises de côté ?",

@@ -59,7 +59,7 @@
         "faq": [
           {
             "q": "How much labelled data do you need?",
-            "a": "Often less than people expect. The oil palm detector was trained on a small hand-annotated set and improved in rounds as new failure patterns showed up."
+            "a": "Often less than people expect. The oil palm detector learned from 4,041 hand-labelled crowns on 435 image tiles, and improved in rounds as new failure patterns showed up."
           },
           {
             "q": "Why test on held-out areas?",

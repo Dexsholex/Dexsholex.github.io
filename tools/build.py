@@ -147,6 +147,11 @@ def fmt_pct(x, lang):
     return FORMATS[lang]["pct"].format(fmt_num(x, lang, 1))
 
 
+def fmt_signed_pct(x, lang):
+    """+0.2% / \u22124.3%, with a true minus sign."""
+    return ("+" if x > 0 else "\u2212" if x < 0 else "") + fmt_pct(abs(x), lang)
+
+
 def fmt_date(iso, lang, day=True):
     f = FORMATS[lang]
     d = dt.date.fromisoformat(iso if len(iso) == 10 else iso + "-01")
@@ -435,6 +440,11 @@ def language_context(lang, data, todo, routes, release):
     palm["double_count_share"] = fmt_pct(palm_raw["double_count_share"], lang)
     palm["as_of"] = fmt_date(palm_raw["as_of"], lang, day=False)
     palm["density"] = fmt_num(palm_raw["density"], lang, 1)
+    for k in ("precision", "recall", "base_precision", "base_recall"):
+        palm[k] = fmt_num(palm_raw[k], lang, 3)
+    palm["count_diff"] = fmt_signed_pct(palm_raw["count_diff"], lang)
+    palm["base_count_diff"] = fmt_signed_pct(palm_raw["base_count_diff"], lang)
+    palm["block_diffs"] = [fmt_signed_pct(v, lang) for v in palm_raw["block_diffs"]]
     osm = data["osm"]
     rows = []
     for feat in osm["lgas"]["features"]:

@@ -59,7 +59,7 @@
         "faq": [
           {
             "q": "¿Cuántos datos etiquetados necesita?",
-            "a": "A menudo menos de lo que se cree. El detector de palmas se entrenó con un pequeño conjunto anotado a mano y se mejoró por etapas a medida que aparecían nuevos tipos de error."
+            "a": "A menudo menos de lo que se cree. El detector de palmas aprendió de 4 041 copas anotadas a mano en 435 teselas de imagen y se mejoró por etapas a medida que aparecían nuevos tipos de error."
           },
           {
             "q": "¿Por qué probar en zonas reservadas?",

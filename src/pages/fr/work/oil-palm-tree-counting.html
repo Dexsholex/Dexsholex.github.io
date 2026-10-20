@@ -1,13 +1,14 @@
 {#page {"kind": "case",
  "title": "Comptage de palmiers à huile par imagerie aérienne · Oluwasola Oyinloye",
  "headline": "718 751 palmiers à huile comptés par imagerie aérienne",
- "description": "Étude de cas : une chaîne de détection des couronnes YOLOv8 qui a cartographié 718 751 palmiers sur 12 166,6 ha et 26 blocs pour une plantation commerciale.",
+ "description": "Étude de cas : une chaîne de détection des couronnes YOLOv8 qui a cartographié 718 751 palmiers sur 12 166,6 ha et 26 blocs, en Afrique de l'Ouest.",
  "og_title": "718 751 palmiers à huile comptés par imagerie aérienne",
  "og_image": "og-oil-palm-fr.png",
  "og_image_alt": "Étude de cas : 718 751 palmiers à huile comptés sur 12 166,6 hectares par imagerie aérienne.",
  "crumb": "Comptage de palmiers à huile",
  "published": "2026-10-03",
- "keywords": ["comptage de palmiers à huile", "détection de couronnes", "YOLOv8", "inventaire de plantation", "imagerie aérienne", "IA géospatiale"]} #}
+ "modified": "2026-10-20",
+ "keywords": ["comptage de palmiers à huile", "détection de couronnes", "YOLOv8", "inventaire de plantation", "imagerie aérienne", "IA géospatiale", "imagerie drone"]} #}
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
 {% block content %}
@@ -21,7 +22,7 @@
         <li class="tag tag-quiet">Anonymisé</li>
       </ul>
       <h1>{{ palm.palms }} palmiers à huile comptés par imagerie aérienne</h1>
-      <p class="lead">Une plantation commerciale de palmiers à huile avait besoin d'un inventaire arbre par arbre de son domaine. J'ai construit une chaîne de traitement qui repère chaque couronne de palmier dans l'imagerie aérienne et en fait un point cartographié et comptable.</p>
+      <p class="lead">Une plantation commerciale de palmiers à huile en Afrique de l'Ouest avait besoin d'un inventaire arbre par arbre de son domaine. J'ai construit une chaîne de traitement qui repère chaque couronne de palmier dans l'imagerie aérienne et en fait un point cartographié et comptable.</p>
       <dl class="kpis">
         <div><dt>Palmiers détectés</dt><dd>{{ palm.palms }}</dd></div>
         <div><dt>Surface nette couverte</dt><dd>{{ palm.hectares }} ha</dd></div>
@@ -51,10 +52,15 @@
         <li><b>Fusion</b><span>Résultats des tuiles réunis et doublons supprimés</span></li>
         <li><b>Inventaire</b><span>Un point par palmier, en GeoPackage et CSV</span></li>
       </ol>
-      <p>Les données d'entraînement sont un petit jeu de couronnes annotées à la main, tirées d'un échantillon stratifié de tuiles, choisi pour couvrir les scènes avec seulement des adventices, seulement des palmiers, ou les deux. Les jeux d'entraînement, de validation et de test ont été séparés par secteur géographique plutôt que par tuile aléatoire : le score de test porte donc sur un terrain que le modèle n'avait pas vu.</p>
+      <p>Le modèle a appris à partir de {{ palm.train_crowns }} couronnes annotées à la main sur {{ palm.train_tiles }} tuiles provenant de deux blocs. Les tuiles du bloc pilote forment un échantillon stratifié, choisi pour couvrir les scènes avec seulement des adventices, seulement des palmiers, ou les deux. Les jeux d'entraînement, de validation et de test ont été séparés à 70/15/15 par secteur géographique plutôt que par tuile aléatoire : le score de test porte donc sur un terrain que le modèle n'avait pas vu.</p>
 
       <h2>Améliorer le modèle en production</h2>
-      <p>À mesure que les blocs arrivaient, deux types d'erreurs sont apparus : la canopée dense des palmiers adultes, où les couronnes voisines se confondent, et les jeunes palmiers, petits et faciles à manquer. J'ai annoté de nouveaux exemples de ces deux cas et réentraîné le modèle. Le modèle actuel est le fruit de {{ palm.iterations }} itérations d'entraînement, chacune comparée au même jeu de test mis de côté.</p>
+      <p>À mesure que les blocs arrivaient, deux types d'erreurs sont apparus : la canopée dense des palmiers adultes, où les couronnes voisines se confondent, et les jeunes palmiers, petits et faciles à manquer. J'ai annoté des exemples de ces deux cas sur un second bloc et réentraîné le modèle. Le modèle publié est le fruit de {{ palm.iterations }} itérations d'entraînement, chacune comparée au même jeu de test mis de côté. Par rapport à la version de référence antérieure, il trouve plus de palmiers et fait moins de fausses détections : aucun des deux progrès ne s'est fait au détriment de l'autre.</p>
+
+      <h2>Précision mesurée</h2>
+      <p>J'ai évalué le modèle publié sur {{ palm.test_tiles }} tuiles de test contenant {{ palm.test_palms }} palmiers annotés à la main, sur un terrain qu'il n'a jamais vu à l'entraînement, et j'ai passé la version de référence sur les mêmes tuiles.</p>
+      {{ m.palm_accuracy('Tuiles de test mises de côté : modèle publié et version de référence', ['Modèle publié', 'Version de référence'], ['Précision : part des détections qui sont de vrais palmiers', 'Rappel : part des vrais palmiers trouvés', "Palmiers comptés à l'intérieur des tuiles (comptage manuel : " ~ palm.hand_count ~ ')', 'Écart avec le comptage manuel']) }}
+      <p>Le comptage porte sur l'intérieur des tuiles, car les tuiles de la chaîne de traitement se chevauchent : une couronne coupée au bord d'une tuile apparaît entière dans la suivante, et les doublons sont fusionnés. La version de référence manquait surtout des palmiers dans la canopée dense et parmi les jeunes plants ; le réentraînement sur ces cas a comblé l'essentiel de l'écart. L'évaluation complète figure dans la <a href="{{ palm.repo }}/blob/main/MODEL_CARD.md" hreflang="en">fiche du modèle</a> (en anglais).</p>
 
       <h2>Obtenir un total juste</h2>
       <p>Les blocs ont été livrés un par un, et beaucoup se chevauchaient. Une vérification de chaque paire a trouvé {{ palm.overlap_hectares }} ha de couverture commune sur {{ palm.overlap_pairs }} paires de blocs. Additionner le comptage de chaque bloc séparément aurait compté les palmiers de ces zones deux ou trois fois.</p>
@@ -66,7 +72,8 @@
       <ul>
         <li>Les recouvrements ont été résolus avec l'emprise rectangulaire de chaque bloc, pas avec des limites de propriété levées. Les totaux par bloc pourraient changer si les vraies limites étaient appliquées. Le total de la plantation devrait peu varier, car le recouvrement correspond à un vrai recouvrement d'images.</li>
         <li>Après application de la règle, quelques blocs ne gardent qu'une mince bande de terrain : leur nombre de palmiers par hectare paraît donc très faible. Ces chiffres doivent être vérifiés sur le terrain avant d'être cités.</li>
-        <li>Les chiffres ci-dessus sont des détections. La méthode prévoit un contrôle de la précision du comptage sur une zone comptée à la main, et j'ajouterai ce résultat au résumé dès qu'il sera publié.</li>
+        <li>Si le comptage à l'intérieur des tuiles est si proche, c'est en partie parce que les erreurs se compensent : environ 100 palmiers annotés sont manqués, et à peu près autant de détections n'ont pas d'annotation correspondante. Par bloc, les écarts étaient de {{ palm.block_diffs[0] }} et {{ palm.block_diffs[1] }}. Les totaux sur de nombreux palmiers sont fiables ; chaque détection prise isolément ne l'est pas forcément.</li>
+        <li>Ce sont des contrôles sur des tuiles mises de côté, pas un comptage de terrain sur un bloc entier. Les palmiers de la plantation sont surtout jeunes, et le modèle n'a pas été évalué sur d'autres plantations ni sur de grands palmiers adultes aux couronnes très imbriquées.</li>
       </ul>
 
       <h2>Ce que la plantation a reçu</h2>
@@ -75,24 +82,24 @@
         <li>Un inventaire général de la plantation qui réunit tous les blocs.</li>
         <li>Un guide pour traiter de nouveaux blocs sans réentraîner le modèle, sauf si un nouveau type d'erreur apparaît.</li>
       </ul>
+
+      <h2>Code et modèle ouverts</h2>
+      <p>Avec l'accord du propriétaire de la plantation, le code et le modèle entraîné sont publics sous licence {{ palm.licence }}. Les images et les annotations restent à la plantation. Le modèle peut aussi être exporté en ONNX et utilisé dans QGIS avec l'extension Deepness.</p>
     </div>
 
     <aside class="case-aside">
       <div class="aside-card">
         <h2>Résumé</h2>
         <dl class="facts">
-          <div><dt>Client</dt><dd>Une plantation commerciale de palmiers à huile (anonymisée)</dd></div>
+          <div><dt>Client</dt><dd>Une plantation commerciale de palmiers à huile en Afrique de l'Ouest (anonymisée)</dd></div>
           <div><dt>Données</dt><dd>Orthomosaïques RVB ; modèles d'élévation pour certains blocs</dd></div>
           <div><dt>Méthode</dt><dd>Détection d'objets YOLOv8</dd></div>
           <div><dt>Livrables</dt><dd>GeoPackage et CSV, UTM zone 31N</dd></div>
           <div><dt>À jour</dt><dd>{{ palm.as_of }}</dd></div>
-          {% if palm.accuracy %}
-          <div><dt>Précision du comptage</dt><dd>{{ palm.accuracy }}</dd></div>
-          {% elif not release %}
-          <div><dt>Précision du comptage</dt><dd>{{ todo('validated counting accuracy figure') }}</dd></div>
-          {% else %}{{ todo('validated counting accuracy figure') }}{% endif %}
+          <div><dt>Contrôle du comptage</dt><dd>{{ palm.model_count }} contre {{ palm.hand_count }} comptés à la main, sur des tuiles de test mises de côté</dd></div>
+          <div><dt>Licence</dt><dd>Code et modèle publics, {{ palm.licence }}</dd></div>
         </dl>
-        <ul class="chips"><li>Python</li><li>YOLOv8</li><li>PyTorch</li><li>GeoPackage</li></ul>
+        <ul class="chips"><li>Python</li><li>YOLOv8</li><li>PyTorch</li><li>GeoPackage</li><li>ONNX</li></ul>
         <p class="case-links"><a href="{{ palm.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a></p>
       </div>
       <div class="aside-cta">

@@ -45,6 +45,22 @@
 </figure>
 {%- endmacro %}
 
+{#- Held-out test results: released model against the earlier baseline -#}
+{% macro palm_accuracy(caption, cols, rows) -%}
+<div class="table-scroll metric">
+  <table class="metric-table">
+    <caption>{{ caption }}</caption>
+    <thead><tr><td></td><th scope="col">{{ cols[0] }}</th><th scope="col">{{ cols[1] }}</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">{{ rows[0] }}</th><td class="is-key">{{ palm.precision }}</td><td>{{ palm.base_precision }}</td></tr>
+      <tr><th scope="row">{{ rows[1] }}</th><td class="is-key">{{ palm.recall }}</td><td>{{ palm.base_recall }}</td></tr>
+      <tr><th scope="row">{{ rows[2] }}</th><td class="is-key">{{ palm.model_count }}</td><td>{{ palm.base_count }}</td></tr>
+      <tr><th scope="row">{{ rows[3] }}</th><td class="is-key"><bdi dir="ltr">{{ palm.count_diff }}</bdi></td><td><bdi dir="ltr">{{ palm.base_count_diff }}</bdi></td></tr>
+    </tbody>
+  </table>
+</div>
+{%- endmacro %}
+
 {% macro palm_chip() -%}
 <span class="media-chip"><b>{{ palm.palms }}</b> {{ t.palm.palms }}<i></i><b>{{ palm.hectares }}</b> {{ t.palm.ha }}<i></i><b>{{ palm.blocks }}</b> {{ t.palm.blocks }}</span>
 {%- endmacro %}

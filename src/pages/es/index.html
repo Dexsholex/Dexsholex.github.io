@@ -51,7 +51,7 @@
             <li class="tag tag-quiet">Anonimizado</li>
           </ul>
           <h3><a href="{{ link(cases['oil-palm']) }}">Contar palmas aceiteras con imágenes aéreas</a></h3>
-          <p>Para una plantación comercial de palma aceitera, un modelo YOLOv8 encuentra cada copa en las imágenes aéreas y la convierte en un árbol cartografiado y contable, bloque por bloque.</p>
+          <p>Para una plantación comercial de palma aceitera en África Occidental, un modelo YOLOv8 encuentra cada copa en las imágenes aéreas y la convierte en un árbol cartografiado y contable, bloque por bloque. En teselas de prueba reservadas contó {{ palm.model_count }} palmas donde el conteo manual encontró {{ palm.hand_count }}.</p>
           {{ m.palm_bars('Los bloques se solapaban, así que sumarlos contaría algunas palmas dos veces. Total de la plantación:') }}
           <p class="small">{{ palm.double_counts }} conteos duplicados eliminados ({{ palm.double_count_share }}). Cada hectárea se asigna a un solo bloque.</p>
           <p class="case-links">

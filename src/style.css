@@ -689,6 +689,16 @@ html.cv-off .section { content-visibility: visible; } /* set before any jump to 
 .bar-value { font-size: .9375rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .bar-note { margin: 0 !important; color: var(--muted); font-size: .8125rem; }
 
+.metric { margin: 1.25rem 0 1.5rem; }
+.metric-table { width: 100%; border-collapse: collapse; font-size: .9375rem; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.metric-table caption { padding-bottom: .6rem; color: var(--muted); font-size: .8125rem; text-align: start; }
+.metric-table th, .metric-table td { padding: .6rem .5rem; border-bottom: 1px solid var(--line); text-align: end; vertical-align: baseline; }
+.metric-table th:first-child { padding-inline-start: 0; }
+.metric-table thead th { color: var(--muted); font-size: .8125rem; font-weight: 600; }
+.metric-table thead th:nth-child(2) { color: var(--accent-text); }
+.metric-table tbody th { text-align: start; font-weight: 400; }
+.metric-table .is-key { font-weight: 700; }
+
 .case-map { margin-top: clamp(2rem, 5vw, 3rem); }
 .zoomable { position: relative; display: block; overflow: hidden; border-radius: var(--radius); background: var(--panel); }
 .case-map .zoomable, .case-media-map { background: #faf8f3; } /* the flood map is drawn on paper */

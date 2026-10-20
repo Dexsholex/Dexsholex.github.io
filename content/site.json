@@ -153,7 +153,24 @@
       "chm_blocks": 5,
       "as_of": "2026-08",
       "repo": "https://github.com/Dexsholex/oil-palm-crown-detection",
-      "accuracy": null
+      "train_crowns": 4041,
+      "train_tiles": 435,
+      "test_tiles": 79,
+      "test_palms": 716,
+      "precision": 0.845,
+      "recall": 0.774,
+      "hand_count": 518,
+      "model_count": 519,
+      "count_diff": 0.2,
+      "base_precision": 0.727,
+      "base_recall": 0.637,
+      "base_count": 454,
+      "base_count_diff": -12.4,
+      "licence": "AGPL-3.0",
+      "block_diffs": [
+        3.2,
+        -4.3
+      ]
     },
     "access_map_build": null,
     "geoaid_dashboard": "https://geoaid-lagos-flood.streamlit.app/",
