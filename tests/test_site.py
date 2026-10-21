@@ -80,6 +80,9 @@ def sha(text):
 PAGES = {}
 # Search engine ownership files (static/google<id>.html) are plain text, not pages
 VERIFICATION = re.compile(r"^google[0-9a-f]+\.html$")
+# Other GitHub Pages projects share this domain (dexsholex.github.io/<repo>/) but are separate sites
+PROJECT_SITES = tuple(v for p in SITE["projects"].values() if isinstance(p, dict)
+                      for v in p.values() if isinstance(v, str) and v.startswith(BASE + "/"))
 
 
 def setUpModule():
@@ -203,6 +206,8 @@ class Links(unittest.TestCase):
             refs += [s.split()[0] for t, a in p.tags if t in ("img", "source") and a.get("srcset")
                      for s in a["srcset"].split(",") if not s.strip().startswith("data:")]
             for ref in refs:
+                if PROJECT_SITES and ref.startswith(PROJECT_SITES):
+                    continue
                 if ref.startswith(BASE):
                     ref = ref[len(BASE):] or "/"
                 if not ref.startswith("/") or ref.startswith("//"):

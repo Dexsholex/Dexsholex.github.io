@@ -45,20 +45,47 @@
 </figure>
 {%- endmacro %}
 
-{#- Held-out test results: released model against the earlier baseline -#}
-{% macro palm_accuracy(caption, cols, rows) -%}
+{#- A small results table: one row label and one value per column; the first column is the key one -#}
+{% macro compare_table(caption, cols, rows) -%}
 <div class="table-scroll metric">
   <table class="metric-table">
     <caption>{{ caption }}</caption>
-    <thead><tr><td></td><th scope="col">{{ cols[0] }}</th><th scope="col">{{ cols[1] }}</th></tr></thead>
+    <thead><tr><td></td>{% for c in cols %}<th scope="col">{{ c }}</th>{% endfor %}</tr></thead>
     <tbody>
-      <tr><th scope="row">{{ rows[0] }}</th><td class="is-key">{{ palm.precision }}</td><td>{{ palm.base_precision }}</td></tr>
-      <tr><th scope="row">{{ rows[1] }}</th><td class="is-key">{{ palm.recall }}</td><td>{{ palm.base_recall }}</td></tr>
-      <tr><th scope="row">{{ rows[2] }}</th><td class="is-key">{{ palm.model_count }}</td><td>{{ palm.base_count }}</td></tr>
-      <tr><th scope="row">{{ rows[3] }}</th><td class="is-key"><bdi dir="ltr">{{ palm.count_diff }}</bdi></td><td><bdi dir="ltr">{{ palm.base_count_diff }}</bdi></td></tr>
+      {% for row in rows %}<tr><th scope="row">{{ row[0] }}</th>{% for v in row[1:] %}<td{% if loop.first %} class="is-key"{% endif %}><bdi dir="ltr">{{ v }}</bdi></td>{% endfor %}</tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
+{%- endmacro %}
+
+{#- Held-out test results: released model against the earlier baseline -#}
+{% macro palm_accuracy(caption, cols, rows) -%}
+{{ compare_table(caption, cols, [(rows[0], palm.precision, palm.base_precision), (rows[1], palm.recall, palm.base_recall),
+                                 (rows[2], palm.model_count, palm.base_count), (rows[3], palm.count_diff, palm.base_count_diff)]) }}
+{%- endmacro %}
+
+{#- Where to Build Next map legend: the four needs (with people) and the two kinds of host site -#}
+{% macro wtbn_legend() -%}
+<ul class="need-legend">
+  <li><i class="need-served"></i>{{ t.wtbn.served }} <b>{{ t.wtbn.millions.replace('{n}', wtbn.served_m) }}</b></li>
+  <li><i class="need-capacity"></i>{{ t.wtbn.capacity }} <b>{{ t.wtbn.millions.replace('{n}', wtbn.capacity_m) }}</b></li>
+  <li><i class="need-measure"></i>{{ t.wtbn.measure }} <b>{{ t.wtbn.millions.replace('{n}', wtbn.measure_m) }}</b></li>
+  <li><i class="need-gap"></i>{{ t.wtbn.gap }} <b>{{ t.wtbn.millions.replace('{n}', wtbn.coverage_m) }}</b></li>
+  <li><i class="site-clinic"></i>{{ t.wtbn.clinic }}</li>
+  <li><i class="site-school"></i>{{ t.wtbn.school }}</li>
+</ul>
+{%- endmacro %}
+
+{#- People reached by the first 100 sites at three site ranges -#}
+{% macro wtbn_reach(caption, note) -%}
+<figure class="bars">
+  <figcaption>{{ caption }}</figcaption>
+  {% for km in (3, 5, 10) %}
+  <div class="bar-row{% if km == 5 %} is-key{% endif %}"><span class="bar-label">{{ t.wtbn.reach_km.replace('{km}', km|string) }}</span><span class="bar-value">{{ t.wtbn.millions.replace('{n}', wtbn.reach_by_km[loop.index0]) }}</span>{{ bar(wtbn.reach_fracs[loop.index0]) }}</div>
+  {% endfor %}
+  <p class="bar-note">{{ note }}</p>
+</figure>
 {%- endmacro %}
 
 {% macro palm_chip() -%}

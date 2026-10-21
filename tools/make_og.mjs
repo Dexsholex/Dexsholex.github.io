@@ -47,6 +47,7 @@ function card({ lang, dir, kicker, title, sub, visual, titleSize }) {
   .visual { flex: none; position: relative; }
   .visual img { display: block; width: 430px; height: 370px; object-fit: cover; border-radius: 24px; }
   .visual.map img { width: 406px; height: 350px; object-fit: cover; object-position: 50% 0; background: #faf8f3; }
+  .visual.nga img { width: 430px; height: 352px; object-fit: contain; padding: 12px; background: #faf8f3; }
   .chip { position: absolute; top: 20px; inset-inline: 20px; padding: 14px 18px; border-radius: 18px; background: rgba(13, 23, 20, .86);
     color: #fff; font-size: 26px; font-weight: 600; text-align: center; }
   .coords { margin-top: -10px; color: #a6b3ac; font: 22px Consolas, monospace; text-align: center; direction: ltr; }
@@ -77,6 +78,8 @@ for (const { code: lang, dir } of SITE.languages) {
         t.og.palm_chip.replace('{palms}', fmt(palm.palms, lang)).replace('{ha}', fmt(palm.hectares, lang, 1)))}</p></div>` },
     [`og-geoaid${suffix}`]: { kicker: t.og.geoaid_kicker, title: t.og.geoaid_title, sub: t.og.geoaid_sub, titleSize: 62,
       visual: `<div class="visual map"><img src="${dataUri('geoaid-flood-800.webp')}" alt=""></div>` },
+    [`og-where-to-build${suffix}`]: { kicker: t.og.wtbn_kicker, title: t.og.wtbn_title, sub: t.og.wtbn_sub, titleSize: 58,
+      visual: `<div class="visual nga"><img src="${dataUri('wtbn-map-800.webp')}" alt=""></div>` },
   };
   for (const [name, c] of Object.entries(cards)) {
     await page.setContent(card({ lang, dir, ...c }), { waitUntil: 'load' });

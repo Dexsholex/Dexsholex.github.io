@@ -1,0 +1,127 @@
+{#page {"kind": "case",
+ "title": "Where to build next: connectivity sites for Nigeria · Oluwasola Oyinloye",
+ "headline": "Where to build next: choosing Nigeria's next connectivity sites",
+ "description": "Case study: a 1 km map of what every part of Nigeria needs for broadband, built on Ookla speed tests, and which clinics and schools should host new sites.",
+ "og_title": "Where to build next: connectivity sites for Nigeria",
+ "og_image": "og-where-to-build.png",
+ "og_image_alt": "Case study card: a map of Nigeria coloured by what each square kilometre needs for broadband.",
+ "crumb": "Where to build next",
+ "published": "2026-10-21",
+ "keywords": ["digital divide Nigeria", "broadband gaps", "connectivity site selection", "telecom site planning", "Ookla speed tests", "maximal covering location", "location intelligence"]} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+{% set M = t.wtbn.millions %}
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.case_studies, section('work')), (page.crumb, none)]) }}
+      <ul class="tags" aria-label="{{ t.nav.project_type }}">
+        <li class="tag">Public good</li>
+        <li class="tag tag-quiet">Spatial optimisation</li>
+        <li class="tag tag-quiet">DSN AI Bootcamp</li>
+      </ul>
+      <h1>Where to build next: choosing Nigeria's next connectivity sites</h1>
+      <p class="lead">Nigeria's broadband plan sets minimum speeds of 25 Mbps in towns and 10 Mbps in rural areas, but money for new sites is scarce and the gaps are not all the same. I sorted every populated square kilometre of the country by what it needs, then chose which clinics and schools should host new sites so that each one reaches as many unconnected people as possible.</p>
+      <dl class="kpis">
+        <div><dt>People mapped</dt><dd>{{ M.replace('{n}', wtbn.population_m) }}</dd></div>
+        <div><dt>In rural gaps</dt><dd>{{ M.replace('{n}', wtbn.coverage_m) }}</dd></div>
+        <div><dt>Reached by the first 100 sites</dt><dd>{{ M.replace('{n}', wtbn.reach100_m) }}</dd></div>
+        <div><dt>Numbers rechecked</dt><dd>{{ wtbn.checks_passed }} of {{ wtbn.checks }}</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-map">
+      <a class="zoomable" href="{{ manifest['wtbn-map'][-1].src }}" data-lightbox>
+        {{ m.picture('wtbn-map', t.wtbn.map_alt, '(min-width: 1100px) 1000px, 92vw', eager=true) }}
+        <span class="zoom-hint">{{ m.icon('expand') }}{{ t.cta.enlarge_map }}</span>
+      </a>
+      <figcaption>
+        {{ m.wtbn_legend() }}
+        {{ t.wtbn.map_caption }}
+        <p class="map-credit">{{ t.wtbn.credit }}</p>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>The question</h2>
+      <p>Where does a new connectivity site do the most good? And where is the real problem something else: networks that exist but are slow, or places nobody has measured yet? I built this for the Geospatial Track of the DSN AI Bootcamp 2026, whose brief was to map Nigeria's digital divide.</p>
+
+      <h2>Four needs, not one</h2>
+      <p>Using Ookla's mobile speed tests for October to December 2024, each populated square kilometre gets one of four labels, depending on whether a test within 2 km reaches the plan's speed for that setting:</p>
+      <ol class="layer-list">
+        <li><b>Served: {{ M.replace('{n}', wtbn.served_m) }} people</b><span>A test at the plan's speed within 2 km. Nothing new is needed.</span></li>
+        <li><b>Slow signal: {{ M.replace('{n}', wtbn.capacity_m) }}</b><span>Tests nearby, all below the plan's speed. The fix is more capacity on existing networks.</span></li>
+        <li><b>Town to measure: {{ M.replace('{n}', wtbn.measure_m) }}</b><span>Urban, but no test within 2 km. Measure before investing.</span></li>
+        <li><b>Rural gap: {{ M.replace('{n}', wtbn.coverage_m) }}</b><span>Rural, with no test within 2 km. This is where new sites are needed.</span></li>
+      </ol>
+      <p>{{ wtbn.gap_poorer_pct }} of the people in rural gaps are in Nigeria's poorer 40%, by Meta's Relative Wealth Index. Where people do test, the average mobile download is {{ wtbn.down_urban }} Mbps in towns and {{ wtbn.down_rural }} Mbps in rural areas, but only {{ wtbn.tiles_rural }} of the {{ wtbn.tiles }} tiles with tests are rural.</p>
+
+      <h2>Choosing the sites</h2>
+      <p>Existing clinics and schools are the candidate hosts; the broadband plan itself sets targets for connecting health centres. Picking the sites that together cover the most people in rural gaps is a maximal covering location problem. I solved it by lazy greedy selection over {{ wtbn.candidates }} candidate square kilometres holding {{ wtbn.clinics }} clinics and {{ wtbn.schools }} schools, with a 5 km site reach, the low end of the 5 to 15 km range the ITU gives for mobile cellular. For this kind of problem, greedy selection is guaranteed to reach at least 63% of the best possible coverage.</p>
+      <p>The first 100 sites reach {{ M.replace('{n}', wtbn.reach100_m) }} people, {{ wtbn.schools100 }} of the sites at schools. Clinics alone would reach {{ M.replace('{n}', wtbn.clinics_only100_m) }}. How far one site reaches matters more than any other assumption:</p>
+      {{ m.wtbn_reach('People reached by the first 100 sites, by how far each site reaches', '5 km, the low end of the ITU range, is used everywhere else on this page.') }}
+
+      <h2>Most people, or the poorest first?</h2>
+      <p>The tool can choose sites to reach the most people, or to reach people in the poorer 40% first while still counting everyone covered. It opens on poorest first.</p>
+      {{ m.compare_table('People reached by the first 100 sites', ['Poorest first', 'Most people'], [('Everyone reached', M.replace('{n}', wtbn.equity100_m), M.replace('{n}', wtbn.reach100_m)), ('People in the poorer 40% reached', M.replace('{n}', wtbn.equity100_poorer_m), M.replace('{n}', wtbn.reach100_poorer_m))]) }}
+      <p>Choosing the poorest first reaches {{ wtbn.equity_gain }} more people in the poorer 40% for {{ wtbn.equity_cost }} fewer people overall. Which to prefer is a policy choice, so the tool shows both.</p>
+
+      <h2>Places a ranking passes over</h2>
+      <p>The LGAs with the most poorer rural people and no test ({{ wtbn.priority_lgas|join(', ') }}) are thinly settled, so a straight ranking passes them over: in four of the five, even the best single site reaches fewer people than the 100th site chosen. They need a budget line of their own.</p>
+
+      <h2>Are the gaps real?</h2>
+      <p>A missing test is missing evidence, not proof of no signal, so I ran two checks.</p>
+      <ul>
+        <li>{{ wtbn.allyear_untested_pct }} of the people in rural gaps had no test within 2 km in any quarter of 2024, so the gaps are not one quarter's chance.</li>
+        <li>In OpenCelliD's crowdsourced map of mobile cells, {{ wtbn.ocid_gap_pct }} of the people in rural gaps have no cell of any kind within 5 km, against {{ wtbn.ocid_served_pct }} in served areas.</li>
+      </ul>
+      <p>DSN supplied the speed tests without saying which release they came from, so I matched them to Ookla's public files: all {{ wtbn.tiles }} tiles are identical to the mobile release for Q4 2024. A separate script then recomputes the published numbers by independent routes, such as brute-force counts and great-circle distances, and the current run passes {{ wtbn.checks_passed }} of {{ wtbn.checks }}.</p>
+
+      <h2>What it doesn't claim</h2>
+      <ul>
+        <li>Tests are crowdsourced, sparse and mostly urban, and {{ wtbn.lgas_no_tile }} of {{ wtbn.lgas }} LGAs logged none in the quarter. The gaps come from where people test, not from operator coverage maps or mast locations.</li>
+        <li>OpenCelliD is a second crowdsourced source, not an independent survey, and {{ wtbn.ocid_gsm_pct }} of its Nigerian records are 2G. It shows where any mobile network has been recorded, not where 4G exists.</li>
+        <li>The 2 km serving distance and the 5 km site reach are assumptions. The sensitivity runs in the repository show how the results move with them.</li>
+        <li>The wealth estimates date from 2021, and a registered clinic or school is not always a working one. New sites also need power, backhaul and security, which this does not model.</li>
+      </ul>
+
+      <h2>What's public</h2>
+      <p>The interactive tool, the full pipeline and the result tables are on GitHub, with a two-page summary. One command rebuilds every number, and each download is checked against a recorded checksum before anything runs. The code is MIT-licensed. Because Ookla's data is non-commercial and ShareAlike, the maps and tables are shared under CC BY-NC-SA 4.0.</p>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Summary</h2>
+        <dl class="facts">
+          <div><dt>Programme</dt><dd>DSN AI Bootcamp 2026, Geospatial Track</dd></div>
+          <div><dt>Area</dt><dd>Nigeria, every populated square kilometre</dd></div>
+          <div><dt>Data</dt><dd>Ookla mobile speed tests (Q4 2024), Meta population and wealth, GHSL, GRID3, OCHA</dd></div>
+          <div><dt>Method</dt><dd>Maximal covering location, lazy greedy</dd></div>
+          <div><dt>Output</dt><dd>Interactive map, ranked sites, two-page summary</dd></div>
+          <div><dt>Licence</dt><dd>Code MIT; maps and tables CC BY-NC-SA 4.0</dd></div>
+          <div><dt>As of</dt><dd>{{ wtbn.as_of }}</dd></div>
+        </dl>
+        <ul class="chips"><li>Python</li><li>GeoPandas</li><li>rasterio</li><li>Leaflet</li><li>Optimisation</li></ul>
+        <p class="case-links stack">
+          <a href="{{ wtbn.tool }}">{{ t.cta.open_tool }}{{ m.icon('out') }}</a>
+          <a href="{{ wtbn.summary_pdf }}">{{ t.cta.read_summary }}{{ m.icon('out') }}</a>
+          <a href="{{ wtbn.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Choosing sites, branches or service points?</strong> Tell me who you need to reach and what data you already have.</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <nav class="case-next wrap" aria-label="{{ t.nav.more_cases }}">
+    <a href="{{ link(cases['oil-palm']) }}"><span>{{ t.cta.next_case }}</span><strong>Counting {{ palm.palms }} oil palms from aerial imagery</strong>{{ m.icon('arrow') }}</a>
+  </nav>
+</article>
+{% endblock %}

@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 {% import "macros.html" as m with context %}
 {% block content %}
+{% set M = t.wtbn.millions %}
 <section class="hero" id="top" aria-labelledby="hero-title">
   <div class="wrap hero-grid">
     <div class="hero-copy">
@@ -80,6 +81,30 @@
             <a class="more" href="{{ link(cases['geoaid']) }}">{{ t.cta.read_case }}{{ m.icon('arrow') }}</a>
             <a href="{{ site.projects.geoaid_dashboard }}">{{ t.cta.live_dashboard }}{{ m.icon('out') }}</a>
             {% if preprint_url %}<a href="{{ preprint_url }}">{{ t.cta.read_preprint }}{{ m.icon('out') }}</a>{% endif %}
+          </p>
+        </div>
+      </article>
+      <article class="case case-wide" data-reveal>
+        <a class="case-media case-media-map" href="{{ link(cases['where-to-build']) }}" tabindex="-1" aria-hidden="true">
+          {{ m.picture('wtbn-map', t.wtbn.map_alt, '(min-width: 1100px) 600px, (min-width: 900px) 52vw, 92vw') }}
+        </a>
+        <div class="case-body">
+          <ul class="tags" aria-label="{{ t.nav.project_type }}">
+            <li class="tag">Interesse público</li>
+            <li class="tag tag-quiet">Otimização espacial</li>
+            <li class="tag tag-quiet">DSN AI Bootcamp</li>
+          </ul>
+          <h3><a href="{{ link(cases['where-to-build']) }}">Onde construir a seguir: locais de conectividade para a Nigéria</a></h3>
+          <p>Com base nos testes de velocidade móvel da Ookla, um mapa de 1 km daquilo de que cada parte da Nigéria precisa em banda larga, e a escolha das unidades de saúde e escolas que deveriam acolher novos locais para que cada um alcance o maior número possível de pessoas sem ligação.</p>
+          <dl class="facts">
+            <div><dt>Lacuna rural</dt><dd>{{ M.replace('{n}', wtbn.coverage_m) }} de pessoas sem testes de velocidade a menos de 2 km</dd></div>
+            <div><dt>100 locais</dt><dd>alcançam {{ M.replace('{n}', wtbn.reach100_m) }} delas</dd></div>
+            <div><dt>Verificado</dt><dd>{{ wtbn.checks_passed }} de {{ wtbn.checks }} números publicados recalculados de forma independente</dd></div>
+          </dl>
+          <p class="case-links">
+            <a class="more" href="{{ link(cases['where-to-build']) }}">{{ t.cta.read_case }}{{ m.icon('arrow') }}</a>
+            <a href="{{ wtbn.tool }}">{{ t.cta.open_tool }}{{ m.icon('out') }}</a>
+            <a href="{{ wtbn.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
           </p>
         </div>
       </article>

@@ -1,0 +1,127 @@
+{#page {"kind": "case",
+ "title": "Dónde construir después: conectividad en Nigeria · Oluwasola Oyinloye",
+ "headline": "Dónde construir después: elegir los próximos emplazamientos de conectividad de Nigeria",
+ "description": "Caso de estudio: mapa de 1 km de lo que necesita Nigeria en banda ancha, hecho con pruebas de Ookla, y los centros de salud y escuelas donde instalar sitios.",
+ "og_title": "Dónde construir después: conectividad en Nigeria",
+ "og_image": "og-where-to-build-es.png",
+ "og_image_alt": "Caso de estudio: mapa de Nigeria coloreado según lo que necesita cada kilómetro cuadrado en banda ancha.",
+ "crumb": "Dónde construir después",
+ "published": "2026-10-21",
+ "keywords": ["brecha digital Nigeria", "cobertura de banda ancha", "selección de emplazamientos de telecomunicaciones", "pruebas de velocidad Ookla", "localización óptima", "teledetección y SIG"]} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+{% set M = t.wtbn.millions %}
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.case_studies, section('work')), (page.crumb, none)]) }}
+      <ul class="tags" aria-label="{{ t.nav.project_type }}">
+        <li class="tag">Interés público</li>
+        <li class="tag tag-quiet">Optimización espacial</li>
+        <li class="tag tag-quiet">DSN AI Bootcamp</li>
+      </ul>
+      <h1>Dónde construir después: elegir los próximos emplazamientos de conectividad de Nigeria</h1>
+      <p class="lead">El plan de banda ancha de Nigeria fija velocidades mínimas de 25 Mbps en las ciudades y de 10 Mbps en las zonas rurales, pero el dinero para nuevos emplazamientos escasea y las brechas no son todas iguales. Clasifiqué cada kilómetro cuadrado habitado del país según lo que necesita y elegí qué centros de salud y escuelas deberían acoger nuevos emplazamientos, para que cada uno llegue al mayor número posible de personas sin conexión.</p>
+      <dl class="kpis">
+        <div><dt>Personas cartografiadas</dt><dd>{{ M.replace('{n}', wtbn.population_m) }}</dd></div>
+        <div><dt>En brechas rurales</dt><dd>{{ M.replace('{n}', wtbn.coverage_m) }}</dd></div>
+        <div><dt>Alcanzadas por los primeros 100 emplazamientos</dt><dd>{{ M.replace('{n}', wtbn.reach100_m) }}</dd></div>
+        <div><dt>Cifras comprobadas de nuevo</dt><dd>{{ wtbn.checks_passed }} de {{ wtbn.checks }}</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-map">
+      <a class="zoomable" href="{{ manifest['wtbn-map'][-1].src }}" data-lightbox>
+        {{ m.picture('wtbn-map', t.wtbn.map_alt, '(min-width: 1100px) 1000px, 92vw', eager=true) }}
+        <span class="zoom-hint">{{ m.icon('expand') }}{{ t.cta.enlarge_map }}</span>
+      </a>
+      <figcaption>
+        {{ m.wtbn_legend() }}
+        {{ t.wtbn.map_caption }}
+        <p class="map-credit">{{ t.wtbn.credit }}</p>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>La pregunta</h2>
+      <p>¿Dónde sirve más un nuevo emplazamiento de conectividad? ¿Y dónde el problema real es otro: redes que existen pero son lentas, o lugares que nadie ha medido todavía? Hice este proyecto para el itinerario geoespacial del DSN AI Bootcamp 2026, cuyo encargo era cartografiar la brecha digital de Nigeria.</p>
+
+      <h2>Cuatro necesidades, no una</h2>
+      <p>Con las pruebas de velocidad móvil de Ookla de octubre a diciembre de 2024, cada kilómetro cuadrado habitado recibe una de cuatro etiquetas, según si una prueba a menos de 2 km alcanza la velocidad del plan para ese tipo de zona:</p>
+      <ol class="layer-list">
+        <li><b>Servido: {{ M.replace('{n}', wtbn.served_m) }} de personas</b><span>Una prueba a la velocidad del plan a menos de 2 km. No hace falta nada nuevo.</span></li>
+        <li><b>Señal lenta: {{ M.replace('{n}', wtbn.capacity_m) }}</b><span>Pruebas cercanas, todas por debajo de la velocidad del plan. La solución es más capacidad en las redes existentes.</span></li>
+        <li><b>Ciudad por medir: {{ M.replace('{n}', wtbn.measure_m) }}</b><span>Zona urbana, pero sin pruebas a menos de 2 km. Medir antes de invertir.</span></li>
+        <li><b>Brecha rural: {{ M.replace('{n}', wtbn.coverage_m) }}</b><span>Zona rural, sin pruebas a menos de 2 km. Aquí es donde hacen falta nuevos emplazamientos.</span></li>
+      </ol>
+      <p>El {{ wtbn.gap_poorer_pct }} de las personas en brechas rurales está entre el 40 % más pobre de Nigeria, según el Relative Wealth Index de Meta. Donde la gente hace pruebas, la descarga móvil media es de {{ wtbn.down_urban }} Mbps en las ciudades y de {{ wtbn.down_rural }} Mbps en las zonas rurales, pero solo {{ wtbn.tiles_rural }} de las {{ wtbn.tiles }} teselas con pruebas son rurales.</p>
+
+      <h2>Elegir los emplazamientos</h2>
+      <p>Los centros de salud y las escuelas existentes son los anfitriones candidatos; el propio plan de banda ancha fija metas para conectar los centros de salud. Elegir los emplazamientos que, juntos, cubren a más personas en brechas rurales es un problema de localización de máxima cobertura. Lo resolví con selección voraz perezosa entre {{ wtbn.candidates }} kilómetros cuadrados candidatos, con {{ wtbn.clinics }} centros de salud y {{ wtbn.schools }} escuelas, y un alcance de 5 km por emplazamiento, el extremo inferior del rango de 5 a 15 km que la UIT da para la telefonía móvil. En este tipo de problema, la selección voraz garantiza al menos el 63 % de la mejor cobertura posible.</p>
+      <p>Los primeros 100 emplazamientos llegan a {{ M.replace('{n}', wtbn.reach100_m) }} de personas, con {{ wtbn.schools100 }} de ellos en escuelas. Solo con centros de salud llegarían a {{ M.replace('{n}', wtbn.clinics_only100_m) }}. El alcance de cada emplazamiento pesa más que cualquier otro supuesto:</p>
+      {{ m.wtbn_reach('Personas alcanzadas por los primeros 100 emplazamientos, según el alcance de cada uno', 'El resto de la página usa 5 km, el extremo inferior del rango de la UIT.') }}
+
+      <h2>¿Más personas, o primero las más pobres?</h2>
+      <p>La herramienta puede elegir los emplazamientos para llegar al mayor número de personas, o para llegar primero al 40 % más pobre, contando igualmente a todas las personas cubiertas. Se abre en la opción «primero las más pobres».</p>
+      {{ m.compare_table('Personas alcanzadas por los primeros 100 emplazamientos', ['Primero las más pobres', 'Más personas'], [('Total de personas alcanzadas', M.replace('{n}', wtbn.equity100_m), M.replace('{n}', wtbn.reach100_m)), ('Personas del 40 % más pobre alcanzadas', M.replace('{n}', wtbn.equity100_poorer_m), M.replace('{n}', wtbn.reach100_poorer_m))]) }}
+      <p>Empezar por las más pobres llega a {{ wtbn.equity_gain }} personas más del 40 % más pobre, a cambio de {{ wtbn.equity_cost }} personas menos en total. Elegir entre ambas opciones es una decisión política, por eso la herramienta muestra las dos.</p>
+
+      <h2>Los lugares que una clasificación pasa por alto</h2>
+      <p>Las LGA con más personas rurales pobres y sin pruebas ({{ wtbn.priority_lgas|join(', ') }}) están poco pobladas, así que una clasificación simple las deja fuera: en cuatro de las cinco, incluso el mejor emplazamiento llega a menos personas que el emplazamiento número 100. Necesitan una partida presupuestaria propia.</p>
+
+      <h2>¿Son reales las brechas?</h2>
+      <p>La falta de una prueba es falta de evidencia, no prueba de que no haya señal, así que hice dos comprobaciones.</p>
+      <ul>
+        <li>El {{ wtbn.allyear_untested_pct }} de las personas en brechas rurales no tuvo ninguna prueba a menos de 2 km en ningún trimestre de 2024, así que las brechas no son el azar de un trimestre.</li>
+        <li>En el mapa colaborativo de antenas móviles de OpenCelliD, el {{ wtbn.ocid_gap_pct }} de las personas en brechas rurales no tiene ninguna antena, de ningún tipo, a menos de 5 km, frente al {{ wtbn.ocid_served_pct }} en las zonas servidas.</li>
+      </ul>
+      <p>DSN entregó las pruebas sin decir de qué publicación venían, así que las comparé con los archivos públicos de Ookla: las {{ wtbn.tiles }} teselas son idénticas a la publicación móvil del cuarto trimestre de 2024. Un script aparte vuelve a calcular las cifras publicadas por otras vías, como recuentos exhaustivos y distancias sobre la esfera, y la última ejecución valida {{ wtbn.checks_passed }} de {{ wtbn.checks }}.</p>
+
+      <h2>Lo que este trabajo no afirma</h2>
+      <ul>
+        <li>Las pruebas son colaborativas, escasas y sobre todo urbanas, y {{ wtbn.lgas_no_tile }} de las {{ wtbn.lgas }} LGA no registraron ninguna en el trimestre. Las brechas salen de dónde la gente hace pruebas, no de mapas de cobertura de los operadores ni de la ubicación de las antenas.</li>
+        <li>OpenCelliD es una segunda fuente colaborativa, no un estudio independiente, y el {{ wtbn.ocid_gsm_pct }} de sus registros nigerianos es 2G. Muestra dónde se ha registrado alguna red móvil, no dónde existe 4G.</li>
+        <li>La distancia de servicio de 2 km y el alcance de 5 km por emplazamiento son supuestos. Las pruebas de sensibilidad del repositorio muestran cómo cambian los resultados con ellos.</li>
+        <li>Las estimaciones de riqueza son de 2021, y un centro de salud o una escuela registrados no siempre funcionan. Un nuevo emplazamiento también necesita electricidad, red de retorno (backhaul) y seguridad, que este trabajo no modela.</li>
+      </ul>
+
+      <h2>Lo que es público</h2>
+      <p>La herramienta interactiva, todo el proceso y las tablas de resultados están en GitHub, con un resumen de dos páginas. Un solo comando vuelve a calcular todas las cifras, y cada descarga se compara con una suma de verificación registrada antes de ejecutar nada. El código tiene licencia MIT. Como los datos de Ookla son no comerciales y de compartir igual, los mapas y las tablas se comparten con licencia CC BY-NC-SA 4.0.</p>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Resumen</h2>
+        <dl class="facts">
+          <div><dt>Programa</dt><dd>DSN AI Bootcamp 2026, itinerario geoespacial</dd></div>
+          <div><dt>Zona</dt><dd>Nigeria, cada kilómetro cuadrado habitado</dd></div>
+          <div><dt>Datos</dt><dd>Pruebas de velocidad móvil de Ookla (4.º trim. 2024), población y riqueza de Meta, GHSL, GRID3, OCHA</dd></div>
+          <div><dt>Método</dt><dd>Localización de máxima cobertura, selección voraz perezosa</dd></div>
+          <div><dt>Entregables</dt><dd>Mapa interactivo, emplazamientos ordenados, resumen de dos páginas</dd></div>
+          <div><dt>Licencia</dt><dd>Código MIT; mapas y tablas CC BY-NC-SA 4.0</dd></div>
+          <div><dt>Fecha</dt><dd>{{ wtbn.as_of }}</dd></div>
+        </dl>
+        <ul class="chips"><li>Python</li><li>GeoPandas</li><li>rasterio</li><li>Leaflet</li><li>Optimización</li></ul>
+        <p class="case-links stack">
+          <a href="{{ wtbn.tool }}">{{ t.cta.open_tool }}{{ m.icon('out') }}</a>
+          <a href="{{ wtbn.summary_pdf }}">{{ t.cta.read_summary }}{{ m.icon('out') }}</a>
+          <a href="{{ wtbn.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>¿Tiene que elegir emplazamientos, sucursales o puntos de servicio?</strong> Cuénteme a quién necesita llegar y qué datos tiene ya.</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <nav class="case-next wrap" aria-label="{{ t.nav.more_cases }}">
+    <a href="{{ link(cases['oil-palm']) }}"><span>{{ t.cta.next_case }}</span><strong>{{ palm.palms }} palmas aceiteras contadas con imágenes aéreas</strong>{{ m.icon('arrow') }}</a>
+  </nav>
+</article>
+{% endblock %}

@@ -41,7 +41,7 @@ FRONT = re.compile(r"\A\{#page\s*(\{.*?\})\s*#\}\s*", re.S)
 BLANK_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 CATEGORY_SLOT = [0, 1, 1, 2, 3]  # hospital, clinic, doctors, pharmacy, other -> legend slot
 CASES = {"oil-palm": "/work/oil-palm-tree-counting/", "geoaid": "/work/geoaid-flood-susceptibility/",
-         "access-map": "/#access-map"}
+         "where-to-build": "/work/where-to-build-next/", "access-map": "/#access-map"}
 NNBSP, NBSP = " ", " "
 
 # How each language writes numbers and dates. Arabic pages keep Western digits, as most
@@ -445,6 +445,24 @@ def language_context(lang, data, todo, routes, release):
     palm["count_diff"] = fmt_signed_pct(palm_raw["count_diff"], lang)
     palm["base_count_diff"] = fmt_signed_pct(palm_raw["base_count_diff"], lang)
     palm["block_diffs"] = [fmt_signed_pct(v, lang) for v in palm_raw["block_diffs"]]
+    # Where to Build Next: numbers come from the project via tools/import_wtbn.py
+    wtbn_raw = site["projects"]["where_to_build"]
+    wtbn = {k: (fmt_num(v, lang) if isinstance(v, int) and not isinstance(v, bool) else v)
+            for k, v in wtbn_raw.items()}
+    for k in ("population_m", "served_m", "capacity_m", "measure_m", "coverage_m", "reach3km_m", "reach10km_m",
+              "down_urban", "down_rural"):
+        wtbn[k] = fmt_num(wtbn_raw[k], lang, 1)
+    for k in ("reach100_m", "reach100_poorer_m", "equity100_m", "equity100_poorer_m", "clinics_only100_m",
+              "tests_per_10k_urban", "tests_per_10k_rural"):
+        if k in wtbn_raw:
+            wtbn[k] = fmt_num(wtbn_raw[k], lang, 2)
+    for k in ("gap_poorer_pct", "allyear_untested_pct", "ocid_gap_pct", "ocid_served_pct"):
+        wtbn[k] = fmt_pct(wtbn_raw[k], lang)
+    wtbn["ocid_gsm_pct"] = FORMATS[lang]["pct"].format(fmt_num(wtbn_raw["ocid_gsm_pct"], lang, 2))
+    wtbn["as_of"] = fmt_date(wtbn_raw["as_of"], lang, day=False)
+    reach = [wtbn_raw["reach3km_m"], wtbn_raw["reach100_m"], wtbn_raw["reach10km_m"]]  # 100 sites at 3, 5, 10 km
+    wtbn["reach_by_km"] = [fmt_num(v, lang, 1) for v in reach]
+    wtbn["reach_fracs"] = [v / max(reach) for v in reach]
     osm = data["osm"]
     rows = []
     for feat in osm["lgas"]["features"]:
@@ -474,7 +492,7 @@ def language_context(lang, data, todo, routes, release):
         "call_url": site.get("booking_url") or email_book, "email_book_url": email_book,
         "mailto_url": f"mailto:{site['email']}",
         "preprint_url": "https://doi.org/" + pre["doi"] if pre.get("doi") else None,
-        "palm": palm, "osm_rows": rows, "osm_count": fmt_num(len(osm["facilities"]), lang),
+        "palm": palm, "wtbn": wtbn, "osm_rows": rows, "osm_count": fmt_num(len(osm["facilities"]), lang),
         "osm_pulled": fmt_date(osm["pulled"], lang), "cases": CASES,
         "today_month": fmt_date(dt.date.today().isoformat(), lang, day=False),
         "site_host": site["base_url"].split("//", 1)[-1].rstrip("/"),

@@ -40,7 +40,9 @@
     "next_case": "Estudo de caso seguinte",
     "back_home": "Ir para a página inicial",
     "download_pdf": "Descarregar PDF",
-    "back_to_site": "Voltar ao site"
+    "back_to_site": "Voltar ao site",
+    "open_tool": "Abrir a ferramenta online",
+    "read_summary": "Ler o resumo de duas páginas (PDF, em inglês)"
   },
   "footer": {
     "based": "Com base em Lagos, Nigéria",
@@ -205,6 +207,7 @@
     "others": "Outros serviços"
   },
   "related": {
+    "where-to-build": "Estudo de caso: onde instalar os próximos locais de conectividade na Nigéria",
     "oil-palm": "Estudo de caso: 718 751 palmeiras-de-óleo contadas a partir de imagens aéreas",
     "geoaid": "Estudo de caso: suscetibilidade a inundações GeoAID, Amuwo-Odofin",
     "access-map": "Lagos Access Map: unidades de saúde no OpenStreetMap",
@@ -252,6 +255,22 @@
     "palm_chip": "{palms} palmeiras · {ha} ha",
     "geoaid_kicker": "Estudo de caso · ML espacial",
     "geoaid_title": "GeoAID: mapear o risco de inundação em Lagos",
-    "geoaid_sub": "Piloto em Amuwo-Odofin · validação cruzada espacial"
+    "geoaid_sub": "Piloto em Amuwo-Odofin · validação cruzada espacial",
+    "wtbn_kicker": "Estudo de caso · Otimização espacial",
+    "wtbn_title": "Onde construir a seguir: conectividade na Nigéria",
+    "wtbn_sub": "Testes Ookla · grelha de 1 km · unidades de saúde e escolas como locais"
+  },
+  "wtbn": {
+    "served": "Servido: um teste à velocidade do plano a menos de 2 km",
+    "capacity": "Sinal lento: testes por perto, todos abaixo da velocidade do plano",
+    "measure": "Cidade por medir: nenhum teste a menos de 2 km",
+    "gap": "Lacuna rural: nenhum teste a menos de 2 km",
+    "millions": "{n} M",
+    "clinic": "Unidade de saúde escolhida como local",
+    "school": "Escola escolhida como local",
+    "reach_km": "Alcance de cada local: {km} km",
+    "map_alt": "Mapa da Nigéria em que cada quilómetro quadrado habitado está colorido conforme aquilo de que precisa em banda larga: servido, sinal lento, cidade por medir ou lacuna rural. As lacunas rurais estendem-se pela maior parte do país, as zonas servidas concentram-se em torno de Lagos, Abuja e outras cidades, e círculos e quadrados brancos marcam as primeiras 100 unidades de saúde e escolas escolhidas como locais.",
+    "map_caption": "Aquilo de que precisa cada quilómetro quadrado habitado da Nigéria, com o número de pessoas em cada classe, e os primeiros 100 locais escolhidos a começar pelos mais pobres. Grelha de 1 km; metas de velocidade do Plano Nacional de Banda Larga 2020–2025 (25 Mbps nas cidades, 10 Mbps nas zonas rurais).",
+    "credit": "Based on Oluwasola Oyinloye's analysis of Speedtest® by Ookla® Global Fixed and Mobile Network Performance Maps for Q4 2024. Ookla trademarks used under license and reprinted with permission. Mapa sob licença CC BY-NC-SA 4.0. Outras camadas: população e Relative Wealth Index da Meta, GHSL, GRID3, OCHA."
   }
 }

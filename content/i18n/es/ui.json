@@ -40,7 +40,9 @@
     "next_case": "Siguiente caso de estudio",
     "back_home": "Ir a la página de inicio",
     "download_pdf": "Descargar PDF",
-    "back_to_site": "Volver al sitio"
+    "back_to_site": "Volver al sitio",
+    "open_tool": "Abrir la herramienta en línea",
+    "read_summary": "Leer el resumen de dos páginas (PDF, en inglés)"
   },
   "footer": {
     "based": "Con sede en Lagos, Nigeria",
@@ -205,6 +207,7 @@
     "others": "Otros servicios"
   },
   "related": {
+    "where-to-build": "Caso de estudio: dónde instalar los próximos emplazamientos de conectividad en Nigeria",
     "oil-palm": "Caso de estudio: 718 751 palmas aceiteras contadas con imágenes aéreas",
     "geoaid": "Caso de estudio: susceptibilidad a inundaciones GeoAID, Amuwo-Odofin",
     "access-map": "Lagos Access Map: centros de salud en OpenStreetMap",
@@ -252,6 +255,22 @@
     "palm_chip": "{palms} palmas · {ha} ha",
     "geoaid_kicker": "Caso de estudio · ML espacial",
     "geoaid_title": "GeoAID: cartografía del riesgo de inundación en Lagos",
-    "geoaid_sub": "Piloto en Amuwo-Odofin · validación cruzada espacial"
+    "geoaid_sub": "Piloto en Amuwo-Odofin · validación cruzada espacial",
+    "wtbn_kicker": "Caso de estudio · Optimización espacial",
+    "wtbn_title": "Dónde construir después: conectividad en Nigeria",
+    "wtbn_sub": "Pruebas de Ookla · cuadrícula de 1 km · centros de salud y escuelas"
+  },
+  "wtbn": {
+    "served": "Servido: una prueba a la velocidad del plan a menos de 2 km",
+    "capacity": "Señal lenta: pruebas cercanas, todas por debajo de la velocidad del plan",
+    "measure": "Ciudad por medir: ninguna prueba a menos de 2 km",
+    "gap": "Brecha rural: ninguna prueba a menos de 2 km",
+    "millions": "{n} M",
+    "clinic": "Centro de salud elegido como emplazamiento",
+    "school": "Escuela elegida como emplazamiento",
+    "reach_km": "Alcance de cada emplazamiento: {km} km",
+    "map_alt": "Mapa de Nigeria en el que cada kilómetro cuadrado habitado está coloreado según lo que necesita en banda ancha: servido, señal lenta, ciudad por medir o brecha rural. Las brechas rurales se extienden por la mayor parte del país, las zonas servidas se agrupan alrededor de Lagos, Abuja y otras ciudades, y círculos y cuadrados blancos marcan los primeros 100 centros de salud y escuelas elegidos como emplazamientos.",
+    "map_caption": "Lo que necesita cada kilómetro cuadrado habitado de Nigeria, con el número de personas en cada clase, y los primeros 100 emplazamientos elegidos empezando por los más pobres. Cuadrícula de 1 km; objetivos de velocidad del Plan Nacional de Banda Ancha 2020–2025 (25 Mbps en ciudades, 10 Mbps en zonas rurales).",
+    "credit": "Based on Oluwasola Oyinloye's analysis of Speedtest® by Ookla® Global Fixed and Mobile Network Performance Maps for Q4 2024. Ookla trademarks used under license and reprinted with permission. Mapa con licencia CC BY-NC-SA 4.0. Otras capas: población y Relative Wealth Index de Meta, GHSL, GRID3, OCHA."
   }
 }

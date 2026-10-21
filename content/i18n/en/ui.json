@@ -40,7 +40,9 @@
     "next_case": "Next case study",
     "back_home": "Go to the home page",
     "download_pdf": "Download PDF",
-    "back_to_site": "Back to the site"
+    "back_to_site": "Back to the site",
+    "open_tool": "Open the live tool",
+    "read_summary": "Read the two-page summary (PDF)"
   },
   "footer": {
     "based": "Based in Lagos, Nigeria",
@@ -205,6 +207,7 @@
     "others": "Other services"
   },
   "related": {
+    "where-to-build": "Case study: where Nigeria's next connectivity sites should go",
     "oil-palm": "Case study: counting 718,751 oil palms from aerial imagery",
     "geoaid": "Case study: GeoAID flood susceptibility, Amuwo-Odofin",
     "access-map": "Lagos Access Map: health facilities in OpenStreetMap",
@@ -252,6 +255,22 @@
     "palm_chip": "{palms} palms · {ha} ha",
     "geoaid_kicker": "Case study · Spatial ML",
     "geoaid_title": "GeoAID: flood risk mapping in Lagos",
-    "geoaid_sub": "Amuwo-Odofin pilot · spatially cross-validated"
+    "geoaid_sub": "Amuwo-Odofin pilot · spatially cross-validated",
+    "wtbn_kicker": "Case study · Spatial optimisation",
+    "wtbn_title": "Where to build next: connectivity sites for Nigeria",
+    "wtbn_sub": "Ookla speed tests · 1 km grid · clinics and schools as hosts"
+  },
+  "wtbn": {
+    "served": "Served: a test at the plan's speed within 2 km",
+    "capacity": "Slow signal: tests nearby, all below the plan's speed",
+    "measure": "Town to measure: no test within 2 km",
+    "gap": "Rural gap: no test within 2 km",
+    "millions": "{n} M",
+    "clinic": "Clinic chosen as a site",
+    "school": "School chosen as a site",
+    "reach_km": "Each site reaches {km} km",
+    "map_alt": "Map of Nigeria in which every populated square kilometre is coloured by what it needs for broadband: served, slow signal, town to measure or rural gap. Rural gaps spread across most of the country, served areas cluster around Lagos, Abuja and other cities, and white circles and squares mark the first 100 clinics and schools chosen as sites.",
+    "map_caption": "What each populated square kilometre of Nigeria needs, with the number of people in each class, and the first 100 sites chosen poorest first. 1 km grid; speed targets from the National Broadband Plan 2020–2025 (25 Mbps in towns, 10 Mbps in rural areas).",
+    "credit": "Based on Oluwasola Oyinloye's analysis of Speedtest® by Ookla® Global Fixed and Mobile Network Performance Maps for Q4 2024. Ookla trademarks used under license and reprinted with permission. Map licensed CC BY-NC-SA 4.0. Other layers: Meta population and Relative Wealth Index, GHSL, GRID3, OCHA."
   }
 }

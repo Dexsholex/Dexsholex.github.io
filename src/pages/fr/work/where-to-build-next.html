@@ -1,0 +1,127 @@
+{#page {"kind": "case",
+ "title": "Où construire ensuite : la connectivité au Nigeria · Oluwasola Oyinloye",
+ "headline": "Où construire ensuite : choisir les prochains sites de connectivité du Nigeria",
+ "description": "Étude de cas : une carte à 1 km des besoins en haut débit de tout le Nigeria, tirée des tests Ookla, et les centres de santé et écoles où installer des sites.",
+ "og_title": "Où construire ensuite : la connectivité au Nigeria",
+ "og_image": "og-where-to-build-fr.png",
+ "og_image_alt": "Étude de cas : carte du Nigeria colorée selon les besoins en haut débit de chaque kilomètre carré.",
+ "crumb": "Où construire ensuite",
+ "published": "2026-10-21",
+ "keywords": ["fracture numérique Nigeria", "couverture haut débit", "choix de sites télécoms", "tests de débit Ookla", "localisation optimale", "géomatique"]} #}
+{% extends "base.html" %}
+{% import "macros.html" as m with context %}
+{% block content %}
+{% set M = t.wtbn.millions %}
+<article class="case-page">
+  <header class="case-hero">
+    <div class="wrap">
+      {{ m.crumbs([(t.nav.home, link('/')), (t.nav.case_studies, section('work')), (page.crumb, none)]) }}
+      <ul class="tags" aria-label="{{ t.nav.project_type }}">
+        <li class="tag">Intérêt général</li>
+        <li class="tag tag-quiet">Optimisation spatiale</li>
+        <li class="tag tag-quiet">DSN AI Bootcamp</li>
+      </ul>
+      <h1>Où construire ensuite : choisir les prochains sites de connectivité du Nigeria</h1>
+      <p class="lead">Le plan haut débit du Nigeria fixe des vitesses minimales de 25 Mbit/s en ville et de 10 Mbit/s en zone rurale, mais l'argent pour de nouveaux sites est rare et les lacunes ne se ressemblent pas. J'ai classé chaque kilomètre carré habité du pays selon ses besoins, puis choisi les centres de santé et les écoles qui devraient accueillir de nouveaux sites, pour que chacun touche le plus possible de personnes non connectées.</p>
+      <dl class="kpis">
+        <div><dt>Personnes cartographiées</dt><dd>{{ M.replace('{n}', wtbn.population_m) }}</dd></div>
+        <div><dt>Dans les lacunes rurales</dt><dd>{{ M.replace('{n}', wtbn.coverage_m) }}</dd></div>
+        <div><dt>Touchées par les 100 premiers sites</dt><dd>{{ M.replace('{n}', wtbn.reach100_m) }}</dd></div>
+        <div><dt>Chiffres revérifiés</dt><dd>{{ wtbn.checks_passed }} sur {{ wtbn.checks }}</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <figure class="case-map">
+      <a class="zoomable" href="{{ manifest['wtbn-map'][-1].src }}" data-lightbox>
+        {{ m.picture('wtbn-map', t.wtbn.map_alt, '(min-width: 1100px) 1000px, 92vw', eager=true) }}
+        <span class="zoom-hint">{{ m.icon('expand') }}{{ t.cta.enlarge_map }}</span>
+      </a>
+      <figcaption>
+        {{ m.wtbn_legend() }}
+        {{ t.wtbn.map_caption }}
+        <p class="map-credit">{{ t.wtbn.credit }}</p>
+      </figcaption>
+    </figure>
+  </div>
+
+  <div class="wrap case-layout">
+    <div class="prose">
+      <h2>La question</h2>
+      <p>Où un nouveau site de connectivité est-il le plus utile ? Et où le vrai problème est-il ailleurs : des réseaux qui existent mais sont lents, ou des endroits que personne n'a encore mesurés ? J'ai réalisé ce projet pour le volet géospatial du DSN AI Bootcamp 2026, dont le sujet était de cartographier la fracture numérique du Nigeria.</p>
+
+      <h2>Quatre besoins, pas un seul</h2>
+      <p>À partir des tests de débit mobile d'Ookla d'octobre à décembre 2024, chaque kilomètre carré habité reçoit l'une de quatre étiquettes, selon qu'un test à moins de 2 km atteint ou non la vitesse prévue par le plan pour ce type de zone :</p>
+      <ol class="layer-list">
+        <li><b>Desservi : {{ M.replace('{n}', wtbn.served_m) }} de personnes</b><span>Un test à la vitesse du plan à moins de 2 km. Rien de nouveau n'est nécessaire.</span></li>
+        <li><b>Signal lent : {{ M.replace('{n}', wtbn.capacity_m) }}</b><span>Des tests à proximité, tous sous la vitesse du plan. La solution : plus de capacité sur les réseaux existants.</span></li>
+        <li><b>Ville à mesurer : {{ M.replace('{n}', wtbn.measure_m) }}</b><span>Zone urbaine, mais aucun test à moins de 2 km. Mesurer avant d'investir.</span></li>
+        <li><b>Lacune rurale : {{ M.replace('{n}', wtbn.coverage_m) }}</b><span>Zone rurale, sans test à moins de 2 km. C'est là qu'il faut de nouveaux sites.</span></li>
+      </ol>
+      <p>{{ wtbn.gap_poorer_pct }} des personnes vivant dans les lacunes rurales font partie des 40 % les plus pauvres du Nigeria, selon le Relative Wealth Index de Meta. Là où les gens font des tests, le débit mobile descendant moyen est de {{ wtbn.down_urban }} Mbit/s en ville et de {{ wtbn.down_rural }} Mbit/s en zone rurale, mais seules {{ wtbn.tiles_rural }} des {{ wtbn.tiles }} tuiles avec des tests sont rurales.</p>
+
+      <h2>Choisir les sites</h2>
+      <p>Les centres de santé et les écoles existants sont les hôtes candidats ; le plan haut débit fixe d'ailleurs lui-même des objectifs de connexion des centres de santé. Choisir les sites qui, ensemble, couvrent le plus de personnes dans les lacunes rurales est un problème de localisation à couverture maximale. Je l'ai résolu par sélection gloutonne paresseuse parmi {{ wtbn.candidates }} kilomètres carrés candidats, qui comptent {{ wtbn.clinics }} centres de santé et {{ wtbn.schools }} écoles, avec une portée de 5 km par site, le bas de la fourchette de 5 à 15 km que l'UIT donne pour la téléphonie mobile. Pour ce type de problème, la sélection gloutonne atteint à coup sûr au moins 63 % de la meilleure couverture possible.</p>
+      <p>Les 100 premiers sites touchent {{ M.replace('{n}', wtbn.reach100_m) }} de personnes, dont {{ wtbn.schools100 }} sites dans des écoles. Les centres de santé seuls en toucheraient {{ M.replace('{n}', wtbn.clinics_only100_m) }}. La portée d'un site compte plus que toute autre hypothèse :</p>
+      {{ m.wtbn_reach('Personnes touchées par les 100 premiers sites, selon la portée de chaque site', 'Le reste de la page utilise 5 km, le bas de la fourchette de l\'UIT.') }}
+
+      <h2>Le plus de monde, ou les plus pauvres d'abord ?</h2>
+      <p>L'outil peut choisir les sites pour toucher le plus de monde, ou pour toucher d'abord les 40 % les plus pauvres, tout en comptant toutes les personnes couvertes. Il s'ouvre sur l'option « les plus pauvres d'abord ».</p>
+      {{ m.compare_table('Personnes touchées par les 100 premiers sites', ['Les plus pauvres d\'abord', 'Le plus de monde'], [('Toutes les personnes touchées', M.replace('{n}', wtbn.equity100_m), M.replace('{n}', wtbn.reach100_m)), ('Personnes des 40 % les plus pauvres touchées', M.replace('{n}', wtbn.equity100_poorer_m), M.replace('{n}', wtbn.reach100_poorer_m))]) }}
+      <p>Commencer par les plus pauvres touche {{ wtbn.equity_gain }} personnes de plus parmi les 40 % les plus pauvres, pour {{ wtbn.equity_cost }} personnes de moins au total. Le choix entre les deux relève de la politique publique, c'est pourquoi l'outil montre les deux.</p>
+
+      <h2>Les zones qu'un classement oublie</h2>
+      <p>Les LGA qui comptent le plus de ruraux pauvres sans aucun test ({{ wtbn.priority_lgas|join(', ') }}) sont peu peuplées, si bien qu'un simple classement les laisse de côté : dans quatre des cinq, même le meilleur site touche moins de personnes que le 100e site retenu. Elles ont besoin d'une ligne budgétaire à part.</p>
+
+      <h2>Les lacunes sont-elles réelles ?</h2>
+      <p>L'absence de test est une absence de preuve, pas la preuve qu'il n'y a pas de signal. J'ai donc fait deux vérifications.</p>
+      <ul>
+        <li>{{ wtbn.allyear_untested_pct }} des personnes vivant dans les lacunes rurales n'avaient aucun test à moins de 2 km, quel que soit le trimestre de 2024 : ces lacunes ne tiennent pas au hasard d'un trimestre.</li>
+        <li>Dans la carte collaborative des antennes mobiles d'OpenCelliD, {{ wtbn.ocid_gap_pct }} des personnes vivant dans les lacunes rurales n'ont aucune antenne, de quelque type que ce soit, à moins de 5 km, contre {{ wtbn.ocid_served_pct }} dans les zones desservies.</li>
+      </ul>
+      <p>DSN a fourni les tests sans préciser de quelle publication ils venaient ; je les ai donc comparés aux fichiers publics d'Ookla : les {{ wtbn.tiles }} tuiles sont identiques à la publication mobile du 4e trimestre 2024. Un script distinct recalcule ensuite les chiffres publiés par d'autres voies, par exemple des comptages exhaustifs et des distances sur la sphère, et la dernière exécution en valide {{ wtbn.checks_passed }} sur {{ wtbn.checks }}.</p>
+
+      <h2>Ce que ce travail ne prétend pas</h2>
+      <ul>
+        <li>Les tests sont collaboratifs, rares et surtout urbains, et {{ wtbn.lgas_no_tile }} des {{ wtbn.lgas }} LGA n'en ont enregistré aucun sur le trimestre. Les lacunes viennent de là où les gens font des tests, pas des cartes de couverture des opérateurs ni de l'emplacement des antennes.</li>
+        <li>OpenCelliD est une deuxième source collaborative, pas une enquête indépendante, et {{ wtbn.ocid_gsm_pct }} de ses relevés nigérians sont en 2G. Elle montre où un réseau mobile, quel qu'il soit, a été enregistré, pas où la 4G existe.</li>
+        <li>La distance de desserte de 2 km et la portée de 5 km par site sont des hypothèses. Les tests de sensibilité du dépôt montrent comment les résultats varient avec elles.</li>
+        <li>Les estimations de richesse datent de 2021, et un centre de santé ou une école enregistrés ne fonctionnent pas toujours. Un nouveau site a aussi besoin d'électricité, de liaison de collecte et de sécurité, que ce travail ne modélise pas.</li>
+      </ul>
+
+      <h2>Ce qui est public</h2>
+      <p>L'outil interactif, toute la chaîne de traitement et les tableaux de résultats sont sur GitHub, avec un résumé de deux pages. Une seule commande recalcule tous les chiffres, et chaque téléchargement est comparé à une empreinte enregistrée avant toute exécution. Le code est sous licence MIT. Comme les données d'Ookla sont non commerciales et à partage dans les mêmes conditions, les cartes et les tableaux sont diffusés sous CC BY-NC-SA 4.0.</p>
+    </div>
+
+    <aside class="case-aside">
+      <div class="aside-card">
+        <h2>Résumé</h2>
+        <dl class="facts">
+          <div><dt>Programme</dt><dd>DSN AI Bootcamp 2026, volet géospatial</dd></div>
+          <div><dt>Zone</dt><dd>Le Nigeria, chaque kilomètre carré habité</dd></div>
+          <div><dt>Données</dt><dd>Tests de débit mobile Ookla (T4 2024), population et richesse de Meta, GHSL, GRID3, OCHA</dd></div>
+          <div><dt>Méthode</dt><dd>Localisation à couverture maximale, sélection gloutonne paresseuse</dd></div>
+          <div><dt>Livrables</dt><dd>Carte interactive, sites classés, résumé de deux pages</dd></div>
+          <div><dt>Licence</dt><dd>Code MIT ; cartes et tableaux CC BY-NC-SA 4.0</dd></div>
+          <div><dt>À jour</dt><dd>{{ wtbn.as_of }}</dd></div>
+        </dl>
+        <ul class="chips"><li>Python</li><li>GeoPandas</li><li>rasterio</li><li>Leaflet</li><li>Optimisation</li></ul>
+        <p class="case-links stack">
+          <a href="{{ wtbn.tool }}">{{ t.cta.open_tool }}{{ m.icon('out') }}</a>
+          <a href="{{ wtbn.summary_pdf }}">{{ t.cta.read_summary }}{{ m.icon('out') }}</a>
+          <a href="{{ wtbn.repo }}">{{ t.cta.read_code }}{{ m.icon('out') }}</a>
+        </p>
+      </div>
+      <div class="aside-cta">
+        <p><strong>Vous devez choisir des sites, des agences ou des points de service ?</strong> Dites-moi qui vous devez toucher et de quelles données vous disposez déjà.</p>
+        {{ m.book_button() }}
+      </div>
+    </aside>
+  </div>
+
+  <nav class="case-next wrap" aria-label="{{ t.nav.more_cases }}">
+    <a href="{{ link(cases['oil-palm']) }}"><span>{{ t.cta.next_case }}</span><strong>{{ palm.palms }} palmiers à huile comptés par imagerie aérienne</strong>{{ m.icon('arrow') }}</a>
+  </nav>
+</article>
+{% endblock %}

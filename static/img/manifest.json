@@ -195,5 +195,27 @@
    "h": 700,
    "src": "/img/access-map-preview-1600.webp"
   }
+ ],
+ "wtbn-map": [
+  {
+   "w": 480,
+   "h": 392,
+   "src": "/img/wtbn-map-480.webp"
+  },
+  {
+   "w": 800,
+   "h": 654,
+   "src": "/img/wtbn-map-800.webp"
+  },
+  {
+   "w": 1354,
+   "h": 1107,
+   "src": "/img/wtbn-map-1354.webp"
+  },
+  {
+   "w": 2708,
+   "h": 2214,
+   "src": "/img/wtbn-map-2708.webp"
+  }
  ]
 }

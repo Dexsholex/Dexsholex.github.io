@@ -40,7 +40,9 @@
     "next_case": "Étude de cas suivante",
     "back_home": "Retour à l'accueil",
     "download_pdf": "Télécharger le PDF",
-    "back_to_site": "Retour au site"
+    "back_to_site": "Retour au site",
+    "open_tool": "Ouvrir l'outil en ligne",
+    "read_summary": "Lire le résumé de deux pages (PDF, en anglais)"
   },
   "footer": {
     "based": "Basé à Lagos, Nigeria",
@@ -164,6 +166,7 @@
     "others": "Autres services"
   },
   "related": {
+    "where-to-build": "Étude de cas : où installer les prochains sites de connectivité au Nigeria",
     "oil-palm": "Étude de cas : 718 751 palmiers à huile comptés par imagerie aérienne",
     "geoaid": "Étude de cas : susceptibilité aux inondations GeoAID, Amuwo-Odofin",
     "access-map": "Lagos Access Map : les établissements de santé dans OpenStreetMap",
@@ -252,6 +255,22 @@
     "palm_chip": "{palms} palmiers · {ha} ha",
     "geoaid_kicker": "Étude de cas · ML spatial",
     "geoaid_title": "GeoAID : cartographier le risque d'inondation à Lagos",
-    "geoaid_sub": "Pilote à Amuwo-Odofin · validation croisée spatiale"
+    "geoaid_sub": "Pilote à Amuwo-Odofin · validation croisée spatiale",
+    "wtbn_kicker": "Étude de cas · Optimisation spatiale",
+    "wtbn_title": "Où construire ensuite : la connectivité au Nigeria",
+    "wtbn_sub": "Tests Ookla · grille de 1 km · centres de santé et écoles comme sites"
+  },
+  "wtbn": {
+    "served": "Desservi : un test à la vitesse du plan à moins de 2 km",
+    "capacity": "Signal lent : des tests à proximité, tous sous la vitesse du plan",
+    "measure": "Ville à mesurer : aucun test à moins de 2 km",
+    "gap": "Lacune rurale : aucun test à moins de 2 km",
+    "millions": "{n} M",
+    "clinic": "Centre de santé retenu comme site",
+    "school": "École retenue comme site",
+    "reach_km": "Portée de chaque site : {km} km",
+    "map_alt": "Carte du Nigeria où chaque kilomètre carré habité est coloré selon ses besoins en haut débit : desservi, signal lent, ville à mesurer ou lacune rurale. Les lacunes rurales couvrent la majeure partie du pays, les zones desservies se regroupent autour de Lagos, d'Abuja et d'autres villes, et des cercles et carrés blancs marquent les 100 premiers centres de santé et écoles retenus comme sites.",
+    "map_caption": "Les besoins de chaque kilomètre carré habité du Nigeria, avec le nombre de personnes dans chaque catégorie, et les 100 premiers sites choisis en commençant par les plus pauvres. Grille de 1 km ; objectifs de vitesse du Plan national haut débit 2020–2025 (25 Mbit/s en ville, 10 Mbit/s en zone rurale).",
+    "credit": "Based on Oluwasola Oyinloye's analysis of Speedtest® by Ookla® Global Fixed and Mobile Network Performance Maps for Q4 2024. Ookla trademarks used under license and reprinted with permission. Carte sous licence CC BY-NC-SA 4.0. Autres couches : population et Relative Wealth Index de Meta, GHSL, GRID3, OCHA."
   }
 }

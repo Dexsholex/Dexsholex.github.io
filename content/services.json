@@ -101,6 +101,7 @@
         "development"
       ],
       "related": [
+        "where-to-build",
         "access-map"
       ]
     },
@@ -122,6 +123,7 @@
         "education"
       ],
       "related": [
+        "where-to-build",
         "access-map"
       ]
     },
@@ -159,6 +161,7 @@
         "education"
       ],
       "related": [
+        "where-to-build",
         "geoaid-dashboard",
         "access-map"
       ]

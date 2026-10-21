@@ -18,7 +18,7 @@ content/i18n/<lang>/         everything a reader sees, one folder per language:
 src/pages/<lang>/            one Jinja template per page; work/x.html becomes /<lang>/work/x/
 src/templates/               base layout, header, footer, service page, shared macros
 src/style.css, src/js/       styles and the small enhancement script
-assets/                      photos (metadata stripped) and GeoAID data, inputs to tools/media.py
+assets/                      photos (metadata stripped), GeoAID and Where to Build Next data, inputs to tools/media.py
 static/                      copied to the site as-is (icons, share cards, PDFs, img/, data/, vendor/)
 tests/                       checks on the built site
 tools/                       build, release, image, data and check scripts
@@ -93,12 +93,13 @@ Results go to `reports/` (not committed).
 
 | Command | Makes | Run it after |
 |---|---|---|
-| `python tools/media.py` | photos, GeoAID map and Access Map preview in `static/img/` | changing photos or crops |
+| `python tools/media.py` | photos, GeoAID map, Where to Build Next map and Access Map preview in `static/img/` | changing photos or crops |
 | `npm run og` | share cards for every language in `static/` | changing the flagship line, card text, domain or figures |
 | `npm run pdf` | one-page capability statement PDF per language in `static/` (fails if any runs past a page) | changing services, figures or the statement; build first, then build again |
 | `python tools/make_images.py` | favicon and touch icon in `static/` | changing the brand mark |
 | `python tools/fetch_osm_health.py` | OpenStreetMap snapshot in `static/data/` | wanting fresher map data |
 | `python tools/import_media.py` | metadata-free photo masters in `assets/field/`, video clips in `static/media/` | adding field photos or video (edit the list at the top) |
+| `python tools/import_wtbn.py` | Where to Build Next map inputs in `assets/wtbn/` and its numbers in `content/site.json`, from the local project folder | rebuilding that project; then run `media.py` |
 | `python tools/import_methods_log.py` | the GeoAID methods log page (English), copied from GitHub | the log changes in the GeoAID repo |
 
 The content tools need `pip install -r requirements-tools.txt`.
